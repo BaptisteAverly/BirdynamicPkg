@@ -2,24 +2,33 @@
 % Please edit documentation in R/bdy_get_distances.R
 \name{bdy_get_distances}
 \alias{bdy_get_distances}
-\title{Calcul des distances entre parc éoliens et colonies}
+\title{Calculates the shortest path distances between marine bird colonies and wind farms}
 \usage{
 bdy_get_distances(colonies, parcs, costMatrix, doShpa = T, progress = NULL)
 }
 \arguments{
-\item{colonies}{tableau de colonies}
+\item{colonies}{table where each row is a colony of interest.
+Must contain one column named "code_colonie" with unique identifiers for each colony
+and one spatial "geometry" column containing the coordinates of the colony centroids}
 
-\item{parcs}{shapefile des parcs}
+\item{parcs}{table where each row is a wind famr of interest.
+Must contain one column named "NAME" with unique identifiers for each wind farm
+and one spatial "geometry" column containing the coordinates of the wind farm centroids}
 
-\item{costMatrix}{matrice de couts}
+\item{costMatrix}{cost raster (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
+Used to calculate shortest path distances for strictly marine birds which do not fly over the land.}
 
-\item{doShpa}{booleen}
+\item{doShpa}{boolean. If set to false, only the euclidean distance is calculated which makes the computation faster, especially if there are many wind farms.}
 
-\item{progress}{uniquement pour une utilisation avec shiny}
+\item{progress}{R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.}
 }
 \value{
-matrice de distance parc-colonies
+List containing 2 matrices with identical format (colonies as rows and wind farms as columns):
+         'eucl_dist' contains the euclidian distances and 'shpa_dist' contains the shortest path distances (filled with NAs id doShpa=F)
 }
 \description{
-Calcul des distances entre parc éoliens et colonies
+Calculates the shortest path distances between marine bird colonies and wind farms
+}
+\seealso{
+[bdy_get_cost_raster()]
 }

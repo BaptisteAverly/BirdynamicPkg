@@ -1,28 +1,32 @@
 
-#' Calcul des distances entre parc éoliens et colonies
+#' Calculates the shortest path distances between marine bird colonies and wind farms
 #'
-#' @param colonies tableau de colonies
-#' @param parcs shapefile des parcs
-#' @param costMatrix matrice de couts
-#' @param doShpa booleen
-#' @param progress uniquement pour une utilisation avec shiny
+#' @param colonies table where each row is a colony of interest.
+#'                Must contain one column named "code_colonie" with unique identifiers for each colony
+#'                and one spatial "geometry" column containing the coordinates of the colony centroids
+#' @param parcs table where each row is a wind famr of interest.
+#'                Must contain one column named "NAME" with unique identifiers for each wind farm
+#'                and one spatial "geometry" column containing the coordinates of the wind farm centroids
+#' @param costMatrix cost raster (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
+#'                   Used to calculate shortest path distances for strictly marine birds which do not fly over the land.
+#' @param doShpa boolean. If set to false, only the euclidean distance is calculated which makes the computation faster, especially if there are many wind farms.
+#' @param progress R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.
 #'
-#' @returns matrice de distance parc-colonies
+#' @returns List containing 2 matrices with identical format (colonies as rows and wind farms as columns):
+#'          'eucl_dist' contains the euclidian distances and 'shpa_dist' contains the shortest path distances (filled with NAs if doShpa=F)
+#'
+#' @seealso [bdy_get_cost_raster()]
 #' @export
 #'
 bdy_get_distances <- function(colonies,parcs,costMatrix,doShpa=T,progress=NULL){
 
+  ## Calculate Euclidean Distance
   eucl_dist <- (st_distance(x = colonies, y = parcs)) %>% set_units(., km)
   rownames(eucl_dist) <- colonies$code_colonie
   colnames(eucl_dist) <- parcs$NAME
 
   n_colo <- nrow(colonies)
   n_parc <- length(parcs$NAME)
-
-  ## Calculate Euclidean Distance
-  if(!is.null(progress)){
-    progress$set(1, detail = paste0("Parc ",n_parc,"  / ",n_parc))
-  }
 
   ## Calculate shortest path between colonies and wind farms
   goal <- st_coordinates(st_centroid(colonies)) %>% suppressWarnings()
