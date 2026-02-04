@@ -1,19 +1,25 @@
-#' Title
+#' Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species.
+#' for a given colony, these weights are influenced by: (1) Distance between the colony and the wind parcs,
+#' (2) The population size of the species of interest for that colony and (3), the proportion of marine surface surrounding the colony.
 #'
-#' @param species
-#' @param max_foraging_range_km
-#' @param colonies
-#' @param sea_area
-#' @param tbl_dist
-#' @param incl_pop_size
-#' @param incl_sea_area
+#' @param max_foraging_range_km numeric, maximum foraging range in kilometers for the species of interest
+#' @param colonies data frame with each row being a colony where the species of interest is present. Must have at least the following columns:
+#'                'group': numeric, colonies with the same number belong to the same cluster
+#'                'avg': numeric, average population size in that colony over the years of interests
+#'                'code_colonie': character, unique identifier for the colony.
+#' @param sea_area named numeric vector giving for each colony the proportion of marine surface surrounding it.
+#'                  Each value should be named with the unique identifier for the corresponding colony.
+#' @param tbl_dist matrix giving the distances between colonies (rows) and wind farms (columns), as outputed by bdy_get_distances()
+#' @param incl_pop_size boolean, whether population size should influence the weight calculation
+#' @param incl_sea_area boolean, whether the proportion of marine surface surrounding the colony should influence the weight calculation
 #'
-#' @returns
+#' @returns list of 4 matrices:
+#'          'AW_colo':
 #' @export
 #'
 #' @examples
 
-bdy_apportionning <- function(species,max_foraging_range_km,colonies,sea_area,tbl_dist,incl_pop_size=T,incl_sea_area=T){
+bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,incl_pop_size=T,incl_sea_area=T){
   n_parc = ncol(tbl_dist)
   n_group <- nlevels(colonies$group) #B
 
@@ -38,9 +44,6 @@ bdy_apportionning <- function(species,max_foraging_range_km,colonies,sea_area,tb
   #tbl_app$size <- colonies$last[match(row.names(tbl_dist),colonies$code_colonie)]
 
   ## Add info sea_area
-  if(species == "Guifette noire"){
-
-  }
   tbl_app$sea_area <- sea_area[row.names(tbl_dist)]
 
   ## Avoid negative values for sea area

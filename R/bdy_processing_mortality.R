@@ -1,6 +1,10 @@
-#' Title
+#' Distributes national mortality among all colonies of a given species
 #'
-#' @param collision
+#' @param collision data frame giving mortality estimates for the species of interest and the wind farms of interest.Should have at least the following columns:
+#'                  'parc': character, names of the parc for which the mortality due to collisions is estimated
+#'                  'month': numeric, month of the year (1 to 12) for which the mortality is estimated
+#'                  'iteration': numeric, iteration index of the collision model.
+#'                  'coefficient': numeric, estimated mortality coefficient from the collision modèle, for a given combination of perc, month and iteration
 #' @param season
 #' @param n_iteration
 #' @param parcNames
