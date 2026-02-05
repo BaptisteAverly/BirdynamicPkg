@@ -14,10 +14,12 @@
 #' @param incl_sea_area boolean, whether the proportion of marine surface surrounding the colony should influence the weight calculation
 #'
 #' @returns list of 4 matrices:
-#'          'AW_colo':
+#'          'AW_colo' (rows=colonies, columns=parcs): absolute weights for each colony/parc combination
+#'          'RW_colo' (rows=colonies, columns=parcs): relative (normalized) weights for each colony/parc combination (sum of weights for a given parc = 1)
+#'          'AW_group' (rows=groups of colonies, columns=parcs): absolute weights for each group/parc combination
+#'          'RW_group' (rows=groups of colonies, columns=parcs): relative (normalized) weights for each group/parc combination (sum of weights for a given parc = 1)
 #' @export
-#'
-#' @examples
+
 
 bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,incl_pop_size=T,incl_sea_area=T){
   n_parc = ncol(tbl_dist)

@@ -38,7 +38,7 @@ bdy_get_distances <- function(colonies,parcs,costMatrix,doShpa=T,progress=NULL){
   rownames(shpa_dist) <- colonies$code_colonie
   colnames(shpa_dist) <- parcs$NAME
 
-  progress$set(0, detail = paste0("Parc 1  / ",iMax))
+  progress$set(0.05, detail = paste0("Parc 1  / ",iMax))
 
   if(doShpa){
     for(i in 1:iMax){

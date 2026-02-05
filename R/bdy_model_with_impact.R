@@ -1,22 +1,19 @@
 
-#' Title
+#' Computes the population model with impact from wind farms for the birds species of interest
 #'
-#' @param n_group
-#' @param ny_data
-#' @param posterior
-#' @param mortality
-#' @param ni
-#' @param ny_proj
-#' @param nimble
-#' @param progress
+#' @param n_group numeric, number of groups of colonies for the bird species of interest
+#' @param ny_data numeric, number of years for which count data exist for the bird species of interest
+#' @param posterior dataframe, estimated output from bdy_model_no_impact()
+#' @param mortality distribution of mortality accross groups of colonies, as outputted by bdy_processing_mortality()
+#' @param ni number of iterations
+#' @param ny_proj number of years from the last annual count for which to compute population projections
+#' @param progress R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.
 #'
 #' @returns
 #' @export
 #'
-#' @examples
 
-#ni = number of iteration
-bdy_model_with_impact <- function(n_group,ny_data,posterior,mortality,ni=1000,ny_proj=30,nimble=F,progress=NULL){
+bdy_model_with_impact <- function(n_group,ny_data,posterior,mortality,ni=1000,ny_proj=30,progress=NULL){
 
   ###############################################################################
   #### IMPACT SIMULATIONS                                                   #####

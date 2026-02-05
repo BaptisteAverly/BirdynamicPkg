@@ -34,7 +34,10 @@ Each value should be named with the unique identifier for the corresponding colo
 }
 \value{
 list of 4 matrices:
-         'AW_colo':
+         'AW_colo' (rows=colonies, columns=parcs): absolute weights for each colony/parc combination
+         'RW_colo' (rows=colonies, columns=parcs): relative (normalized) weights for each colony/parc combination (sum of weights for a given parc = 1)
+         'AW_group' (rows=groups of colonies, columns=parcs): absolute weights for each group/parc combination
+         'RW_group' (rows=groups of colonies, columns=parcs): relative (normalized) weights for each group/parc combination (sum of weights for a given parc = 1)
 }
 \description{
 Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species.

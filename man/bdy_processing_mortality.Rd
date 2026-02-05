@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_processing_mortality.R
 \name{bdy_processing_mortality}
 \alias{bdy_processing_mortality}
-\title{Distributes national mortality among all colonies of a given species}
+\title{Distributes national mortality among all colonies of a given species, based on weights calculated with bdy_apportionning}
 \usage{
 bdy_processing_mortality(
   collision,
@@ -19,8 +19,18 @@ bdy_processing_mortality(
 'iteration': numeric, iteration index of the collision model.
 'coefficient': numeric, estimated mortality coefficient from the collision modèle, for a given combination of perc, month and iteration}
 
-\item{RW_group}{}
+\item{season}{character vector of length 12, giving the presence status of the bird of interest on the french coasts for each month of the year, with:
+'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent.
+For more details refer to the Birdynamic report by Chambert et al.}
+
+\item{n_iteration}{number of iterations to draw from (shuffled distribution)}
+
+\item{RW_group}{matrix (rows=groups of colonies, columns=parcs) giving relative weights for each group/parc combination,
+with sum of weights for a given parc = 1, as outputed by bdy_apportionning}
+}
+\value{
+matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies
 }
 \description{
-Distributes national mortality among all colonies of a given species
+Distributes national mortality among all colonies of a given species, based on weights calculated with bdy_apportionning
 }

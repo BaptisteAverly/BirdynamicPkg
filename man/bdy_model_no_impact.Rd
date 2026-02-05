@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_model_no_impact.R
 \name{bdy_model_no_impact}
 \alias{bdy_model_no_impact}
-\title{Title}
+\title{Computes the null population model (without impact from wind farms) for the birds species of interest}
 \usage{
 bdy_model_no_impact(
   count_data,
@@ -12,6 +12,7 @@ bdy_model_no_impact(
   propRepro,
   modelFile,
   nimble = T,
+  lightResults = T,
   ny_proj = 30,
   na = 5000,
   nb = 1000,
@@ -21,8 +22,40 @@ bdy_model_no_impact(
 )
 }
 \arguments{
-\item{nt}{}
+\item{count_data}{matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns)}
+
+\item{PI}{matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns)}
+
+\item{survival}{numeric vector giving the survival rates for the different age classes of the species of interest}
+
+\item{fecundity}{numeric vector giving the fecundity rates for the different age classes of the species of interest}
+
+\item{propRepro}{numeric vector giving the proportion of reproductive individual for the different age classes of the species of interest}
+
+\item{modelFile}{character, relative path for the text file containing the population model as jags code}
+
+\item{nimble}{boolean, whether to use nimble of jags to compute the bayesian model}
+
+\item{lightResults}{boolean, whether the output should only be the estimated output useful for the model with impact, or the full posterior distribution (can be quite heavy)}
+
+\item{ny_proj}{number of years from the last annual count for which to compute population projections}
+
+\item{na}{Number of iterations to run in the JAGS adaptive phase}
+
+\item{nb}{Number of iterations at the beginning of the chain to discard (i.e., the burn-in). Does not include the adaptive phase iterations.}
+
+\item{ni}{Total number of iterations per chain (including burn-in).}
+
+\item{nc}{Number of Markov chains to run.}
+
+\item{nt}{Thinning rate. Must be a positive integer.}
+}
+\value{
+Data frame with nrow = ni.
+         If lightResults=T, columns contain estimated group size for the first year of projection (one column per group of colonies) and estimated annual growth rate (one column per group of colonies).
+         If lightRestuls=F, columns contain the full posterior distribution: different estimated output for each group of colonies, and each year of interest (count years + projection years).
+         Refer to the documentation of packages 'nimble' or 'jagsUI' for details.
 }
 \description{
-Title
+Computes the null population model (without impact from wind farms) for the birds species of interest
 }

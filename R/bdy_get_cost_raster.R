@@ -23,7 +23,6 @@
 #'          'cost_raster': raster object where sea is represented as low cost and land is represented as high cost
 #' @export
 #'
-#' @examples
 
 bdy_get_cost_raster <- function(world_map,region=c("Northern Europe","Southern Europe","Western Europe"),
                                 colonies_geom,parcs_geom,N_buffer=10,S_buffer=10,W_buffer=10,E_buffer=10,pixel_size=10){

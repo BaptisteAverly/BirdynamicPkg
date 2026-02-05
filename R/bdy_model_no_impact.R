@@ -1,31 +1,32 @@
 
-#' Title
+#' Computes the null population model (without impact from wind farms) for the birds species of interest
 #'
-#' @param count_data
-#' @param PI
-#' @param survival
-#' @param fecundity
-#' @param propRepro
-#' @param modelFile
-#' @param nimble
-#' @param ny_proj
-#' @param na
-#' @param nb
-#' @param ni
-#' @param nc
-#' @param nt
+#' @param count_data matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns)
+#' @param PI matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns)
+#' @param survival numeric vector giving the survival rates for the different age classes of the species of interest
+#' @param fecundity numeric vector giving the fecundity rates for the different age classes of the species of interest
+#' @param propRepro numeric vector giving the proportion of reproductive individual for the different age classes of the species of interest
+#' @param modelFile character, relative path for the text file containing the population model as jags code
+#' @param nimble boolean, whether to use nimble of jags to compute the bayesian model
+#' @param lightResults boolean, whether the output should only be the estimated output useful for the model with impact, or the full posterior distribution (can be quite heavy)
+#' @param ny_proj number of years from the last annual count for which to compute population projections
+#' @param na Number of iterations to run in the JAGS adaptive phase
+#' @param nb Number of iterations at the beginning of the chain to discard (i.e., the burn-in). Does not include the adaptive phase iterations.
+#' @param ni Total number of iterations per chain (including burn-in).
+#' @param nc Number of Markov chains to run.
+#' @param nt Thinning rate. Must be a positive integer.
 #'
-#' @returns
+#' @returns Data frame with nrow = ni.
+#'          If lightResults=T, columns contain estimated group size for the first year of projection (one column per group of colonies) and estimated annual growth rate (one column per group of colonies).
+#'          If lightRestuls=F, columns contain the full posterior distribution: different estimated output for each group of colonies, and each year of interest (count years + projection years).
+#'          Refer to the documentation of packages 'nimble' or 'jagsUI' for details.
 #' @export
 #'
-#' @examples
-#'
 
-#count_data = comptages annuels
-#PI = Proportion des colonies suivies par groupe, chaque année
-#ny_proj = Ajouter des NA's pour les projections démo
-bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,modelFile,nimble=T,
+bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,modelFile,nimble=T,lightResults=T,
                                 ny_proj=30,na=5000,nb=1000,ni=20000 + nb,nc=3,nt=5){
+  # B - from our understanding, not sure that ny_proj really as to be set to 30, since we only output the first year of projection
+
   ny_data <- ncol(count_data)
   ny_full <- ny_data + ny_proj
   count_data[, (ny_data+(1:ny_proj))] <- NA
@@ -52,7 +53,7 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
 
   if(nimble){
 
-    m01 <- Bdy_modelCode()
+    m01 <- bdy_modelCode()
 
     # Initial values
     y<-as.matrix(count_data)
@@ -78,7 +79,7 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
       )  # close nimbleMCMC
 
     posterior <- rbind(outNimble$chain1,outNimble$chain2,outNimble$chain3)
-    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ", ", ncol(group_counts)+1, "]"))
+    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ", ", ncol(count_data)+1, "]"))
     growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nlevels(colonies$group),"]"))
 
     no_impact_output <- posterior[,c(nTotCol,growthCol)]
@@ -96,10 +97,14 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
       )
     )
     posterior <- rbind(outJags$samples[[1]],outJags$samples[[2]],outJags$samples[[3]])
-    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ",", ncol(group_counts)+1, "]"))
+    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ",", ncol(count_data)+1, "]"))
     growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nlevels(colonies$group),"]"))
 
     no_impact_output <- posterior[,c(nTotCol,growthCol)]
   }
-  return(no_impact_output)
+  if(lightResults){
+    return(no_impact_output)
+  }else{
+    return(posterior)
+  }
 }

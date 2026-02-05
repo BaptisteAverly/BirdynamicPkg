@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_model_with_impact.R
 \name{bdy_model_with_impact}
 \alias{bdy_model_with_impact}
-\title{Title}
+\title{Computes the population model with impact from wind farms for the birds species of interest}
 \usage{
 bdy_model_with_impact(
   n_group,
@@ -11,13 +11,24 @@ bdy_model_with_impact(
   mortality,
   ni = 1000,
   ny_proj = 30,
-  nimble = F,
   progress = NULL
 )
 }
 \arguments{
-\item{progress}{}
+\item{n_group}{numeric, number of groups of colonies for the bird species of interest}
+
+\item{ny_data}{numeric, number of years for which count data exist for the bird species of interest}
+
+\item{posterior}{dataframe, estimated output from bdy_model_no_impact()}
+
+\item{mortality}{distribution of mortality accross groups of colonies, as outputted by bdy_processing_mortality()}
+
+\item{ni}{number of iterations}
+
+\item{ny_proj}{number of years from the last annual count for which to compute population projections}
+
+\item{progress}{R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.}
 }
 \description{
-Title
+Computes the population model with impact from wind farms for the birds species of interest
 }
