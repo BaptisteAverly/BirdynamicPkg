@@ -17,14 +17,15 @@ bdy_get_cost_raster(
 )
 }
 \arguments{
-\item{world_map}{shapefile of the world with every country. Can be downloaded here:
+\item{world_map}{sf object of the world with every country. Can be downloaded here:
 https://github.com/nvkelso/natural-earth-vector/blob/master/10m_cultural/ne_10m_admin_0_countries.shp}
 
 \item{region}{regions of the world where the analysis should take place. Subsetting on the regions of interest can speed up the calculation.
-Can be any or a combination of the following: "All","South-Eastern Asia","South America","Western Asia","Southern Asia",             "Eastern Asia"
-"Eastern Africa","Western Europe","Northern Africa","Central America","Middle Africa"
-"Eastern Europe","Southern Africa","Caribbean","Central Asia","Northern Europe"
-"Southern Europe","Western Africa","Northern America","Melanesia","Antarctica"
+Can be any or a combination of the following: \cr
+"All","South-Eastern Asia","South America","Western Asia","Southern Asia","Eastern Asia",
+"Eastern Africa","Western Europe","Northern Africa","Central America","Middle Africa",
+"Eastern Europe","Southern Africa","Caribbean","Central Asia","Northern Europe",
+"Southern Europe","Western Africa","Northern America","Melanesia","Antarctica",
 "Australia and New Zealand","Polynesia","Micronesia"}
 
 \item{colonies_geom}{vector of geometries indicating the coordinates of all the bird colonies of interest.
@@ -44,9 +45,11 @@ This is used to get the extent of the raster to calculate.}
 \item{pixel_size}{numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution.}
 }
 \value{
-list of 2 elements:
-         'transition_matrix': transitionLayer object where sea is represented as low cost and land is represented as high cost
-         'cost_raster': raster object where sea is represented as low cost and land is represented as high cost
+List of 2 elements:
+         \itemize{
+         \item 'transition_matrix': transitionLayer object where sea is represented as low cost and land is represented as high cost
+         \item 'cost_raster': raster object where sea is represented as low cost and land is represented as high cost
+         }
 }
 \description{
 Produces the transition matrix and cost raster used to calculate shortest path distances for birds with marine exclusive livestyles.

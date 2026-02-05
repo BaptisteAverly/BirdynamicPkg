@@ -9,7 +9,11 @@
 #' @param ny_proj number of years from the last annual count for which to compute population projections
 #' @param progress R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.
 #'
-#' @returns
+#' @returns List of two arrays of size (n_group)*(ny_data)*(ni) containing projected population size:
+#'          \itemize{
+#'          \item sc0:  projections with no impact from wind farms (null model).
+#'          \item sc1: projections with impacts from wind farms.
+#'          }
 #' @export
 #'
 

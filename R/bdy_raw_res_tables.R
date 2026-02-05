@@ -1,0 +1,137 @@
+#' Title
+#'
+#' @param mod_out
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+
+bdy_raw_res_tables <- function(mod_out){
+
+  ### Merge simulated data of all species
+  Simulated_Counts <- data.frame()
+  for(SP in 1:length(mod_out)){
+
+    Simulated_SP <- mod_out[[SP]]$no_impact %>%
+      reshape2::melt(., value.name="Count_noimpact") %>%
+      dplyr::rename(., GrColo=Var1, Year=Var2, Iteration=Var3) %>%
+      mutate(Species=names(mod_out)[SP]) %>%
+      relocate(., "Species", .before="GrColo")
+
+    Simulated_SP$Count_withimpact <- mod_out[[SP]]$with_impact %>%
+      reshape2::melt(., value.name="Count") %>%
+      .$Count
+
+    Simulated_Counts <- rbind(Simulated_Counts, Simulated_SP)
+
+  }
+
+  ### Get parameters
+  ny_proj <- max(Simulated_Counts$Year) # Number of years
+
+
+  ### Impact per group of colonies -----
+
+  ## Relative Impact (the last year of simulation)
+  Simulated_Counts$PopInit <- subset(Simulated_Counts, Year==1)$Count_noimpact[match(paste0(Simulated_Counts$Species, Simulated_Counts$GrColo, Simulated_Counts$Iteration), paste0(subset(Simulated_Counts, Year==1)$Species, subset(Simulated_Counts, Year==1)$GrColo, subset(Simulated_Counts, Year==1)$Iteration))]
+  Relative_Impact <- Simulated_Counts %>%
+    subset(., Year==ny_proj) %>%
+    mutate(Rel_impact=(Count_noimpact-Count_withimpact)/Count_noimpact,
+           Trend_no=(Count_noimpact-PopInit)/PopInit,
+           Trend_impact=(Count_withimpact-PopInit)/PopInit,
+    )
+
+  ## Subpopulation table
+  Tableau_Subpop <- Relative_Impact %>%
+    dplyr::group_by(Species, GrColo) %>%
+    dplyr::summarise(Pop_Init_med=round(median(PopInit, na.rm=T)),
+                     Pop_Init_2.5=round(quantile(PopInit, probs=0.025, na.rm=T)),
+                     Pop_Init_97.5=round(quantile(PopInit, probs=0.975, na.rm=T)),
+
+                     Trend_no_med=median(Trend_no, na.rm=T),
+                     Trend_no_2.5=quantile(Trend_no, probs=0.025, na.rm=T),
+                     Trend_no_97.5=quantile(Trend_no, probs=0.975, na.rm=T),
+
+                     Trend_impact_med=median(Trend_impact, na.rm=T),
+                     Trend_impact_2.5=quantile(Trend_impact, probs=0.025, na.rm=T),
+                     Trend_impact_97.5=quantile(Trend_impact, probs=0.975, na.rm=T),
+
+                     Mortality_med=NA, Mortality_2.5=NA, Mortality_97.5=NA,
+
+                     RelImpact_med=median(Rel_impact, na.rm=T),
+                     RelImpact_2.5=quantile(Rel_impact, probs=0.025, na.rm=T),
+                     RelImpact_97.5=quantile(Rel_impact, probs=0.975, na.rm=T),
+
+                     Ext_Noimpact=mean(Count_noimpact==0, na.rm=T),
+                     Ext_Withimpact=mean(Count_withimpact==0, na.rm=T),
+                     .groups="keep"
+    ) %>%
+    mutate(Ext_Relative = ((Ext_Withimpact-Ext_Noimpact)/Ext_Noimpact) %>% ifelse(is.na(.), 0, .),
+           Ext_Ratio = (Ext_Withimpact / Ext_Noimpact)
+    )
+
+  ## Add mortality from another table
+  for(SP in 1:length(mod_out)){
+
+    Morta <- as.data.frame(t(apply(mod_out[[SP]]$mortality, 2, quantile, probs = c(0.025, 0.5, 0.975))))
+
+    Tableau_Subpop$Mortality_med[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`50%`
+    Tableau_Subpop$Mortality_2.5[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`2.5%`
+    Tableau_Subpop$Mortality_97.5[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`97.5%`
+
+  }
+
+
+  ### Impact National ------
+  Simulated_National <- Simulated_Counts %>%
+    dplyr::group_by(Species, Year, Iteration) %>%
+    dplyr::summarise(Sum_PopInit=sum(PopInit, na.rm=T),
+                     Sum_noimpact=sum(Count_noimpact, na.rm=T),
+                     Sum_withimpact=sum(Count_withimpact, na.rm=T),
+                     .groups="keep")
+
+  ## Relative Impact (the last year of simulation)
+  Relative_Impact_National <- Simulated_National %>%
+    subset(., Year==ny_proj) %>%
+    mutate(Rel_impact=(Sum_noimpact-Sum_withimpact)/Sum_noimpact)
+
+
+  ## Probability of extinction (National)
+  Tableau_National <- Relative_Impact_National %>%
+    dplyr::group_by(Species) %>%
+    dplyr::summarise(
+      Pop_Init_med=round(median(Sum_PopInit, na.rm=T)),
+      Pop_Init_2.5=round(quantile(Sum_PopInit, probs=0.025, na.rm=T)),
+      Pop_Init_97.5=round(quantile(Sum_PopInit, probs=0.975, na.rm=T)),
+
+      Mortality_med=NA, Mortality_2.5=NA, Mortality_97.5=NA,
+
+      RelImpact_med = median(Rel_impact, na.rm=T),
+      RelImpact_2.5 = quantile(Rel_impact, probs=0.025, na.rm=T),
+      RelImpact_97.5 = quantile(Rel_impact, probs=0.975, na.rm=T),
+
+      Ext_Noimpact=mean(Sum_noimpact==0, na.rm=T),
+      Ext_Withimpact=mean(Sum_withimpact==0, na.rm=T),
+      .groups="keep"
+    ) %>%
+    mutate(Ext_Relative = ((Ext_Withimpact-Ext_Noimpact)/Ext_Noimpact) %>% ifelse(is.na(.), 0, .),
+           Ext_Ratio = (Ext_Withimpact / Ext_Noimpact)
+    )
+
+  # Add mortality from another table
+  for(SP in 1:length(mod_out)){
+
+    Morta <- quantile(apply(mod_out[[SP]]$mortality, 1, sum), probs = c(0.025, 0.5, 0.975))
+
+    Tableau_National$Mortality_med[Tableau_National$Species==names(mod_out)[SP]] <- Morta["50%"]
+    Tableau_National$Mortality_2.5[Tableau_National$Species==names(mod_out)[SP]] <- Morta["2.5%"]
+    Tableau_National$Mortality_97.5[Tableau_National$Species==names(mod_out)[SP]] <- Morta["97.5%"]
+
+  }
+
+  return(list(Simulated_National=Simulated_National,
+              Tableau_Subpop=Tableau_Subpop,
+              Tableau_National=Tableau_National))
+
+}

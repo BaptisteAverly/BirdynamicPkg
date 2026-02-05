@@ -19,25 +19,29 @@ bdy_apportionning(
 \item{max_foraging_range_km}{numeric, maximum foraging range in kilometers for the species of interest}
 
 \item{colonies}{data frame with each row being a colony where the species of interest is present. Must have at least the following columns:
-'group': numeric, colonies with the same number belong to the same cluster
-'avg': numeric, average population size in that colony over the years of interests
-'code_colonie': character, unique identifier for the colony.}
+\itemize{
+\item 'group': numeric, colonies with the same number belong to the same cluster
+\item 'avg': numeric, average population size in that colony over the years of interests
+\item 'code_colonie': character, unique identifier for the colony.
+}}
 
 \item{sea_area}{named numeric vector giving for each colony the proportion of marine surface surrounding it.
 Each value should be named with the unique identifier for the corresponding colony.}
 
-\item{tbl_dist}{matrix giving the distances between colonies (rows) and wind farms (columns), as outputed by bdy_get_distances()}
+\item{tbl_dist}{matrix giving the distances between colonies (rows) and wind farms (columns), as outputted by bdy_get_distances()}
 
 \item{incl_pop_size}{boolean, whether population size should influence the weight calculation}
 
 \item{incl_sea_area}{boolean, whether the proportion of marine surface surrounding the colony should influence the weight calculation}
 }
 \value{
-list of 4 matrices:
-         'AW_colo' (rows=colonies, columns=parcs): absolute weights for each colony/parc combination
-         'RW_colo' (rows=colonies, columns=parcs): relative (normalized) weights for each colony/parc combination (sum of weights for a given parc = 1)
-         'AW_group' (rows=groups of colonies, columns=parcs): absolute weights for each group/parc combination
-         'RW_group' (rows=groups of colonies, columns=parcs): relative (normalized) weights for each group/parc combination (sum of weights for a given parc = 1)
+List of 4 matrices:
+         \itemize{
+         \item 'AW_colo' (rows=colonies, columns=parcs): absolute weights for each colony/parc combination
+         \item 'RW_colo' (rows=colonies, columns=parcs): relative (normalized) weights for each colony/parc combination (sum of weights for a given parc = 1)
+         \item 'AW_group' (rows=groups of colonies, columns=parcs): absolute weights for each group/parc combination
+         \item 'RW_group' (rows=groups of colonies, columns=parcs): relative (normalized) weights for each group/parc combination (sum of weights for a given parc = 1)
+         }
 }
 \description{
 Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species.

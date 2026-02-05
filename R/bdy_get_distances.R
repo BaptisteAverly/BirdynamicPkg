@@ -12,7 +12,7 @@
 #' @param doShpa boolean. If set to false, only the euclidean distance is calculated which makes the computation faster, especially if there are many wind farms.
 #' @param progress R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.
 #'
-#' @returns List containing 2 matrices with identical format (colonies as rows and wind farms as columns):
+#' @returns List containing 2 matrices with identical format (colonies as rows and wind farms as columns): \cr
 #'          'eucl_dist' contains the euclidian distances and 'shpa_dist' contains the shortest path distances (filled with NAs if doShpa=F)
 #'
 #' @seealso [bdy_get_cost_raster()]

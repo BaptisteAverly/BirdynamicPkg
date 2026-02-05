@@ -23,7 +23,7 @@ Used to calculate shortest path distances for strictly marine birds which do not
 \item{progress}{R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.}
 }
 \value{
-List containing 2 matrices with identical format (colonies as rows and wind farms as columns):
+List containing 2 matrices with identical format (colonies as rows and wind farms as columns): \cr
          'eucl_dist' contains the euclidian distances and 'shpa_dist' contains the shortest path distances (filled with NAs if doShpa=F)
 }
 \description{

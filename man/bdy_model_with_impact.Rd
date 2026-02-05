@@ -29,6 +29,13 @@ bdy_model_with_impact(
 
 \item{progress}{R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.}
 }
+\value{
+List of two arrays of size (n_group)*(ny_data)*(ni) containing projected population size:
+         \itemize{
+         \item sc0:  projections with no impact from wind farms (null model).
+         \item sc1: projections with impacts from wind farms.
+         }
+}
 \description{
 Computes the population model with impact from wind farms for the birds species of interest
 }

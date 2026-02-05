@@ -14,13 +14,15 @@ bdy_processing_mortality(
 }
 \arguments{
 \item{collision}{data frame giving mortality estimates for the species of interest and the wind farms of interest.Should have at least the following columns:
-'parc': character, names of the parc for which the mortality due to collisions is estimated
-'month': numeric, month of the year (1 to 12) for which the mortality is estimated
-'iteration': numeric, iteration index of the collision model.
-'coefficient': numeric, estimated mortality coefficient from the collision modèle, for a given combination of perc, month and iteration}
+\itemize{
+\item 'parc': character, names of the parc for which the mortality due to collisions is estimated
+\item 'month': numeric, month of the year (1 to 12) for which the mortality is estimated
+\item 'iteration': numeric, iteration index of the collision model.
+\item 'coefficient': numeric, estimated mortality coefficient from the collision model, for a given combination of parc, month and iteration
+}}
 
-\item{season}{character vector of length 12, giving the presence status of the bird of interest on the french coasts for each month of the year, with:
-'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent.
+\item{season}{character vector of length 12, giving the presence status of the bird of interest on the french coasts for each month of the year, with: \cr
+'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. \cr
 For more details refer to the Birdynamic report by Chambert et al.}
 
 \item{n_iteration}{number of iterations to draw from (shuffled distribution)}
@@ -29,7 +31,7 @@ For more details refer to the Birdynamic report by Chambert et al.}
 with sum of weights for a given parc = 1, as outputed by bdy_apportionning}
 }
 \value{
-matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies
+Matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies
 }
 \description{
 Distributes national mortality among all colonies of a given species, based on weights calculated with bdy_apportionning
