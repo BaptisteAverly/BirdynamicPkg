@@ -52,9 +52,9 @@ bdy_model_no_impact(
 }
 \value{
 Data frame with nrow = ni. \cr
-         If lightResults=T, columns contain estimated group size for the first year of projection (one column per group of colonies) and estimated annual growth rate (one column per group of colonies).\cr
-         If lightRestuls=F, columns contain the full posterior distribution: different estimated output for each group of colonies, and each year of interest (count years + projection years). \cr
-         Refer to the documentation of packages 'nimble' or 'jagsUI' for details.
+If lightResults=T, columns contain estimated group size for the first year of projection (one column per group of colonies) and estimated annual growth rate (one column per group of colonies).\cr
+If lightRestuls=F, columns contain the full posterior distribution: different estimated output for each group of colonies, and each year of interest (count years + projection years). \cr
+Refer to the documentation of packages 'nimble' or 'jagsUI' for details.
 }
 \description{
 Computes the null population model (without impact from wind farms) for the birds species of interest

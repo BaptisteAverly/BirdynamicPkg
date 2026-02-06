@@ -1,17 +1,51 @@
 Package: BirdynamicPkg
 Type: Package
-Title: What the Package Does (Title Case)
-Version: 0.1.0
+Title: Windfarm impact analysis based on the project Bird Dynamic
+Version: 1.0
 Authors@R: c(
     person(
-      "Jane", "Doe",
-      email = "jane@example.com",
+      "Baptiste", "Averly",
+      email = "baptiste.averly@gmail.com",
       role = c("aut", "cre")
+    ),
+    person(
+      "Victor", "Cazalis",
+      email = "victor.cazalis@conservara.fr",
+      role = c("aut")
+	 ),
+    person(
+      "Thierry", "Chambert",
+      email = "thierry.chambert@ofb.gouv.fr",
+      role = c("aut")
     )
   )
-Description: More about what it does (maybe more than one line).
-    Continuation lines should be indented.
-License: What license is it under?
+Description: Estimates the impact of windfarms on seabird demography in France, estimating the impact on population trends and probability of extinction
+License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 RoxygenNote: 7.3.3
+Roxygen: list(markdown = TRUE)
+Imports:
+	plyr,
+	dplyr,
+	tidyverse,
+	ggplot2,
+	reshape2,
+	gdistance,
+	sf,
+	raster,
+	units
+Depends: 
+    R (>= 3.5),
+	plyr,
+	dplyr,
+	tidyverse,
+	ggplot2,
+	reshape2,
+	vegan,
+	fundiversity,
+	chron,
+	gdistance,
+	sf,
+	raster,
+	units

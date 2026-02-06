@@ -4,7 +4,7 @@
 \alias{bdy_calculate_sea_area}
 \title{Calculates the proportion of sea area around the colonies of interest
 (ratio between marine surface and terrestrial surface within the foraging range of the species of interest).
-Used by bdy_apportionning to compute mortality weights between colonies.}
+Used by \code{\link[=bdy_apportionning]{bdy_apportionning()}} to compute mortality weights between colonies.}
 \usage{
 bdy_calculate_sea_area(shapeFile, max_foraging_range, colonies)
 }
@@ -13,10 +13,10 @@ bdy_calculate_sea_area(shapeFile, max_foraging_range, colonies)
 
 \item{max_foraging_range}{numeric, max foraging range of the species of interest in kilometers
 @param colonies sf object with each row being a colony where the species of interest is present. Must have at least the following columns:
-              \itemize{
-              \item 'geometry': coordinates of the colony
-              \item 'code_colonie': character, unique identifier for the colony.
-              }}
+\itemize{
+\item 'geometry': coordinates of the colony
+\item 'code_colonie': character, unique identifier for the colony.
+}}
 }
 \value{
 named numeric vector indicating the proportion of sea area for each colony provided
@@ -24,5 +24,5 @@ named numeric vector indicating the proportion of sea area for each colony provi
 \description{
 Calculates the proportion of sea area around the colonies of interest
 (ratio between marine surface and terrestrial surface within the foraging range of the species of interest).
-Used by bdy_apportionning to compute mortality weights between colonies.
+Used by \code{\link[=bdy_apportionning]{bdy_apportionning()}} to compute mortality weights between colonies.
 }

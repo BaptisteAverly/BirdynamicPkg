@@ -2,13 +2,18 @@
 % Please edit documentation in R/bdy_check_shapefile.R
 \name{bdy_check_shapefile}
 \alias{bdy_check_shapefile}
-\title{Title}
+\title{Check that windfarms shapefile is valid}
 \usage{
 bdy_check_shapefile(LoadedShape, Names_mortality)
 }
 \arguments{
-\item{Names_mortality}{}
+\item{LoadedShape}{sf object (point or polygon) of windfarms}
+
+\item{Names_mortality}{names of windfarms from the mortality table (a perfect match is required)}
+}
+\value{
+an HTML text message, in green if the sf object is valid, in red with details otherwise.
 }
 \description{
-Title
+Check that windfarms shapefile is valid
 }

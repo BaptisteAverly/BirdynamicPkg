@@ -1,4 +1,5 @@
-
+#' Model with no impact
+#'
 #' Computes the null population model (without impact from wind farms) for the birds species of interest
 #'
 #' @param count_data matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns)

@@ -46,10 +46,10 @@ This is used to get the extent of the raster to calculate.}
 }
 \value{
 List of 2 elements:
-         \itemize{
-         \item 'transition_matrix': transitionLayer object where sea is represented as low cost and land is represented as high cost
-         \item 'cost_raster': raster object where sea is represented as low cost and land is represented as high cost
-         }
+\itemize{
+\item 'transition_matrix': transitionLayer object where sea is represented as low cost and land is represented as high cost
+\item 'cost_raster': raster object where sea is represented as low cost and land is represented as high cost
+}
 }
 \description{
 Produces the transition matrix and cost raster used to calculate shortest path distances for birds with marine exclusive livestyles.

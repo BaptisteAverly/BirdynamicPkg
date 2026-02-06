@@ -2,13 +2,18 @@
 % Please edit documentation in R/bdy_summary_figure.R
 \name{bdy_summary_figure}
 \alias{bdy_summary_figure}
-\title{Title}
+\title{Plots figure of projected national trends}
 \usage{
 bdy_summary_figure(Raw_ResTables, Pretty_table_national)
 }
 \arguments{
-\item{Pretty_table_national}{}
+\item{Raw_ResTables}{Raw result tables from function \code{\link[=bdy_raw_res_tables]{bdy_raw_res_tables()}}}
+
+\item{Pretty_table_national}{Pretty table from function \code{\link[=bdy_pretty_result_table]{bdy_pretty_result_table()}}}
+}
+\value{
+A ggplot object with a facet plot per species showing trends with and without impact
 }
 \description{
-Title
+Plots figure of projected national trends
 }

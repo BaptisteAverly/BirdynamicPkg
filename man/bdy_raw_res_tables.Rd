@@ -2,13 +2,19 @@
 % Please edit documentation in R/bdy_raw_res_tables.R
 \name{bdy_raw_res_tables}
 \alias{bdy_raw_res_tables}
-\title{Title}
+\title{Compute result tables (national and by group of colonies)}
 \usage{
 bdy_raw_res_tables(mod_out)
 }
 \arguments{
-\item{mod_out}{}
+\item{mod_out}{Output of the \code{\link[=bdy_model_with_impact]{bdy_model_with_impact()}} function, completed with colonies, mortality and distance data}
+}
+\value{
+Three tables: \cr
+- Simulated_National: Simulated counts for the 30 projected years at national level (used to plot temporal trends with \code{\link[=bdy_summary_figure]{bdy_summary_figure()}})
+- Tableau_Subpop: Summary table of results by colony (with relative impact, increase in probability of extinction, mortality, etc)
+- Tableau_National: Summary table of results at national level (with relative impact, increase in probability of extinction, mortality, etc)
 }
 \description{
-Title
+Compute result tables (national and by group of colonies)
 }

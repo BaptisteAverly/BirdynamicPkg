@@ -1,12 +1,13 @@
-#' Title
+#' Check windfarms sf object
 #'
-#' @param LoadedShape
-#' @param Names_mortality
+#' Check the sf object LoadedShape to verify that each windfarm has a different name, corresponding with names from the mortality file.
 #'
-#' @returns
+#' @param LoadedShape sf object (point or polygon) of windfarms
+#' @param Names_mortality names of windfarms from the mortality table (a perfect match is required)
+#'
+#' @returns an HTML text message, in green if the sf object is valid, in red with details otherwise.
 #' @export
 #'
-#' @examples
 
 bdy_check_shapefile <- function(LoadedShape, Names_mortality){
 

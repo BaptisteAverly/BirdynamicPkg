@@ -1,4 +1,6 @@
-#' Distributes national mortality among all colonies of a given species, based on weights calculated with bdy_apportionning
+#' Process mortality file
+#'
+#' Distributes national mortality among all colonies of a given species, based on weights calculated with [bdy_apportionning()]
 #'
 #' @param collision data frame giving mortality estimates for the species of interest and the wind farms of interest.Should have at least the following columns:
 #'                  \itemize{
@@ -12,7 +14,7 @@
 #'              For more details refer to the Birdynamic report by Chambert et al.
 #' @param n_iteration number of iterations to draw from (shuffled distribution)
 #' @param RW_group matrix (rows=groups of colonies, columns=parcs) giving relative weights for each group/parc combination,
-#'                with sum of weights for a given parc = 1, as outputed by bdy_apportionning
+#'                with sum of weights for a given parc = 1, as outputed by [bdy_apportionning()]
 #'
 #' @returns Matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies
 #' @export
