@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_summary_figure.R
 \name{bdy_summary_figure}
 \alias{bdy_summary_figure}
-\title{Plots figure of projected national trends}
+\title{Summary trends figure}
 \usage{
 bdy_summary_figure(Raw_ResTables, Pretty_table_national)
 }

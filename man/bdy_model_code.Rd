@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_model_code.R
 \name{bdy_model_code}
 \alias{bdy_model_code}
-\title{Nimble code for the null population model (without impact from wind farms). Meant to be called by bdy_model_no_impact()}
+\title{Code null population model}
 \usage{
 bdy_model_code()
 }
@@ -10,5 +10,5 @@ bdy_model_code()
 The population model as nimble code
 }
 \description{
-Nimble code for the null population model (without impact from wind farms). Meant to be called by bdy_model_no_impact()
+Nimble code for the null population model (without impact from wind farms). Meant to be called by \code{\link[=bdy_model_no_impact]{bdy_model_no_impact()}}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_check_shapefile.R
 \name{bdy_check_shapefile}
 \alias{bdy_check_shapefile}
-\title{Check that windfarms shapefile is valid}
+\title{Check windfarms sf object}
 \usage{
 bdy_check_shapefile(LoadedShape, Names_mortality)
 }
@@ -15,5 +15,5 @@ bdy_check_shapefile(LoadedShape, Names_mortality)
 an HTML text message, in green if the sf object is valid, in red with details otherwise.
 }
 \description{
-Check that windfarms shapefile is valid
+Check the sf object LoadedShape to verify that each windfarm has a different name, corresponding with names from the mortality file.
 }

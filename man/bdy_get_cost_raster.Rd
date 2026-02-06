@@ -2,28 +2,24 @@
 % Please edit documentation in R/bdy_get_cost_raster.R
 \name{bdy_get_cost_raster}
 \alias{bdy_get_cost_raster}
-\title{Produces the transition matrix and cost raster used to calculate shortest path distances for birds with marine exclusive livestyles.}
+\title{Get cost transition matrix}
 \usage{
 bdy_get_cost_raster(
   world_map,
   regions = c("Northern Europe", "Southern Europe", "Western Europe"),
-  colonies_geom,
-  parcs_geom,
+  geom,
   N_buffer = 10,
   S_buffer = 10,
   W_buffer = 10,
   E_buffer = 10,
-  pixel_size = 10
+  pixel_size = 1000
 )
 }
 \arguments{
 \item{world_map}{sf object of the world with every country. Can be downloaded here:
 https://github.com/nvkelso/natural-earth-vector/blob/master/10m_cultural/ne_10m_admin_0_countries.shp}
 
-\item{colonies_geom}{vector of geometries indicating the coordinates of all the bird colonies of interest.
-This is used to get the extent of the raster to calculate.}
-
-\item{parcs_geom}{vector of geometries indicating the coordinates of all the wind farms of interest.
+\item{geom}{vector of geometries, giving the coordinates of bird colonies, wind farms, or others.
 This is used to get the extent of the raster to calculate.}
 
 \item{N_buffer}{north buffer to increase the extent of the raster beyond the northernmost colony or parc (numeric, in kilometers)}
@@ -34,7 +30,7 @@ This is used to get the extent of the raster to calculate.}
 
 \item{E_buffer}{east buffer to increase the extent of the raster beyond the easternmost colony or parc (numeric, in kilometers)}
 
-\item{pixel_size}{numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution.}
+\item{pixel_size}{numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution, but greatly increase computing time.}
 
 \item{region}{regions of the world where the analysis should take place. Subsetting on the regions of interest can speed up the calculation.
 Can be any or a combination of the following: \cr

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_model_with_impact.R
 \name{bdy_model_with_impact}
 \alias{bdy_model_with_impact}
-\title{Computes the population model with impact from wind farms for the birds species of interest}
+\title{Model with impact}
 \usage{
 bdy_model_with_impact(
   n_group,
@@ -19,9 +19,9 @@ bdy_model_with_impact(
 
 \item{ny_data}{numeric, number of years for which count data exist for the bird species of interest}
 
-\item{posterior}{dataframe, estimated output from bdy_model_no_impact()}
+\item{posterior}{dataframe, estimated output from \code{\link[=bdy_model_no_impact]{bdy_model_no_impact()}}}
 
-\item{mortality}{distribution of mortality accross groups of colonies, as outputted by bdy_processing_mortality()}
+\item{mortality}{distribution of mortality accross groups of colonies, as outputted by \code{\link[=bdy_processing_mortality]{bdy_processing_mortality()}}}
 
 \item{ni}{number of iterations}
 

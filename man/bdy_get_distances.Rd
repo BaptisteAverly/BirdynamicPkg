@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_get_distances.R
 \name{bdy_get_distances}
 \alias{bdy_get_distances}
-\title{Calculates the shortest path distances between marine bird colonies and wind farms}
+\title{Calculates distance parc-colonies}
 \usage{
 bdy_get_distances(colonies, parcs, costMatrix, doShpa = T, progress = NULL)
 }

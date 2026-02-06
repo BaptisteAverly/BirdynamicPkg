@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_model_no_impact.R
 \name{bdy_model_no_impact}
 \alias{bdy_model_no_impact}
-\title{Computes the null population model (without impact from wind farms) for the birds species of interest}
+\title{Model with no impact}
 \usage{
 bdy_model_no_impact(
   count_data,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_check_mortality.R
 \name{bdy_check_mortality}
 \alias{bdy_check_mortality}
-\title{Performs some checks and cleaning on the mortality table provided by a users to make sure it follows the format required by the app.}
+\title{Check mortality table}
 \usage{
 bdy_check_mortality(Mortality, speciesList)
 }

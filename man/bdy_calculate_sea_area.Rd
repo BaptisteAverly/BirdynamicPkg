@@ -2,9 +2,7 @@
 % Please edit documentation in R/bdy_calculate_sea_area.R
 \name{bdy_calculate_sea_area}
 \alias{bdy_calculate_sea_area}
-\title{Calculates the proportion of sea area around the colonies of interest
-(ratio between marine surface and terrestrial surface within the foraging range of the species of interest).
-Used by \code{\link[=bdy_apportionning]{bdy_apportionning()}} to compute mortality weights between colonies.}
+\title{Calculate proportion of sea around colony}
 \usage{
 bdy_calculate_sea_area(shapeFile, max_foraging_range, colonies)
 }
@@ -22,7 +20,6 @@ bdy_calculate_sea_area(shapeFile, max_foraging_range, colonies)
 named numeric vector indicating the proportion of sea area for each colony provided
 }
 \description{
-Calculates the proportion of sea area around the colonies of interest
-(ratio between marine surface and terrestrial surface within the foraging range of the species of interest).
+Calculates the proportion of sea area around the colonies of interest (the ratio between marine surface and terrestrial surface within the foraging range of the species of interest).
 Used by \code{\link[=bdy_apportionning]{bdy_apportionning()}} to compute mortality weights between colonies.
 }

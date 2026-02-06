@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_raw_res_tables.R
 \name{bdy_raw_res_tables}
 \alias{bdy_raw_res_tables}
-\title{Compute result tables (national and by group of colonies)}
+\title{Raw result tables}
 \usage{
 bdy_raw_res_tables(mod_out)
 }

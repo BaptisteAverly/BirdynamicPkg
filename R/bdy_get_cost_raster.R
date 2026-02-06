@@ -11,15 +11,13 @@
 #'                "Eastern Europe","Southern Africa","Caribbean","Central Asia","Northern Europe",
 #'                "Southern Europe","Western Africa","Northern America","Melanesia","Antarctica",
 #'                "Australia and New Zealand","Polynesia","Micronesia"
-#' @param colonies_geom vector of geometries indicating the coordinates of all the bird colonies of interest.
-#'                      This is used to get the extent of the raster to calculate.
-#' @param parcs_geom vector of geometries indicating the coordinates of all the wind farms of interest.
-#'                    This is used to get the extent of the raster to calculate.
+#' @param geom vector of geometries, giving the coordinates of bird colonies, wind farms, or others.
+#'                This is used to get the extent of the raster to calculate.
 #' @param N_buffer north buffer to increase the extent of the raster beyond the northernmost colony or parc (numeric, in kilometers)
 #' @param S_buffer south buffer to increase the extent of the raster beyond the southernmost colony or parc (numeric, in kilometers)
 #' @param W_buffer west buffer to increase the extent of the raster beyond the westernmost colony or parc (numeric, in kilometers)
 #' @param E_buffer east buffer to increase the extent of the raster beyond the easternmost colony or parc (numeric, in kilometers)
-#' @param pixel_size numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution.
+#' @param pixel_size numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution, but greatly increase computing time.
 #'
 #' @returns List of 2 elements:
 #'          \itemize{
@@ -30,7 +28,7 @@
 #'
 
 bdy_get_cost_raster <- function(world_map,regions=c("Northern Europe","Southern Europe","Western Europe"),
-                                colonies_geom,parcs_geom,N_buffer=10,S_buffer=10,W_buffer=10,E_buffer=10,pixel_size=10){
+                                geom,N_buffer=10,S_buffer=10,W_buffer=10,E_buffer=10,pixel_size=1000){
 
   if("All" %in% regions){
     countries <- world_map
@@ -42,7 +40,7 @@ bdy_get_cost_raster <- function(world_map,regions=c("Northern Europe","Southern 
   countries_L93 <- st_transform(countries, crs = 2154)
 
   # Take a subset of the raster based on the extent of colonies and parcs locations
-  ext_col <- rbind(colonies_geom, parcs_geom) %>% st_bbox
+  ext_col <- geom %>% st_bbox
 
   #st_bbox(colonies_L93)
 

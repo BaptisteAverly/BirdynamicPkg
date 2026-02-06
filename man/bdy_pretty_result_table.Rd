@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_pretty_result_table.R
 \name{bdy_pretty_result_table}
 \alias{bdy_pretty_result_table}
-\title{Transform raw result tables to a table ready to be used for reporting}
+\title{Pretty result table}
 \usage{
 bdy_pretty_result_table(Raw_ResTables, type)
 }
