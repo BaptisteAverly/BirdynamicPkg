@@ -27,13 +27,13 @@
 #' @export
 #'
 
-bdy_get_cost_raster <- function(world_map,region=c("Northern Europe","Southern Europe","Western Europe"),
+bdy_get_cost_raster <- function(world_map,regions=c("Northern Europe","Southern Europe","Western Europe"),
                                 colonies_geom,parcs_geom,N_buffer=10,S_buffer=10,W_buffer=10,E_buffer=10,pixel_size=10){
 
-  if(region == "All"){
-    countreis <- world_map
+  if("All" %in% regions){
+    countries <- world_map
   }else{
-    countries <- world_map[world_map$SUBREGION %in% region,]
+    countries <- world_map[world_map$SUBREGION %in% regions,]
   }
 
   # Transform in L93 projection
