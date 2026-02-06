@@ -2,13 +2,18 @@
 % Please edit documentation in R/bdy_pretty_result_table.R
 \name{bdy_pretty_result_table}
 \alias{bdy_pretty_result_table}
-\title{Title}
+\title{Transform raw result tables to a table ready to be used for reporting}
 \usage{
 bdy_pretty_result_table(Raw_ResTables, type)
 }
 \arguments{
-\item{type}{}
+\item{Raw_ResTables}{Raw result tables from function \code{\link[=bdy_raw_res_tables]{bdy_raw_res_tables()}}}
+
+\item{type}{Character, either "national" or "subpop", indicating what table to transform}
+}
+\value{
+A clean table with initial population, mortality, relative impact, extinction probability and their confidence intervals
 }
 \description{
-Title
+Transform raw result tables to a table ready to be used for reporting
 }

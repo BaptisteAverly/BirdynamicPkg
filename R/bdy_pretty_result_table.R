@@ -1,12 +1,13 @@
-#' Title
+#' Pretty result table
 #'
-#' @param Raw_ResTables
-#' @param type
+#' Transform raw result tables to a table ready to be used for reporting
 #'
-#' @returns
+#' @param Raw_ResTables Raw result tables from function [bdy_raw_res_tables()]
+#' @param type Character, either "national" or "subpop", indicating what table to transform
+#'
+#' @returns A clean table with initial population, mortality, relative impact, extinction probability and their confidence intervals
 #' @export
 #'
-#' @examples
 
 bdy_pretty_result_table <- function(Raw_ResTables, type){
 

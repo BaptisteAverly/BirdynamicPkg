@@ -24,11 +24,11 @@ Used to calculate shortest path distances for strictly marine birds which do not
 }
 \value{
 List containing 2 matrices with identical format (colonies as rows and wind farms as columns): \cr
-         'eucl_dist' contains the euclidian distances and 'shpa_dist' contains the shortest path distances (filled with NAs if doShpa=F)
+'eucl_dist' contains the euclidian distances and 'shpa_dist' contains the shortest path distances (filled with NAs if doShpa=F)
 }
 \description{
 Calculates the shortest path distances between marine bird colonies and wind farms
 }
 \seealso{
-[bdy_get_cost_raster()]
+\code{\link[=bdy_get_cost_raster]{bdy_get_cost_raster()}}
 }

@@ -1,3 +1,5 @@
+#' Get cost transition matrix
+#'
 #' Produces the transition matrix and cost raster used to calculate shortest path distances for birds with marine exclusive livestyles.
 #'
 #' @param world_map sf object of the world with every country. Can be downloaded here:

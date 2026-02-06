@@ -1,4 +1,5 @@
-
+#' Calculates distance parc-colonies
+#'
 #' Calculates the shortest path distances between marine bird colonies and wind farms
 #'
 #' @param colonies table where each row is a colony of interest.

@@ -2,9 +2,7 @@
 % Please edit documentation in R/bdy_apportionning.R
 \name{bdy_apportionning}
 \alias{bdy_apportionning}
-\title{Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species.
-for a given colony, these weights are influenced by: (1) Distance between the colony and the wind parcs,
-(2) The population size of the species of interest for that colony and (3), the proportion of marine surface surrounding the colony.}
+\title{Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species.}
 \usage{
 bdy_apportionning(
   max_foraging_range_km,
@@ -28,7 +26,7 @@ bdy_apportionning(
 \item{sea_area}{named numeric vector giving for each colony the proportion of marine surface surrounding it.
 Each value should be named with the unique identifier for the corresponding colony.}
 
-\item{tbl_dist}{matrix giving the distances between colonies (rows) and wind farms (columns), as outputted by bdy_get_distances()}
+\item{tbl_dist}{matrix giving the distances between colonies (rows) and wind farms (columns), as outputted by \code{\link[=bdy_get_distances]{bdy_get_distances()}}}
 
 \item{incl_pop_size}{boolean, whether population size should influence the weight calculation}
 
@@ -36,15 +34,14 @@ Each value should be named with the unique identifier for the corresponding colo
 }
 \value{
 List of 4 matrices:
-         \itemize{
-         \item 'AW_colo' (rows=colonies, columns=parcs): absolute weights for each colony/parc combination
-         \item 'RW_colo' (rows=colonies, columns=parcs): relative (normalized) weights for each colony/parc combination (sum of weights for a given parc = 1)
-         \item 'AW_group' (rows=groups of colonies, columns=parcs): absolute weights for each group/parc combination
-         \item 'RW_group' (rows=groups of colonies, columns=parcs): relative (normalized) weights for each group/parc combination (sum of weights for a given parc = 1)
-         }
+\itemize{
+\item 'AW_colo' (rows=colonies, columns=parcs): absolute weights for each colony/parc combination
+\item 'RW_colo' (rows=colonies, columns=parcs): relative (normalized) weights for each colony/parc combination (sum of weights for a given parc = 1)
+\item 'AW_group' (rows=groups of colonies, columns=parcs): absolute weights for each group/parc combination
+\item 'RW_group' (rows=groups of colonies, columns=parcs): relative (normalized) weights for each group/parc combination (sum of weights for a given parc = 1)
+}
 }
 \description{
-Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species.
-for a given colony, these weights are influenced by: (1) Distance between the colony and the wind parcs,
+For a given colony, these weights are influenced by: (1) Distance between the colony and the wind parcs,
 (2) The population size of the species of interest for that colony and (3), the proportion of marine surface surrounding the colony.
 }

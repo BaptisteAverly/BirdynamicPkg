@@ -1,6 +1,7 @@
-#' Calculates the proportion of sea area around the colonies of interest
-#' (ratio between marine surface and terrestrial surface within the foraging range of the species of interest).
-#' Used by bdy_apportionning to compute mortality weights between colonies.
+#' Calculate proportion of sea around colony
+#'
+#' Calculates the proportion of sea area around the colonies of interest (the ratio between marine surface and terrestrial surface within the foraging range of the species of interest).
+#' Used by [bdy_apportionning()] to compute mortality weights between colonies.
 #'
 #' @param shapeFile shapefile of the area of interest
 #' @param max_foraging_range numeric, max foraging range of the species of interest in kilometers
@@ -15,7 +16,7 @@
 
 bdy_calculate_sea_area <- function(shapeFile,max_foraging_range,colonies){
 
-  # on rassemble les r?gions pour avoir la france en entier dans le mm shape
+  # on rassemble les regions pour avoir la france en entier dans le mm shape
   system.time( shape <- st_union(shapeFile) )
 
   # en L93

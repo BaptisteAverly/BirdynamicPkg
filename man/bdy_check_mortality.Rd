@@ -20,10 +20,10 @@ bdy_check_mortality(Mortality, speciesList)
 }
 \value{
 list of 2:
-         \itemize{
-         \item warning: string giving warnings, errors, or otherwise a green pass about the formatting of the table
-         \item table: the mortality data frame with some dditional formatting
-         }
+\itemize{
+\item warning: string giving warnings, errors, or otherwise a green pass about the formatting of the table
+\item table: the mortality data frame with some dditional formatting
+}
 }
 \description{
 Performs some checks and cleaning on the mortality table provided by a users to make sure it follows the format required by the app.

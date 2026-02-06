@@ -1,4 +1,6 @@
-#' Nimble code for the null population model (without impact from wind farms). Meant to be called by bdy_model_no_impact()
+#' Code null population model
+#'
+#' Nimble code for the null population model (without impact from wind farms). Meant to be called by [bdy_model_no_impact()]
 #'
 #' @returns The population model as nimble code
 #' @export

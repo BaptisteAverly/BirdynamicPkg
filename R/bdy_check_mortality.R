@@ -1,3 +1,5 @@
+#' Check mortality table
+#'
 #' Performs some checks and cleaning on the mortality table provided by a users to make sure it follows the format required by the app.
 #'
 #' @param Mortality A data frame giving mortality estimates for the species of interest and the wind farms of interest.Correctly formated ones should have the following columns:

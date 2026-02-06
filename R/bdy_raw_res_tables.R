@@ -1,11 +1,15 @@
-#' Title
+#' Raw result tables
 #'
-#' @param mod_out
+#' Compute result tables (national and by group of colonies)
 #'
-#' @returns
+#' @param mod_out Output of the [bdy_model_with_impact()] function, completed with colonies, mortality and distance data
+#'
+#' @returns Three tables: \cr
+#'          - Simulated_National: Simulated counts for the 30 projected years at national level (used to plot temporal trends with [bdy_summary_figure()])
+#'          - Tableau_Subpop: Summary table of results by colony (with relative impact, increase in probability of extinction, mortality, etc)
+#'          - Tableau_National: Summary table of results at national level (with relative impact, increase in probability of extinction, mortality, etc)
 #' @export
 #'
-#' @examples
 
 bdy_raw_res_tables <- function(mod_out){
 

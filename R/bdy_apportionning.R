@@ -1,5 +1,6 @@
-#' Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species.
-#' for a given colony, these weights are influenced by: (1) Distance between the colony and the wind parcs,
+#' Apportionning
+#'
+#' Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species. For a given colony, these weights are influenced by: (1) Distance between the colony and the wind parcs,
 #' (2) The population size of the species of interest for that colony and (3), the proportion of marine surface surrounding the colony.
 #'
 #' @param max_foraging_range_km numeric, maximum foraging range in kilometers for the species of interest
@@ -11,7 +12,7 @@
 #'                }
 #' @param sea_area named numeric vector giving for each colony the proportion of marine surface surrounding it.
 #'                  Each value should be named with the unique identifier for the corresponding colony.
-#' @param tbl_dist matrix giving the distances between colonies (rows) and wind farms (columns), as outputted by bdy_get_distances()
+#' @param tbl_dist matrix giving the distances between colonies (rows) and wind farms (columns), as outputted by [bdy_get_distances()]
 #' @param incl_pop_size boolean, whether population size should influence the weight calculation
 #' @param incl_sea_area boolean, whether the proportion of marine surface surrounding the colony should influence the weight calculation
 #'

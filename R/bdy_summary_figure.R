@@ -1,12 +1,13 @@
-#' Title
+#' Summary trends figure
 #'
-#' @param Raw_ResTables
-#' @param Pretty_table_national
+#' Plots figure of projected national trends
 #'
-#' @returns
+#' @param Raw_ResTables Raw result tables from function [bdy_raw_res_tables()]
+#' @param Pretty_table_national Pretty table from function [bdy_pretty_result_table()]
+#'
+#' @returns A ggplot object with a facet plot per species showing trends with and without impact
 #' @export
 #'
-#' @examples
 
 bdy_summary_figure <- function(Raw_ResTables, Pretty_table_national){
 
