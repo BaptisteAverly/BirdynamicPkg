@@ -37,7 +37,7 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
   ### VITAL RATES & SAD #####
   # Get SAD factor "g"
   # from vital rates for that species
-  g <- sum(pop_vector(nb_pair = 1000, s = survival, f = fecundity, pr = propRepro)[-1])/1000
+  g <- sum(bdy_get_pop_vector(nb_pair = 1000, s = survival, f = fecundity, pr = propRepro)[-1])/1000
 
   ### BAYESIAN ANALYSIS #####
   # Define max.N0 for the model
