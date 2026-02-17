@@ -1,7 +1,7 @@
-# Get a population size vector
-
-# Builds a vector of population size, for each age class, using a Leslie matrix to get the Stable Age Distribution (SAD)
-
+#' Get a population size vector
+#'
+#' Builds a vector of population size, for each age class, using a Leslie matrix to get the Stable Age Distribution (SAD)
+#'
 #' @param nb_pair a single number. Number of Pairs of reproductive individuals.
 #' @param s a numeric vector of survival probabilities for each age class
 #' @param f a numeric vector of fecundity values for each age class
