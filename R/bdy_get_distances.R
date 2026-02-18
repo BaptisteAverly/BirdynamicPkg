@@ -57,6 +57,9 @@ bdy_get_distances <- function(colonies,parcs,costMatrix,doShpa=T,progress=NULL){
 
       shpa_dist[,i] <- st_length(st_as_sf(shortPath), which = "Euclidean") /1000
 
+      # Manually input distance of 10,000 km if not on the same facade
+      shpa_dist[colonies$facade!=parcs$Facade[i],i] <- 10000
+
       #updating progress
       if(!is.null(progress)){
         if(i < iMax){

@@ -32,9 +32,9 @@ bdy_pretty_result_table <- function(Raw_ResTables, type){
   # Add max impact
   if(type=="national"){
     ResTable_MaxIR <- Raw_ResTables$Tableau_Subpop %>% group_by(Species) %>%  slice(which.max(RelImpact_med))
-    ResTable_MaxIR$Text <- ifelse(ResTable_MaxIR$RelImpact_med==0, 0, paste0(round(ResTable_MaxIR$RelImpact_med,4), "% (Groupe de colonies : ", ResTable_MaxIR$GrColo, ")"))
+    ResTable_MaxIR$Text <- ifelse(ResTable_MaxIR$RelImpact_med==0, 0, paste0(round(ResTable_MaxIR$RelImpact_med, 2), "% (Groupe de colonies : ", ResTable_MaxIR$GrColo, ")"))
     ResTable_MaxExt <- Raw_ResTables$Tableau_Subpop %>% group_by(Species) %>%  slice(which.max(Ext_Relative))
-    ResTable_MaxExt$Text <- ifelse(ResTable_MaxExt$Ext_Relative==0, 0, paste0(round(ResTable_MaxExt$Ext_Relative,4), "% (Groupe de colonies : ", ResTable_MaxExt$GrColo, ")"))
+    ResTable_MaxExt$Text <- ifelse(ResTable_MaxExt$Ext_Relative==0, 0, paste0(round(ResTable_MaxExt$Ext_Relative, 2), "% (Groupe de colonies : ", ResTable_MaxExt$GrColo, ")"))
     ResTable$MAX_Impact_relatif <- ResTable_MaxIR$Text[match(ResTable$Espece, ResTable_MaxIR$Species)]
     ResTable$MAX_Augmentation_extinction <- ResTable_MaxExt$Text[match(ResTable$Espece, ResTable_MaxExt$Species)]
   }
