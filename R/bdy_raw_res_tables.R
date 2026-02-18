@@ -41,7 +41,7 @@ bdy_raw_res_tables <- function(mod_out){
   Simulated_Counts$PopInit <- subset(Simulated_Counts, Year==1)$Count_noimpact[match(paste0(Simulated_Counts$Species, Simulated_Counts$GrColo, Simulated_Counts$Iteration), paste0(subset(Simulated_Counts, Year==1)$Species, subset(Simulated_Counts, Year==1)$GrColo, subset(Simulated_Counts, Year==1)$Iteration))]
   Relative_Impact <- Simulated_Counts %>%
     subset(., Year==ny_proj) %>%
-    mutate(Rel_impact=(Count_noimpact-Count_withimpact)/Count_noimpact,
+    mutate(Rel_impact=100*(Count_noimpact-Count_withimpact)/Count_noimpact,
            Trend_no=(Count_noimpact-PopInit)/PopInit,
            Trend_impact=(Count_withimpact-PopInit)/PopInit,
     )
@@ -61,7 +61,7 @@ bdy_raw_res_tables <- function(mod_out){
                      Trend_impact_2.5=quantile(Trend_impact, probs=0.025, na.rm=T),
                      Trend_impact_97.5=quantile(Trend_impact, probs=0.975, na.rm=T),
 
-                     Mortality_med=NA, Mortality_2.5=NA, Mortality_97.5=NA,
+                     Mortality_med=NA, Mortality_2.5=NA, Mortality_97.5=NA, Parc_proche=NA,
 
                      RelImpact_med=median(Rel_impact, na.rm=T),
                      RelImpact_2.5=quantile(Rel_impact, probs=0.025, na.rm=T),
@@ -71,18 +71,42 @@ bdy_raw_res_tables <- function(mod_out){
                      Ext_Withimpact=mean(Count_withimpact==0, na.rm=T),
                      .groups="keep"
     ) %>%
-    mutate(Ext_Relative = ((Ext_Withimpact-Ext_Noimpact)/Ext_Noimpact) %>% ifelse(is.na(.), 0, .),
+    mutate(Ext_Relative = 100*((Ext_Withimpact-Ext_Noimpact)/Ext_Noimpact) %>% ifelse(is.na(.), 0, .),
            Ext_Ratio = (Ext_Withimpact / Ext_Noimpact)
     )
 
-  ## Add mortality from another table
+
+  ## Add mortality and distance to parcs from other table
   for(SP in 1:length(mod_out)){
 
+    # Mortality
     Morta <- as.data.frame(t(apply(mod_out[[SP]]$mortality, 2, quantile, probs = c(0.025, 0.5, 0.975))))
 
     Tableau_Subpop$Mortality_med[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`50%`
     Tableau_Subpop$Mortality_2.5[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`2.5%`
     Tableau_Subpop$Mortality_97.5[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`97.5%`
+
+    # Distance to parcs
+    Dist_qtt <- mod_out[[SP]]$distance %>%
+      as.data.frame() %>%
+      mutate(
+        Dist_min = apply(., 1, min, na.rm=T),
+        Parc_min = names(.)[apply(., 1, which.min)]
+      )
+
+    Colonies_SP <- mod_out[[SP]]$colonies
+    Colonies_SP$Dist_min <- Dist_qtt$Dist_min[match(Colonies_SP$code_colonie, rownames(Dist_qtt))]
+    Colonies_SP$Parc_min <- Dist_qtt$Parc_min[match(Colonies_SP$code_colonie, rownames(Dist_qtt))]
+
+    GrColo_SP <- Colonies_SP %>%
+      group_by(group) %>%
+      summarise(colonies=paste0(unique(code_colonie), collapse=", "),
+                Dist_min=min(Dist_min, na.rm=T),
+                Parc_min=Parc_min[which.min(Dist_min)]
+      ) %>%
+      mutate(Parc_proche = paste0(Parc_min, " (", Dist_min, "km)"))
+
+    Tableau_Subpop$Parc_proche[Tableau_Subpop$Species==names(mod_out)[SP]] <- GrColo_SP$Parc_proche[match(Tableau_Subpop$GrColo[Tableau_Subpop$Species==names(mod_out)[SP]], GrColo_SP$group)]
 
   }
 
@@ -98,7 +122,7 @@ bdy_raw_res_tables <- function(mod_out){
   ## Relative Impact (the last year of simulation)
   Relative_Impact_National <- Simulated_National %>%
     subset(., Year==ny_proj) %>%
-    mutate(Rel_impact=(Sum_noimpact-Sum_withimpact)/Sum_noimpact)
+    mutate(Rel_impact=100*(Sum_noimpact-Sum_withimpact)/Sum_noimpact)
 
 
   ## Probability of extinction (National)
@@ -119,7 +143,7 @@ bdy_raw_res_tables <- function(mod_out){
       Ext_Withimpact=mean(Sum_withimpact==0, na.rm=T),
       .groups="keep"
     ) %>%
-    mutate(Ext_Relative = ((Ext_Withimpact-Ext_Noimpact)/Ext_Noimpact) %>% ifelse(is.na(.), 0, .),
+    mutate(Ext_Relative = 100*((Ext_Withimpact-Ext_Noimpact)/Ext_Noimpact) %>% ifelse(is.na(.), 0, .),
            Ext_Ratio = (Ext_Withimpact / Ext_Noimpact)
     )
 
