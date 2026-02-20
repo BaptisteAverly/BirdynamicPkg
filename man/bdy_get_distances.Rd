@@ -8,14 +8,23 @@ bdy_get_distances(colonies, parcs, costMatrix, doShpa = T, progress = NULL)
 }
 \arguments{
 \item{colonies}{table where each row is a colony of interest.
-Must contain one column named "code_colonie" with unique identifiers for each colony
-and one spatial "geometry" column containing the coordinates of the colony centroids}
+Must contain the columns:
+\itemize{
+\item 'code_colonie': character, unique identifiers for each colony
+\item 'geometry': sf coordinates of the colony centroids
+\item 'facade': character, which sea front is the colony located in
+}}
 
-\item{parcs}{table where each row is a wind famr of interest.
-Must contain one column named "NAME" with unique identifiers for each wind farm
-and one spatial "geometry" column containing the coordinates of the wind farm centroids}
+\item{parcs}{table where each row is a wind farm of interest.
+Must contain the columns:
+\itemize{
+\item 'NAME': character, unique identifier for each wind farm
+\item 'geometry': sf coordiantes of the wind famr centroid
+\item 'Facade': character, which sea front is the colony located in
+}}
 
-\item{costMatrix}{cost raster (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
+\item{costMatrix}{named list containing cost rasters (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
+Must contain one object per sea front, with names identical to names in column 'facade' of argument 'colonies' and column 'Facade' of argument 'parcs'.
 Used to calculate shortest path distances for strictly marine birds which do not fly over the land.}
 
 \item{doShpa}{boolean. If set to false, only the euclidean distance is calculated which makes the computation faster, especially if there are many wind farms.}
