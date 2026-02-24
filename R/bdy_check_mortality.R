@@ -76,11 +76,20 @@ bdy_check_mortality <- function(Mortality,speciesList){
         }
       }
 
-      ### check that iteration is numeric
+      ### check that coefficient is numeric
       #maybe add additional checks depending on what is expected for this
       Mortality$coefficient <- as.numeric(Mortality$coefficient)
       if(all(is.na(Mortality$coefficient))){
         Warning <- paste0(Warning,"La colonne coefficient n'est pas numérique.<br>")
+      }
+      if(any(Mortality$coefficient < 0)){
+        Warning <- paste0(Warning,"Les valeurs de la colonne coefficient ne devraient pas être négatives.<br>")
+      }
+
+      ### check that iteration is numeric
+      Mortality$iteration <- as.numeric(Mortality$iteration)
+      if(all(is.na(Mortality$iteration))){
+        Warning <- paste0(Warning,"La colonne iteration n'est pas numérique.<br>")
       }
 
       ### check that species in the table correspond to the list

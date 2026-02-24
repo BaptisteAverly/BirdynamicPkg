@@ -80,7 +80,7 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
       )  # close nimbleMCMC
 
     posterior <- rbind(outNimble$chain1,outNimble$chain2,outNimble$chain3)
-    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ", ", ncol(count_data)+1, "]"))
+    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ", ", ncol(group_counts)+1, "]"))
     growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nlevels(colonies$group),"]"))
 
     no_impact_output <- posterior[,c(nTotCol,growthCol)]
@@ -98,7 +98,7 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
       )
     )
     posterior <- rbind(outJags$samples[[1]],outJags$samples[[2]],outJags$samples[[3]])
-    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ",", ncol(count_data)+1, "]"))
+    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ",", ncol(group_counts)+1, "]"))
     growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nlevels(colonies$group),"]"))
 
     no_impact_output <- posterior[,c(nTotCol,growthCol)]
