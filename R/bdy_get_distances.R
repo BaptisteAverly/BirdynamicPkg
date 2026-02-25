@@ -3,12 +3,21 @@
 #' Calculates the shortest path distances between marine bird colonies and wind farms
 #'
 #' @param colonies table where each row is a colony of interest.
-#'                Must contain one column named "code_colonie" with unique identifiers for each colony
-#'                and one spatial "geometry" column containing the coordinates of the colony centroids
-#' @param parcs table where each row is a wind famr of interest.
-#'                Must contain one column named "NAME" with unique identifiers for each wind farm
-#'                and one spatial "geometry" column containing the coordinates of the wind farm centroids
-#' @param costMatrix cost raster (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
+#'                Must contain the columns:
+#'                \itemize{
+#'                \item 'code_colonie': character, unique identifiers for each colony
+#'                \item 'geometry': sf coordinates of the colony centroids
+#'                \item 'facade': character, which sea front is the colony located in
+#'                }
+#' @param parcs table where each row is a wind farm of interest.
+#'                Must contain the columns:
+#'                \itemize{
+#'                \item 'NAME': character, unique identifier for each wind farm
+#'                \item 'geometry': sf coordiantes of the wind famr centroid
+#'                \item 'Facade': character, which sea front is the colony located in
+#'                }
+#' @param costMatrix named list containing cost rasters (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
+#'                   Must contain one object per sea front, with names identical to names in column 'facade' of argument 'colonies' and column 'Facade' of argument 'parcs'.
 #'                   Used to calculate shortest path distances for strictly marine birds which do not fly over the land.
 #' @param doShpa boolean. If set to false, only the euclidean distance is calculated which makes the computation faster, especially if there are many wind farms.
 #' @param progress R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.
@@ -30,7 +39,7 @@ bdy_get_distances <- function(colonies,parcs,costMatrix,doShpa=T,progress=NULL){
   n_parc <- length(parcs$NAME)
 
   ## Calculate shortest path between colonies and wind farms
-  goal <- st_coordinates(st_centroid(colonies)) %>% suppressWarnings()
+  goals <- st_coordinates(st_centroid(colonies)) %>% suppressWarnings()
   iMax <- n_parc
 
   # Object to store shortest path distances between each colony and each parc
@@ -46,19 +55,26 @@ bdy_get_distances <- function(colonies,parcs,costMatrix,doShpa=T,progress=NULL){
   if(doShpa){
     for(i in 1:iMax){
 
+      #coordinates of the current parc
       origin <- st_coordinates(st_centroid(parcs))[i,] %>% t()
 
-      shortPath <- shortestPath(x = costMatrix,
+      #which façade is the park in
+      facade <- parcs$Facade[i]
+
+      #idx to select only the colonies which are on this façade
+      facadeIdx <- which(colonies$facade == facade)
+
+      shortPath <- shortestPath(x = costMatrix[[facade]],
                                 origin = origin,
-                                goal = goal,
+                                goal = goals[facadeIdx,],
                                 output = "SpatialLines") %>% suppressWarnings()
 
       #crs(shortPath) <- CRS("+init=epsg:2154") %>% suppressWarnings()
 
-      shpa_dist[,i] <- st_length(st_as_sf(shortPath), which = "Euclidean") /1000
-
-      # Manually input distance of 10,000 km if not on the same facade
-      shpa_dist[colonies$facade!=parcs$Facade[i],i] <- 10000
+      #storing the distances for the colonies on the right façade in the table
+      shpa_dist[facadeIdx,i] <- st_length(st_as_sf(shortPath), which = "Euclidean") /1000
+      #colonies which are not on the same façade as the parc get very high shortest path distances (no influence)
+      shpa_dist[which(colonies$facade != facade),i] <- 10000
 
       #updating progress
       if(!is.null(progress)){

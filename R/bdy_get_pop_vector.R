@@ -12,7 +12,7 @@
 #'
 #' @export
 
-bdy_pop_vector <- function(nb_pair, s, f, pr, type="post"){
+bdy_get_pop_vector <- function(nb_pair, s, f, pr, type="post"){
 
   N00 <- nb_pair*2
 

@@ -74,6 +74,7 @@ bdy_raw_res_tables <- function(mod_out){
     mutate(Ext_Relative = 100*(Ext_Withimpact-Ext_Noimpact) %>% ifelse(is.na(.), 0, .))
 
 
+
   ## Add mortality and distance to parcs from other table
   for(SP in 1:length(mod_out)){
 
@@ -142,6 +143,7 @@ bdy_raw_res_tables <- function(mod_out){
       .groups="keep"
     ) %>%
     mutate(Ext_Relative = 100*(Ext_Withimpact-Ext_Noimpact) %>% ifelse(is.na(.), 0, .))
+
 
   # Add mortality from another table
   for(SP in 1:length(mod_out)){
