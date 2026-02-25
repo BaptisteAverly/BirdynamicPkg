@@ -34,7 +34,9 @@ Imports:
 	gdistance,
 	sf,
 	raster,
-	units
+	units,
+	tools,
+	popbio
 Depends: 
     R (>= 3.5),
 	plyr,
@@ -42,10 +44,9 @@ Depends:
 	tidyverse,
 	ggplot2,
 	reshape2,
-	vegan,
-	fundiversity,
-	chron,
 	gdistance,
 	sf,
 	raster,
-	units
+	units,
+	tools,
+	popbio
