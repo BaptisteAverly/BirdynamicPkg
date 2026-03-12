@@ -16,11 +16,6 @@ bdy_get_pop_vector <- function(nb_pair, s, f, pr, type="post"){
 
   N00 <- nb_pair*2
 
-  # Get the LESLIE matrix, SAD and mature age classes
-  A <- build_Leslie(s, f, type = "post")
-  build_Leslie <- function(s, f, type = "pre"){ elements_Leslie(s=s, f=f, type=type)$A }
-
-
   nac <- length(s)
   vr_list <- as.list(c(s,f))
   names(vr_list) <- c(paste0("s", (1:nac)-1), paste0("f", (1:nac)-1))
