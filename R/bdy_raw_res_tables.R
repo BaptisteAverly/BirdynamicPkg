@@ -87,7 +87,7 @@ bdy_raw_res_tables <- function(mod_out){
 
     # Distance to parcs
     Dist_qtt <- mod_out[[SP]]$distance %>%
-      as.data.frame() %>%
+      data.frame() %>%
       mutate(
         Dist_min = apply(., 1, min, na.rm=T),
         Parc_min = names(.)[apply(., 1, which.min)]
