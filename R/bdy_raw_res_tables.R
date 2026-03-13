@@ -71,8 +71,9 @@ bdy_raw_res_tables <- function(mod_out){
                      Ext_Withimpact=mean(Count_withimpact==0, na.rm=T),
                      .groups="keep"
     ) %>%
-    mutate(Ext_Relative = 100*(Ext_Withimpact-Ext_Noimpact) %>% ifelse(is.na(.), 0, .))
-
+    mutate(Ext_Relative = 100*((Ext_Withimpact-Ext_Noimpact)/Ext_Noimpact) %>% ifelse(is.na(.), 0, .) %>% ifelse(.==Inf,100,.),
+           Ext_Ratio = (Ext_Withimpact / Ext_Noimpact)
+    )
 
 
   ## Add mortality and distance to parcs from other table
@@ -142,8 +143,9 @@ bdy_raw_res_tables <- function(mod_out){
       Ext_Withimpact=mean(Sum_withimpact==0, na.rm=T),
       .groups="keep"
     ) %>%
-    mutate(Ext_Relative = 100*(Ext_Withimpact-Ext_Noimpact) %>% ifelse(is.na(.), 0, .))
-
+    mutate(Ext_Relative = 100*((Ext_Withimpact-Ext_Noimpact)/Ext_Noimpact) %>% ifelse(is.na(.), 0, .) %>% ifelse(.==Inf,100,.),
+           Ext_Ratio = (Ext_Withimpact / Ext_Noimpact)
+    )
 
   # Add mortality from another table
   for(SP in 1:length(mod_out)){
