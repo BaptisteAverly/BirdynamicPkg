@@ -12,7 +12,6 @@
 #' @param season character vector of length 12, giving the presence status of the bird of interest on the french coasts for each month of the year, with: \cr
 #'              'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. \cr
 #'              For more details refer to the Birdynamic report by Chambert et al.
-#' @param n_iteration number of iterations to draw from (shuffled distribution)
 #' @param RW_group matrix (rows=groups of colonies, columns=parcs) giving relative weights for each group/parc combination,
 #'                with sum of weights for a given parc = 1, as outputed by [bdy_apportionning()]
 #'
@@ -42,12 +41,14 @@ bdy_processing_mortality <- function(collision,season,n_iteration=1000,parcNames
       #sel_option <- tmp$Option[which.max(tmp$coefficient)]
       #cr <- cr[cr$Option == sel_option,]
 
+      n_iter_morta <- length(unique(collision$iteration)) #B
+
       ## Months when only local individuals are present
       # cr_sel <- cr[cr$Month %in% months_breeding,]
       sel_local <- which(season %in% c("B", "R"))
       cr_sel <- cr[cr$mois %in% sel_local,]
       cr_local <- aggregate(coefficient ~ iteration, data = cr_sel, sum) # sum over the Breeding season
-      cr_local <- (cr_local$coefficient * rep(1, n_iteration)) #B - /!\ This gives a warning /!\
+      cr_local <- (cr_local$coefficient * rep(1, n_iter_morta))
       rm(cr_sel) ; rm(sel_local)
 
       ## Months when both local and migrants are present (X% affects local populations)
@@ -59,7 +60,7 @@ bdy_processing_mortality <- function(collision,season,n_iteration=1000,parcNames
         # Incertitude sur la proportion des collisions concernant les populations locales
         min_PROP_LOCAL <- min((mean(cr_local)/mean(cr_mix$coefficient)), 1, na.rm = TRUE) # si il y a moins de collisions en période hors-repro qu'en repro, on considère que hors période repro les collisions affectent à 100% les individus locaux
         max_PROP_LOCAL <- 1
-        cr_mix <- (cr_mix$coefficient * runif(n_iteration, min_PROP_LOCAL, max_PROP_LOCAL)) #B - /!\ This gives a warning /!\
+        cr_mix <- (cr_mix$coefficient * runif(n_iter_morta, min_PROP_LOCAL, max_PROP_LOCAL))
       } else {
         cr_mix <- 0
       } # close if
