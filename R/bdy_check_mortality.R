@@ -13,15 +13,17 @@
 
 #' @param speciesList character vector giving the names of all the species which are acceptable entries for the analysis
 #'
+#' @param returnFormattedTable Boolean, whether to return the table with small modifications in addition to the warning string
+#'
 #' @returns list of 2:
 #'          \itemize{
 #'          \item warning: string giving warnings, errors, or otherwise a green pass about the formatting of the table
-#'          \item table: the mortality data frame with some dditional formatting
+#'          \item table: the mortality data frame with some additional formatting (only if returnFormattedTable=T)
 #'          }
 #' @export
 #'
 
-bdy_check_mortality <- function(Mortality,speciesList){
+bdy_check_mortality <- function(Mortality,speciesList,returnFormattedTable=T){
 
   tableNames <- c("espece_latin","iteration","mois","parc","coefficient")
 
@@ -124,10 +126,14 @@ bdy_check_mortality <- function(Mortality,speciesList){
     if(anyNA(Mortality$coefficient)){
       Warning <- paste0(Warning,"<p style='color:purple'>Certaines valeures dans la colonne coefficient ne sont pas numériques, création de NAs</p>")
     }
-    return(list(warning=Warning,table=Mortality))
-
   }else {
     Warning <- paste0("<p style='color:red'>", Warning, "</p>")
-    return(list(warning=Warning,table=Mortality))
   }
+
+  if(returnFormattedTable){
+    return(list(warning=Warning,table=Mortality))
+  }else{
+    return(warning)
+  }
+
 }
