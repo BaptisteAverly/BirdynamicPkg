@@ -120,7 +120,7 @@ bdy_check_mortality <- function(Mortality,speciesList,returnFormattedTable=T){
     dupl <- which(duplicated(Mortality[,c("espece_latin","iteration","mois","parc")]))
     if(length(dupl) > 0){
       Mortality <- Mortality[-dupl,]
-      Warning <- paste0(Warning,"<p style='color:purple'>Les lignes ",paste(dupl,collapse=", ")," sont des doublons et ont été supprimées.</p>")
+      Warning <- paste0(Warning,"<p style='color:purple'>",length(dupl)," doublons ont été supprimées.</p>")
     }
 
     if(anyNA(Mortality$coefficient)){
@@ -133,7 +133,7 @@ bdy_check_mortality <- function(Mortality,speciesList,returnFormattedTable=T){
   if(returnFormattedTable){
     return(list(warning=Warning,table=Mortality))
   }else{
-    return(warning)
+    return(Warning)
   }
 
 }

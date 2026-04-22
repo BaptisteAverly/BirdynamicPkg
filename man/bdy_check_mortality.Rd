@@ -4,7 +4,7 @@
 \alias{bdy_check_mortality}
 \title{Check mortality table}
 \usage{
-bdy_check_mortality(Mortality, speciesList)
+bdy_check_mortality(Mortality, speciesList, returnFormattedTable = T)
 }
 \arguments{
 \item{Mortality}{A data frame giving mortality estimates for the species of interest and the wind farms of interest.Correctly formated ones should have the following columns:
@@ -17,12 +17,14 @@ bdy_check_mortality(Mortality, speciesList)
 }}
 
 \item{speciesList}{character vector giving the names of all the species which are acceptable entries for the analysis}
+
+\item{returnFormattedTable}{Boolean, whether to return the table with small modifications in addition to the warning string}
 }
 \value{
 list of 2:
 \itemize{
 \item warning: string giving warnings, errors, or otherwise a green pass about the formatting of the table
-\item table: the mortality data frame with some dditional formatting
+\item table: the mortality data frame with some additional formatting (only if returnFormattedTable=T)
 }
 }
 \description{

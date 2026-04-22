@@ -25,8 +25,6 @@ bdy_processing_mortality(
 'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. \cr
 For more details refer to the Birdynamic report by Chambert et al.}
 
-\item{n_iteration}{number of iterations to draw from (shuffled distribution)}
-
 \item{RW_group}{matrix (rows=groups of colonies, columns=parcs) giving relative weights for each group/parc combination,
 with sum of weights for a given parc = 1, as outputed by \code{\link[=bdy_apportionning]{bdy_apportionning()}}}
 }
