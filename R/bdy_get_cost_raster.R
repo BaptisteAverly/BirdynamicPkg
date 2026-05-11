@@ -28,7 +28,7 @@
 #'
 
 bdy_get_cost_raster <- function(world_map,regions=c("Northern Europe","Southern Europe","Western Europe"),
-                                geom,N_buffer=10,S_buffer=10,W_buffer=10,E_buffer=10,pixel_size=1000){
+                                geom,N_buffer=100,S_buffer=100,W_buffer=100,E_buffer=100,pixel_size=1000){
 
   if("All" %in% regions){
     countries <- world_map

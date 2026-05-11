@@ -2,19 +2,19 @@
 #'
 #' Calculates the shortest path distances between marine bird colonies and wind farms
 #'
-#' @param colonies table where each row is a colony of interest.
+#' @param colonies sf table where each row is a colony of interest.
 #'                Must contain the columns:
 #'                \itemize{
-#'                \item 'code_colonie': character, unique identifiers for each colony
+#'                \item 'colony_code': character, unique identifiers for each colony
 #'                \item 'geometry': sf coordinates of the colony centroids
-#'                \item 'facade': character, which sea front is the colony located in
+#'                \item 'seafront': character, which sea front is the colony located in
 #'                }
-#' @param parcs table where each row is a wind farm of interest.
+#' @param parcs sf table where each row is a wind farm of interest.
 #'                Must contain the columns:
 #'                \itemize{
 #'                \item 'NAME': character, unique identifier for each wind farm
 #'                \item 'geometry': sf coordiantes of the wind famr centroid
-#'                \item 'Facade': character, which sea front is the colony located in
+#'                \item 'seafront': character, which sea front is the colony located in
 #'                }
 #' @param costMatrix named list containing cost rasters (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
 #'                   Must contain one object per sea front, with names identical to names in column 'facade' of argument 'colonies' and column 'Facade' of argument 'parcs'.
@@ -32,7 +32,7 @@ bdy_get_distances <- function(colonies,parcs,costMatrix,doShpa=T,progress=NULL){
 
   ## Calculate Euclidean Distance
   eucl_dist <- (st_distance(x = colonies, y = parcs)) %>% set_units(., km)
-  rownames(eucl_dist) <- colonies$code_colonie
+  rownames(eucl_dist) <- colonies$colony_code
   colnames(eucl_dist) <- parcs$NAME
 
   n_colo <- nrow(colonies)
@@ -45,7 +45,7 @@ bdy_get_distances <- function(colonies,parcs,costMatrix,doShpa=T,progress=NULL){
   # Object to store shortest path distances between each colony and each parc
   shpa_dist <- eucl_dist
   shpa_dist[] <- NA
-  rownames(shpa_dist) <- colonies$code_colonie
+  rownames(shpa_dist) <- colonies$colony_code
   colnames(shpa_dist) <- parcs$NAME
 
   if(!is.null(progress)){
@@ -59,22 +59,22 @@ bdy_get_distances <- function(colonies,parcs,costMatrix,doShpa=T,progress=NULL){
       origin <- st_coordinates(st_centroid(parcs))[i,] %>% t()
 
       #which façade is the park in
-      facade <- parcs$Facade[i]
+      seafront <- parcs$seafront[i]
 
       #idx to select only the colonies which are on this façade
-      facadeIdx <- which(colonies$facade == facade)
+      seafrontIdx <- which(colonies$seafront == seafront)
 
-      shortPath <- shortestPath(x = costMatrix[[facade]],
+      shortPath <- shortestPath(x = costMatrix[[seafront]],
                                 origin = origin,
-                                goal = goals[facadeIdx,],
+                                goal = goals[seafrontIdx,],
                                 output = "SpatialLines") %>% suppressWarnings()
 
       #crs(shortPath) <- CRS("+init=epsg:2154") %>% suppressWarnings()
 
       #storing the distances for the colonies on the right façade in the table
-      shpa_dist[facadeIdx,i] <- st_length(st_as_sf(shortPath), which = "Euclidean") /1000
+      shpa_dist[seafrontIdx,i] <- st_length(st_as_sf(shortPath), which = "Euclidean") /1000
       #colonies which are not on the same façade as the parc get very high shortest path distances (no influence)
-      shpa_dist[which(colonies$facade != facade),i] <- 10000
+      shpa_dist[which(colonies$seafront != seafront),i] <- 10000
 
       #updating progress
       if(!is.null(progress)){

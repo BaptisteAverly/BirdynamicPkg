@@ -7,20 +7,20 @@
 bdy_get_distances(colonies, parcs, costMatrix, doShpa = T, progress = NULL)
 }
 \arguments{
-\item{colonies}{table where each row is a colony of interest.
+\item{colonies}{sf table where each row is a colony of interest.
 Must contain the columns:
 \itemize{
-\item 'code_colonie': character, unique identifiers for each colony
+\item 'colony_code': character, unique identifiers for each colony
 \item 'geometry': sf coordinates of the colony centroids
-\item 'facade': character, which sea front is the colony located in
+\item 'seafront': character, which sea front is the colony located in
 }}
 
-\item{parcs}{table where each row is a wind farm of interest.
+\item{parcs}{sf table where each row is a wind farm of interest.
 Must contain the columns:
 \itemize{
 \item 'NAME': character, unique identifier for each wind farm
 \item 'geometry': sf coordiantes of the wind famr centroid
-\item 'Facade': character, which sea front is the colony located in
+\item 'seafront': character, which sea front is the colony located in
 }}
 
 \item{costMatrix}{named list containing cost rasters (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.

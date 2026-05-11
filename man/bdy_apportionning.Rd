@@ -20,7 +20,7 @@ bdy_apportionning(
 \itemize{
 \item 'group': numeric, colonies with the same number belong to the same cluster
 \item 'avg': numeric, average population size in that colony over the years of interests
-\item 'code_colonie': character, unique identifier for the colony.
+\item 'colony_code': character, unique identifier for the colony.
 }}
 
 \item{sea_area}{named numeric vector giving for each colony the proportion of marine surface surrounding it.

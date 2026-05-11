@@ -8,7 +8,7 @@
 #'  @param colonies sf object with each row being a colony where the species of interest is present. Must have at least the following columns:
 #'                \itemize{
 #'                \item 'geometry': coordinates of the colony
-#'                \item 'code_colonie': character, unique identifier for the colony.
+#'                \item 'colony_code': character, unique identifier for the colony.
 #'                }
 #'
 #' @returns named numeric vector indicating the proportion of sea area for each colony provided
@@ -16,16 +16,11 @@
 
 bdy_calculate_sea_area <- function(shapeFile,max_foraging_range,colonies){
 
-  # on rassemble les regions pour avoir la france en entier dans le mm shape
-  system.time( shape <- st_union(shapeFile) )
-
   # en L93
-  system.time(shape_L93 <- st_transform(shape, 2154))
-
-  load(paste0("3.BV_Data_processed/processed_data_per_species/clean_data_",esp,".RData"))
+  system.time(shape_L93 <- st_transform(shapeFile, 2154))
 
   # buffer de X km autour de tes points
-  buf <- st_buffer(colonies, set_units(max_foraging_range_km, "km"))
+  buf <- st_buffer(colonies, set_units(max_foraging_range, "km"))
   buf$id <- 1:nrow(buf)
   buf$buffer_area <- st_area(buf)
 
@@ -52,7 +47,7 @@ bdy_calculate_sea_area <- function(shapeFile,max_foraging_range,colonies){
 
   # pourcentage de mer
   sea_area <- (1 - buf_ok$pct_terre)
-  names(sea_area) <- colonies$code_colonie
+  names(sea_area) <- colonies$colony_code
 
   return(sea_area)
 }

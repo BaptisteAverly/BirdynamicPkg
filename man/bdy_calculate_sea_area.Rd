@@ -13,7 +13,7 @@ bdy_calculate_sea_area(shapeFile, max_foraging_range, colonies)
 @param colonies sf object with each row being a colony where the species of interest is present. Must have at least the following columns:
 \itemize{
 \item 'geometry': coordinates of the colony
-\item 'code_colonie': character, unique identifier for the colony.
+\item 'colony_code': character, unique identifier for the colony.
 }}
 }
 \value{

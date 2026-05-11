@@ -8,7 +8,7 @@
 #'                \itemize{
 #'                \item 'group': numeric, colonies with the same number belong to the same cluster
 #'                \item 'avg': numeric, average population size in that colony over the years of interests
-#'                \item 'code_colonie': character, unique identifier for the colony.
+#'                \item 'colony_code': character, unique identifier for the colony.
 #'                }
 #' @param sea_area named numeric vector giving for each colony the proportion of marine surface surrounding it.
 #'                  Each value should be named with the unique identifier for the corresponding colony.
@@ -27,6 +27,7 @@
 
 
 bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,incl_pop_size=T,incl_sea_area=T){
+
   n_parc = ncol(tbl_dist)
   n_group <- nlevels(colonies$group) #B
 
@@ -36,9 +37,9 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
   ### Create Relative Weights (AW) for Apportioning fatalities
 
   ## Filter colonies for the given species
-  #tbl_dist <- tbl_dist[which(rownames(tbl_dist) %in% colonies$code_colonie), ]
+  #tbl_dist <- tbl_dist[which(rownames(tbl_dist) %in% colonies$colony_code), ]
 
-  ## Ensure it is ordered by code_colonie
+  ## Ensure it is ordered by colony_code
   tbl_dist <- tbl_dist[order(row.names(tbl_dist)),,drop=F]
 
   ## Table for Apportioning
@@ -47,8 +48,8 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
   colnames(tbl_app) = parcNames
 
   ## Add info colony size
-  tbl_app$size <- colonies$avg[match(row.names(tbl_dist),colonies$code_colonie)]
-  #tbl_app$size <- colonies$last[match(row.names(tbl_dist),colonies$code_colonie)]
+  tbl_app$size <- colonies$mean[match(row.names(tbl_dist),colonies$colony_code)]
+  #tbl_app$size <- colonies$last[match(row.names(tbl_dist),colonies$colony_code)]
 
   ## Add info sea_area
   tbl_app$sea_area <- sea_area[row.names(tbl_dist)]
@@ -56,8 +57,8 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
   ## Avoid negative values for sea area
   tbl_app$sea_area[tbl_app$sea_area < 0] <- min(tbl_app$sea_area[tbl_app$sea_area > 0])
 
-  # check: which(!( (names(sea_area)) %in% ((colonies$code_colonie))) )
-  # check: cbind((names(sea_area)), (colonies$code_colonie) )
+  # check: which(!( (names(sea_area)) %in% ((colonies$colony_code))) )
+  # check: cbind((names(sea_area)), (colonies$colony_code) )
 
   ## Define function to get relative weights
   # rel_weight <- function(x) if(sum(x) == 0) 0 else x/sum(x)
@@ -116,18 +117,18 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
 
     ## Distance moyenne au group pondérée par la taille de colonie
     group_dist[gg,] <-
-      (rel_weight(tbl_app[colonies$code_colonie[colonies$group == gg], "size"]) *
-         tbl_app[colonies$code_colonie[colonies$group == gg], 1:n_parc,drop=F]
+      (rel_weight(tbl_app[colonies$colony_code[colonies$group == gg], "size"]) *
+         tbl_app[colonies$colony_code[colonies$group == gg], 1:n_parc,drop=F]
       ) %>%
       colSums
 
     ## Relative weight Mean pop size of the group
-    group_size[gg] <- sum(tbl_app[colonies$code_colonie[colonies$group == gg], "size"])
+    group_size[gg] <- sum(tbl_app[colonies$colony_code[colonies$group == gg], "size"])
 
     ## Mean sea area of the group, weighted by colony size
     group_area[gg] <-
-      (rel_weight(tbl_app[colonies$code_colonie[colonies$group == gg], "size"]) *
-         tbl_app[colonies$code_colonie[colonies$group == gg], "sea_area"]
+      (rel_weight(tbl_app[colonies$colony_code[colonies$group == gg], "size"]) *
+         tbl_app[colonies$colony_code[colonies$group == gg], "sea_area"]
       ) %>%
       sum
 

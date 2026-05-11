@@ -8,10 +8,10 @@ bdy_get_cost_raster(
   world_map,
   regions = c("Northern Europe", "Southern Europe", "Western Europe"),
   geom,
-  N_buffer = 10,
-  S_buffer = 10,
-  W_buffer = 10,
-  E_buffer = 10,
+  N_buffer = 100,
+  S_buffer = 100,
+  W_buffer = 100,
+  E_buffer = 100,
   pixel_size = 1000
 )
 }

@@ -4,13 +4,7 @@
 \alias{bdy_processing_mortality}
 \title{Process mortality file}
 \usage{
-bdy_processing_mortality(
-  collision,
-  season,
-  n_iteration = 1000,
-  parcNames,
-  RW_group
-)
+bdy_processing_mortality(collision, season, n_iteration = 1000, RW_group)
 }
 \arguments{
 \item{collision}{data frame giving mortality estimates for the species of interest and the wind farms of interest.Should have at least the following columns:

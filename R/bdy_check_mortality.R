@@ -112,7 +112,7 @@ bdy_check_mortality <- function(Mortality,speciesList,returnFormattedTable=T){
 
     Mortality$espece_latin <- as.factor(Mortality$espece_latin)
     Mortality$mois <- as.factor(Mortality$mois)
-    Mortality$parc <- as.factor(Bdy_clean_names(Mortality$parc))
+    Mortality$parc <- as.factor(bdy_clean_names(Mortality$parc))
     Mortality$mois <- as.factor(Mortality$mois)
     if("espece" %in% names(Mortality)){Mortality$espece <- as.factor(Mortality$espece)}
 
