@@ -1,0 +1,27 @@
+---
+output: github_document
+---
+
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+```
+
+# BirdynamicPkg
+The R package 'BirdynamicPkg' enables modelling the demographic impact of windfarms on seabird species following the methodology developed in the Bird Dynamic project by Chambert et al. (under review). The R package was created to support the [Bird dynamic Shiny App](https://shiny.cefe.cnrs.fr/Shiny_Bird_dynamic/) created to apply the methodology to Mainland France. The R package enables running the analyses that run in the Shiny App, but with more flexibility by adding your own colonies or editing species attributes.
+
+## Installation
+
+You can install the development version of BirdynamicPkg from [GitHub](https://github.com/) with:
+
+``` r
+# install.packages("pak")
+pak::pak("BaptisteAverly/BirdynamicPkg")
+```
+
+Check out the vignette Vignette_Bird_Dynamic to see how to use the package.
