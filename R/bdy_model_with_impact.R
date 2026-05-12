@@ -100,6 +100,5 @@ bdy_model_with_impact <- function(n_group,ny_data,posterior,mortality,ni=1000,ny
 
     } # k (simulation iterations)
   ) # time_sim
-  print(time_sim)
   return(list(sc0=n_sc0, sc1=n_sc1))
 }
