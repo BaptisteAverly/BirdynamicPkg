@@ -46,26 +46,135 @@ library(htmlwidgets) # Needed for onRender in leaflet map
 library(reshape2) # Needed to prepare output tables
 library(nimble)
 
-load("C:/Users/TERRA/Documents/Tempo_Bdy_loaded4vignette.RData")
+#load("C:/Users/TERRA/Documents/Tempo_Bdy_loaded4vignette.RData")
 
-# TEMPO
-Mortality_raw <- read.csv("C:/Users/TERRA/Documents/Projects/Birdynamic/Test_data_Shiny/mortality_template.csv", sep=";", dec=",")
-FormattedMortality <- bdy_check_mortality(Mortality_raw,liste_especes_latin)$table
-parcs_L93 <- st_read("C:/Users/TERRA/Documents/Projects/Birdynamic/Test_data_Shiny/Parcs_generic_names.shp") %>% st_transform(., st_crs(2154))
-parcs_L93$Facade <- st_join(st_point_on_surface(parcs_L93), LimFrance, join=st_intersects)$Facade
+# # TEMPO
+# parcs_L93 <- st_read("C:/Users/TERRA/Documents/Projects/Birdynamic/Test_data_Shiny/Parcs_generic_names.shp") %>% st_transform(., st_crs(2154))
+# parcs_L93$Facade <- st_join(st_point_on_surface(parcs_L93), LimFrance, join=st_intersects)$Facade
 ```
 
 
 # Prepare data
-TO COME, must include:
-<!-- parcs_L93_full <- st_transform(Shapefile_stored$Shp_list$Merged_shp, st_crs(2154)) -->
-<!-- # Extract if parcs are in the Mediterranean or the Atlantic -->
-<!-- parcs_L93_full$Facade <- st_join(st_point_on_surface(parcs_L93_full), LimFrance, join=st_intersects)$Facade -->
+
+## Species parameters
+To run the analyses, parameters of the species of interest have to be included in the following tables. For each of these tables, the default values that we use in the Bird Dynamic Shiny app are included in the package, but you can decide to edit them with different values or adding species.
+
+The table `vital_rates` includes the survival and reproduction parameters:
+```{r data_vital}
+vital_rates <- bdydata_vital_rates
+head(vital_rates)
+```
+
+
+The table `foraging_ranges` includes the foraging range of each species:
+```{r data_foraging}
+foraging_ranges <- bdydata_foraging_ranges
+head(foraging_ranges)
+```
+
+
+The table `seasons` includes the presence of each species at each month (see `help(bdydata_seasons)` to see details on attributes):
+```{r data_seasons}
+seasons <- bdydata_seasons
+head(seasons)
+```
+
+
+## Mortality data
+Mortality can be either calculated using the `stochLAB` package or directly loaded if they were calculated previously.
+
+### Calculate mortality data
+To create them with the `stoch_crm()` function from the `stochLAB` package, you must define the density of your species for each parc and month, and all the parc and seabird parameters. The values entered below are only for the example, do not consider them as verified default values. 
+
+```{r calculate_mortality}
+
+dens_dt <- data.frame(
+  row.names = month.name,
+  month=month.name,
+  mean=c(5,5,5,10,10,10,10,10,10,5,5,5),
+  sd=1
+)
+
+chord_profile <- data.frame(
+  pp_radius=seq(0, 1, by=0.05),
+  chord=c(0.69, 0.73, 0.79, 0.88, 0.96, 1, 0.98, 0.92, 0.85, 0.8, 0.75, 0.7, 0.64, 0.58, 0.52, 0.47, 0.41, 0.37, 0.3, 0.24, 0)
+)
+
+n_iterations <- 1000
+
+morta_results <- stoch_crm(
+  model_options = "1",
+  n_iter = n_iterations,
+  flt_speed_pars = data.frame("mean"=0.1, "sd"=0),
+  body_lt_pars = data.frame("mean"=0.1, "sd"=0),
+  wing_span_pars = data.frame("mean"=0.1, "sd"=0),
+  avoid_bsc_pars = data.frame("mean"=0.99, "sd"=0),
+  avoid_ext_pars = NULL,
+  noct_act_pars = data.frame("mean"=0.2, "sd"=0),
+  prop_crh_pars = data.frame("mean"=0,"sd"=0),
+  bird_dens_opt = "tnorm",
+  bird_dens_dt = dens_dt,
+  flight_type = "flapping",
+  prop_upwind = 0.5,
+  n_blades = 3,
+  air_gap_pars = data.frame("mean"=30,"sd"=0),
+  rtr_radius_pars = data.frame("mean"=80, "sd"=0),
+  bld_width_pars = data.frame("mean"=5.5,"sd"=0),
+  bld_chord_prf = chord_profile,
+  rtn_pitch_opt = "probDist",
+  bld_pitch_pars = data.frame("mean"=2, "sd"=0.1),
+  rtn_speed_pars = data.frame("mean"=10, "sd"=0.5),
+  trb_wind_avbl = cbind(data.frame("month"=month.name),"pctg"=rep(95, 12)),
+  trb_downtime_pars = cbind(data.frame("month"=month.name), "mean"=rep(6, 12), "sd"=rep(2, 12)),
+  wf_n_trbs = 50,
+  wf_width = 5,
+  wf_latitude = 48.67,
+  tidal_offset = 2,
+  lrg_arr_corr = T,
+  out_format = "draws",
+  out_sampled_pars = FALSE,
+  out_period = "months",
+  season_specs = NULL,
+  verbose = TRUE,
+  log_file = NULL,
+  seed = NULL
+)
+
+morta_format <- data.frame("espece_latin"="Larus fuscus",
+                           "parc"="parc_1",
+                           "mois"=rep(1:12, n_iterations),
+                           "iteration"=rep(1:n_iterations, each=12),
+                           "coefficient"=as.vector(t(morta_results[["opt1"]]))
+                           )
+```
+
+
+### Load mortality data
+Alternatively, mortality data that were compiled previously can be directly loaded, as long as they are formatted as in `bdydata_mortality_example` (which we will use in this vignette):
+
+```{r load_mortality}
+FormattedMortality <- bdy_check_mortality(bdydata_mortality_example, bdydata_mortality_example$espece_latin)$table
+head(FormattedMortality)
+```
+
+
+
+## Parc data
+Parc data must be provided to run the analyses, as a sf object (see `st_read(st_read)` for more details) using either points or polygons, projected in Lambert93 (EPSG:2154). As an example, we here use the `bdydata_parc_example` data included in the package. They must include a column indicating the seafront (for France, it has to be 'atlantic' or 'mediterranean'); this also has to be added as a column to the colony file.
+
+```{r parc_example}
+parcs_L93 <- bdydata_parcs_example %>% st_transform(., st_crs(2154))
+parcs_L93$seafront <- "atlantic"
+parcs_L93
+
+colonies00_L93$seafront <- "atlantic"
+```
+
+
+ADD Check mortality names
 
 
 # Analyse data
-
-## Use the general function XX
 
 ## Calculate distance between colonies and parcs
 We calculate two types of distance: euclidian distance is used for species that cross land (e.g., gulls), shortest sea path is used for purely marine species (e.g., Northern Gannet). Both distances are calculated for all colonies (if at least one species is purely marine) with the [bdy_get_distances()] function, the type of distance to use then depends on species later in the analysis.
@@ -77,10 +186,10 @@ all_distances <- bdy_get_distances(colonies=colonies00_L93,
                                    doShpa = T)
 
 shortest_path_distances <- all_distances$shpa_dist
-print(shortest_path_distances[1:10,])
+head(shortest_path_distances)
 
 euclidian_distances <- all_distances$eucl_dist
-print(euclidian_distances[1:10,])
+head(euclidian_distances)
 
 ```
 
@@ -174,8 +283,17 @@ with_impact_output <- bdy_model_with_impact(n_group=nlevels(colonies$group),
 ```
 
 
-### Loop for multiple species
+### Use of grouped function and loop for multiple species
+The same analysis can be run using the grouped function ADD_FUNCTION, which includes the steps described in the previous section (from selecting the correct distance table to the model with impact). This is convenient for instance if you need to loop the analyses across multiple species.
 
+ADD EXAMPLE
+```{r analyses_multiple}
+with_impact_output <- bdy_model_with_impact(n_group=nlevels(colonies$group),
+                                                ny_data=ncol(group_counts),
+                                                posterior=no_impact_output,
+                                                mortality=morta_iter_group)
+
+```
 
 ## Display results
 
