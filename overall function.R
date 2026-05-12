@@ -9,7 +9,6 @@ foraging_ranges <- bdydata_foraging_ranges
 seasons <- bdydata_seasons
 vital_rates <- bdydata_vital_rates
 
-
 modelFilePath <- "app/0.Data/model_01.txt"
 
 #these are user input
@@ -38,27 +37,23 @@ bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(
   ## Add colony_code  to "countData"
   countData$colony_code <- colonies_all$colony_code[match(countData$colony,colonies_all$colony)]
 
-  #calculating cost matrix for each seafront
-  cost_matrix <- list()
-  for(seafront in unique(colonies_all$seafront)){
-    seafrontIdx <- which(colonies_all$seafront==seafront)
-    cost_matrix[[seafront]] <- bdy_get_cost_raster(world_map,
-                                                   pixel_size=10000, #to speed up testing, remove in final function
-                                                   geom=colonies_all$geometry[seafrontIdx])$transition_matrix
-  }
-
-  #calculating distances
-  all_distances <- bdy_get_distances(colonies=colonies_all,
-                                     parcs = parcs,
-                                     costMatrix=cost_matrix,
-                                     doShpa = any(!subset(foraging_ranges, species_latin %in% species)$terrestrial_habits))
-
   # Prepare countryShape
   crop_extent <- colonies_all %>% st_bbox() %>% st_as_sfc() %>% st_buffer(., 100000) %>% st_transform(., 4326)
 
   countryShape <- bdydata_world_map %>%
     st_crop(., crop_extent) %>%
     st_transform(., st_crs(colonies_all))
+
+  #calculating cost matrix for each seafront
+  cost_matrix <- bdy_get_cost_raster(countryShape,colonies_all,
+                                     pixel_size=10000 #to speed up testing, remove in final function
+  )
+
+  #calculating distances
+  all_distances <- bdy_get_distances(colonies=colonies_all,
+                                     parcs = parcs,
+                                     costMatrix=cost_matrix,
+                                     doShpa = any(!subset(foraging_ranges, species_latin %in% species)$terrestrial_habits))
 
   #preparing a list to store model outpu for each species
   model_output <- list()
@@ -72,10 +67,10 @@ bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(
 
     # !! prevoir cas ou l'espece d'interet n'est pas dans la liste !!
     foraging_range_sp = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)]
-    terrestrial_habbit = foraging_ranges$terrestrial_habits[which(foraging_ranges$species_latin==sp)]
+    terrestrial_habit = foraging_ranges$terrestrial_habits[which(foraging_ranges$species_latin==sp)]
 
     #selecting apropriate distance table (shpa or eucl), and only for colonies where species is present
-    if(terrestrial_habbit){
+    if(terrestrial_habit){
       distances <-  all_distances$eucl_dist
     }else{
       distances <-  all_distances$shpa_dist
@@ -84,9 +79,9 @@ bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(
     distances <- distances[idx,]
 
     #calculating sea area for each colony
-    sea_area <- bdy_calculate_sea_area(countryShape,
+    sea_area <- bdy_calculate_sea_area(shapefile=countryShape,
                            max_foraging_range = foraging_range_sp,
-                           count_processed$colonies_sp)
+                           colonies=count_processed$colonies_sp)
 
     #apportionning
     apportionning <- bdy_apportionning(max_foraging_range_km=foraging_range_sp,

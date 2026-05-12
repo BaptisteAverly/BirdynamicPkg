@@ -27,48 +27,56 @@
 #' @export
 #'
 
-bdy_get_cost_raster <- function(world_map,regions=c("Northern Europe","Southern Europe","Western Europe"),
-                                geom,N_buffer=100,S_buffer=100,W_buffer=100,E_buffer=100,pixel_size=1000){
-
-  if("All" %in% regions){
-    countries <- world_map
-  }else{
-    countries <- world_map[world_map$SUBREGION %in% regions,]
-  }
+bdy_get_cost_raster <- function(shape,colonies,
+                                N_buffer=100,S_buffer=100,W_buffer=100,E_buffer=100,pixel_size=1000,returnRaster=F){
 
   # Transform in L93 projection
-  countries_L93 <- st_transform(countries, crs = 2154)
+  shape_L93 <- st_transform(shape, crs = 2154)
 
-  # Take a subset of the raster based on the extent of colonies and parcs locations
-  ext_col <- geom %>% st_bbox
+  tr_cost_tot = list()
+  rast_cost_tot = list()
+  for(seafront in unique(colonies$seafront)){
 
-  #st_bbox(colonies_L93)
+    subColonies <- colonies[which(colonies$seafront==seafront),]
 
-  ext_col <- extent(c(
-    ext_col$xmin-(W_buffer*1000),
-    ext_col$xmax+(E_buffer*1000),
-    ext_col$ymin-(S_buffer*1000),
-    ext_col$ymax+(N_buffer*1000)))
+    # Take a subset of the raster based on the extent of colonies and parcs locations
+    ext_col <- subColonies$geometry %>% st_bbox
 
-  # create a raster with this extent which will serve as the cost surface
-  rast_cost <- raster(ext_col)
+    #st_bbox(colonies_L93)
 
-  # pixel size (m) : 1000 m.
-  res(rast_cost) <- pixel_size
+    ext_col <- extent(c(
+      ext_col$xmin-(W_buffer*1000),
+      ext_col$xmax+(E_buffer*1000),
+      ext_col$ymin-(S_buffer*1000),
+      ext_col$ymax+(N_buffer*1000)))
 
-  # transfer the coordinate system to the raster
-  crs(rast_cost) <- CRS("+init=epsg:2154") %>% suppressWarnings()
+    # create a raster with this extent which will serve as the cost surface
+    rast_cost <- raster(ext_col)
 
-  # Now you can add data to the cells in your raster to mark the ones that fall within your polygon.
-  (rast_cost[as_Spatial(countries_L93),] <- 10000) %>% suppressWarnings()
+    # pixel size (m) : 1000 m.
+    res(rast_cost) <- pixel_size
 
-  ## Create cost surface : "land" = high cost, sea = low cost
-  #rast_cost[rast_cost == 1] <- 10000
-  rast_cost[is.na(rast_cost)] <- 1
+    # transfer the coordinate system to the raster
+    crs(rast_cost) <- CRS("+init=epsg:2154") %>% suppressWarnings()
 
-  ## Produce transition matrices, and correct because 8 directions
-  system.time( trCost <- transition(1/rast_cost, mean, directions=8) )
-  system.time( trCost <- geoCorrection(trCost, type="c") )
+    # Now you can add data to the cells in your raster to mark the ones that fall within your polygon.
+    (rast_cost[as_Spatial(shape_L93),] <- 10000) %>% suppressWarnings()
 
-  return(list("transition_matrix"=trCost,"cost_raster"=rast_cost))
+    ## Create cost surface : "land" = high cost, sea = low cost
+    #rast_cost[rast_cost == 1] <- 10000
+    rast_cost[is.na(rast_cost)] <- 1
+
+    ## Produce transition matrices, and correct because 8 directions
+    system.time( trCost <- transition(1/rast_cost, mean, directions=8) )
+    system.time( trCost <- geoCorrection(trCost, type="c") )
+
+    tr_cost_tot[[seafront]] <- trCost
+    rast_cost_tot[[seafront]] <- rast_cost
+  }
+
+  if(returnRaster){
+    return(list("transition_matrix"=trCost,"cost_raster"=rast_cost))
+  }else{
+    return(tr_cost_tot)
+  }
 }
