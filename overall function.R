@@ -1,24 +1,31 @@
 
-setwd(dir=ifelse(file.exists("C:/Users/Victor"),
-                 "C:/Users/Victor/Documents/Projects/Birdynamic", # Setwd Victor
+setwd(dir=ifelse(file.exists("C:/Users/TERRA"),
+                 "C:/Users/TERRA/Documents/Projects/Birdynamic", # Setwd Victor
                  "D:/Documents/JOBS/Independant/Birdynamic")) # Setwd Baptiste
 
 #these should be included in the package
-world_map <- st_read("0.BV_Data_input/world_shpFile/ne_10m_admin_0_countries.shp")
-load("0.BV_Data_input/species_parameters.RData")
+world_map <- bdydata_world_map
+foraging_ranges <- bdydata_foraging_ranges
+seasons <- bdydata_seasons
+vital_rates <- bdydata_vital_rates
+
+
 modelFilePath <- "app/0.Data/model_01.txt"
 
 #these are user input
 countData <-  read.csv2("0.BV_Data_input/BD_Effectifs_clean.csv")
-load("Test_data_Shiny/clean_data_parcs.RData")
-parcs <- parcs_L93
+
+#load("Test_data_Shiny/clean_data_parcs.RData")
+#parcs <- parcs_L93
+parcs <- bdydata_parcs_example %>% st_transform(., st_crs(2154))
 parcs$NAME <- bdy_clean_names(parcs$NAME)
 parcs$seafront <- "atlantique"
+
 species = seasons$species_latin[1:4]
-countryShape <- st_read("0.BV_Data_input/France_shp/france.shp") #shapefile for france could be included in package as default
-#or sea_area function could be made better to get country of interest from world map
+
 timeRange = c(2009,2021)
-mortality <- read.csv(file="Test_data_Shiny/mortality_all/formatted/01_collisionRisk_Fou de Bassan.csv")
+#mortality <- read.csv(file="Test_data_Shiny/mortality_all/formatted/01_collisionRisk_Fou de Bassan.csv")
+mortality <- bdydata_mortality_example
 mortality <- bdy_check_mortality(mortality,seasons$species_latin)$table #include inside overall function ?
 mortality$species_latin <- mortality$espece_latin
 
@@ -48,6 +55,13 @@ bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(
                                      parcs = parcs,
                                      costMatrix=cost_matrix,
                                      doShpa = length(marine_sp)>0)
+
+  # Prepare countryShape
+  crop_extent <- colonies_all %>% st_bbox() %>% st_as_sfc() %>% st_buffer(., 100000) %>% st_transform(., 4326)
+
+  countryShape <- bdydata_world_map %>%
+    st_crop(., crop_extent) %>%
+    st_transform(., st_crs(colonies_all))
 
   #preparing a list to store model outpu for each species
   model_output <- list()
