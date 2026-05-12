@@ -1,5 +1,17 @@
-
-
+#' Title
+#'
+#' @param sp
+#' @param effec00
+#' @param colonies00
+#' @param first_year
+#' @param last_year
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+#'
+#'
 bdy_process_count_data <- function(sp,effec00,colonies00,first_year,last_year){
 
   #---check species name-----
@@ -72,8 +84,8 @@ bdy_process_count_data <- function(sp,effec00,colonies00,first_year,last_year){
   ## Aggregate colonie_counts by groups
   sum2 <- function(x)ifelse(all(is.na(x)), NA, sum(x, na.rm = T))
 
-  group_counts <- apply(counts00[grep("X",colnames(counts00))],2,
-                        FUN = function(x)tapply(x,counts00$group,sum2))
+  group_counts <- as.data.frame(apply(counts00[grep("X",colnames(counts00))],2,
+                        FUN = function(x)tapply(x,counts00$group,sum2)))
 
 
   ## Proportion of colonies (from a group) surveyed each year
@@ -111,6 +123,6 @@ bdy_process_count_data <- function(sp,effec00,colonies00,first_year,last_year){
 
   rownames(ncs_yr) <- rownames(ppc_yr) <- rownames(ppa_yr) <- paste("group", levels(coloniesSp$group))
 
-  return(list("species"=sp,"group_counts_sp"=group_counts,"ppa_yr_sp"=ppa_yr,"colonies_sp"=coloniesSp))
+  return(list("species"=sp,"group_counts_sp"=group_counts,"ppa_yr_sp"=as.data.frame(ppa_yr),"colonies_sp"=coloniesSp))
 
 }

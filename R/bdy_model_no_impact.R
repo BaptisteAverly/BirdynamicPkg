@@ -80,8 +80,8 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
       )  # close nimbleMCMC
 
     posterior <- rbind(outNimble$chain1,outNimble$chain2,outNimble$chain3)
-    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ", ", ncol(group_counts)+1, "]"))
-    growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nlevels(colonies$group),"]"))
+    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nrow(count_data), ", ", ny_data+1, "]"))
+    growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nrow(count_data),"]"))
 
     no_impact_output <- posterior[,c(nTotCol,growthCol)]
     colnames(no_impact_output) <- str_replace(colnames(no_impact_output)," ","")
@@ -98,8 +98,8 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
       )
     )
     posterior <- rbind(outJags$samples[[1]],outJags$samples[[2]],outJags$samples[[3]])
-    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nlevels(colonies$group), ",", ncol(group_counts)+1, "]"))
-    growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nlevels(colonies$group),"]"))
+    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nrow(count_data), ",", ny_data+1, "]"))
+    growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nrow(count_data),"]"))
 
     no_impact_output <- posterior[,c(nTotCol,growthCol)]
   }

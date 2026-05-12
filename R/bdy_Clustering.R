@@ -1,10 +1,16 @@
-h_km = 5           # Define the bandwidth (in km) used by the Clustering Algorithm
-dist_regr_isol <- 20 # h_km*4    # Define the max distance to regroup an isolated colony to closest cluster
-
-## Clustering : Random clustering of Colonies (small spatial scale : 5km) - V copy from s05_Random_Clustering_Of_Colonies.R
-## Clustering using Mean Shift Algorithm
-# more info here : https://towardsdatascience.com/the-5-clustering-algorithms-data-scientists-need-to-know-a36d136ef68
-
+#' Clustering
+#'
+#'Clustering using Mean Shift Algorithm
+#'
+#' @param coord
+#' @param h_km Define the bandwidth (in km) used by the Clustering Algorithm
+#' @param dist_regr_isol Define the max distance to regroup an isolated colony to closest cluster
+#' @param regroupIsolates
+#'
+#' @returns
+#' @export
+#'
+#' @examples
 bdy_clustering <- function(coord,h_km=5,dist_regr_isol=4*h_km,regroupIsolates=T){
 
   ## Define range of Lat/Lon values

@@ -93,12 +93,12 @@ bdy_raw_res_tables <- function(mod_out){
       )
 
     Colonies_SP <- mod_out[[SP]]$colonies
-    Colonies_SP$Dist_min <- Dist_qtt$Dist_min[match(Colonies_SP$code_colonie, rownames(Dist_qtt))]
-    Colonies_SP$Parc_min <- Dist_qtt$Parc_min[match(Colonies_SP$code_colonie, rownames(Dist_qtt))]
+    Colonies_SP$Dist_min <- Dist_qtt$Dist_min[match(Colonies_SP$colony_code, rownames(Dist_qtt))]
+    Colonies_SP$Parc_min <- Dist_qtt$Parc_min[match(Colonies_SP$colony_code, rownames(Dist_qtt))]
 
     GrColo_SP <- Colonies_SP %>%
       group_by(group) %>%
-      summarise(colonies=paste0(unique(code_colonie), collapse=", "),
+      summarise(colonies=paste0(unique(colony_code), collapse=", "),
                 Dist_min=min(Dist_min, na.rm=T),
                 Parc_min=Parc_min[which.min(Dist_min)]
       ) %>%

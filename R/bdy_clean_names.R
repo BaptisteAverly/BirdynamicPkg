@@ -1,3 +1,12 @@
+#' Title
+#'
+#' @param any_words
+#'
+#' @returns
+#' @export
+#'
+#' @examples
+#'
 bdy_clean_names <- function(any_words){
   any_words %>%
     #iconv(., to="ASCII//TRANSLIT") %>%
