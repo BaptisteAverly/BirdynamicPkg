@@ -47,14 +47,11 @@ bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(
                                                    geom=colonies_all$geometry[seafrontIdx])$transition_matrix
   }
 
-  #which species of interest are strictly marine
-  marine_sp <- species[!foraging_ranges$terrestrial_habits[match(species,foraging_ranges$species_latin)]]
-
   #calculating distances
   all_distances <- bdy_get_distances(colonies=colonies_all,
                                      parcs = parcs,
                                      costMatrix=cost_matrix,
-                                     doShpa = length(marine_sp)>0)
+                                     doShpa = any(!subset(foraging_ranges, species_latin %in% species)$terrestrial_habits))
 
   # Prepare countryShape
   crop_extent <- colonies_all %>% st_bbox() %>% st_as_sfc() %>% st_buffer(., 100000) %>% st_transform(., 4326)
@@ -78,7 +75,11 @@ bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(
     terrestrial_habbit = foraging_ranges$terrestrial_habits[which(foraging_ranges$species_latin==sp)]
 
     #selecting apropriate distance table (shpa or eucl), and only for colonies where species is present
-    distances <-  all_distances[[match(terrestrial_habbit,c(T,F))]]
+    if(terrestrial_habbit){
+      distances <-  all_distances$eucl_dist
+    }else{
+      distances <-  all_distances$shpa_dist
+    }
     idx <- which(row.names(distances) %in% count_processed$colonies_sp$colony_code)
     distances <- distances[idx,]
 
