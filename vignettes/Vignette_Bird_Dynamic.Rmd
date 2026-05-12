@@ -1,0 +1,231 @@
+---
+title: "Use BirdynamicPkg package"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Use BirdynamicPkg package}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  warning = FALSE,
+  message = FALSE,
+  comment = "#>"
+)
+```
+
+
+# Introduction
+The R package 'BirdynamicPkg' enables modelling the demographic impact of windfarms on seabird species following the methodology developed in the Bird Dynamic project. Check out the 'Read me' file to know more.
+
+
+# Download and load the package
+
+```{r setup, echo=F}
+#devtools::install_github("BaptisteAverly/BirdynamicPkg", ref="develop")
+library(BirdynamicPkg)
+
+library(stochLAB)
+library(rhandsontable)
+library(popbio)
+library(plyr)
+library(tidyverse)
+library(plotly)
+library(rmarkdown)
+library(markdown)
+library(DT)
+library(leaflet) # Needed for interactive map
+library(leafem) # Needed for addMouseCoordinates
+library(gdistance) # Needed to calculate shortest path distance
+library(sf) # Needed for GIS work
+library(raster) # Needed for GIS work (extent function)
+library(units)
+library(htmlwidgets) # Needed for onRender in leaflet map
+library(reshape2) # Needed to prepare output tables
+library(nimble)
+
+load("C:/Users/TERRA/Documents/Tempo_Bdy_loaded4vignette.RData")
+
+# TEMPO
+Mortality_raw <- read.csv("C:/Users/TERRA/Documents/Projects/Birdynamic/Test_data_Shiny/mortality_template.csv", sep=";", dec=",")
+FormattedMortality <- bdy_check_mortality(Mortality_raw,liste_especes_latin)$table
+parcs_L93 <- st_read("C:/Users/TERRA/Documents/Projects/Birdynamic/Test_data_Shiny/Parcs_generic_names.shp") %>% st_transform(., st_crs(2154))
+parcs_L93$Facade <- st_join(st_point_on_surface(parcs_L93), LimFrance, join=st_intersects)$Facade
+```
+
+
+# Prepare data
+TO COME, must include:
+<!-- parcs_L93_full <- st_transform(Shapefile_stored$Shp_list$Merged_shp, st_crs(2154)) -->
+<!-- # Extract if parcs are in the Mediterranean or the Atlantic -->
+<!-- parcs_L93_full$Facade <- st_join(st_point_on_surface(parcs_L93_full), LimFrance, join=st_intersects)$Facade -->
+
+
+# Analyse data
+
+## Use the general function XX
+
+## Calculate distance between colonies and parcs
+We calculate two types of distance: euclidian distance is used for species that cross land (e.g., gulls), shortest sea path is used for purely marine species (e.g., Northern Gannet). Both distances are calculated for all colonies (if at least one species is purely marine) with the [bdy_get_distances()] function, the type of distance to use then depends on species later in the analysis.
+
+```{r calc_dist}
+all_distances <- bdy_get_distances(colonies=colonies00_L93,
+                                   parcs = parcs_L93,
+                                   costMatrix=costMat,
+                                   doShpa = T)
+
+shortest_path_distances <- all_distances$shpa_dist
+print(shortest_path_distances[1:10,])
+
+euclidian_distances <- all_distances$eucl_dist
+print(euclidian_distances[1:10,])
+
+```
+
+
+## Species analysis
+The next steps of the analysis are applied species by species. In this vignette, we show a detailed example for one species, followed by how you can loop the analysis for multiple species.
+
+For this example, we will select the Northern Gannett (**Morus bassanus**) and load the data saved during the previous step (TO ADAPT).
+```{r select_species}
+sp <- "Fou de Bassan"
+
+load(paste0("C:/Users/TERRA/Documents/Projects/Birdynamic/app/0.Data/processed_data_per_species/clean_data_",sp,".RData"))
+```
+
+
+### Apportionning and process mortality data
+The first step to apply is the apportionning, where mortalities due to collisions with wind turbines (modelled or loaded earlier in the pipeline) are attributed to the different colonies depending on their distance to the windfarms or the configuration of the coastline.
+
+We first set the distance between parcs and colonies that include the selected species, keeping the shortest sea path if the species is purely marine, the euclidian distance otherwise.
+
+```{r select_dist}
+if(sp %in% moeurs_terrestres){
+      selec <- which(row.names(euclidian_distances) %in% colonies$code_colonie)
+      colo_parc_distances <- euclidian_distances[selec,,drop=F]
+    }else{
+      selec <- which(row.names(shortest_path_distances) %in% colonies$code_colonie)
+      colo_parc_distances <- shortest_path_distances[selec,,drop=F]
+    }
+
+```
+
+
+We then load sea areas (TO DETAIL).
+```{r select_seaarea}
+ if(sp == "Guifette noire"){
+      sea_area <- rep(1, nrow(colonies))
+      names(sea_area) <- row.names(colo_parc_distances)
+    }else{
+      load(paste0("C:/Users/TERRA/Documents/Projects/Birdynamic/app/0.Data/sea_area/sea_area_", sp, ".rda"))
+    }
+
+```
+
+
+We can now apply the [bdy_apportionning()] function to run the apportionning calculations to set how mortality data should be distributed among colonies.
+```{r apportionning}
+apportionning <- bdy_apportionning(max_foraging_range_km = foraging_range_tbl$Max_km[which(foraging_range_tbl$Espece==sp)], #B
+                                       colonies = colonies,
+                                       sea_area=sea_area,
+                                       tbl_dist=colo_parc_distances)
+
+```
+
+
+This table can then be used in the [bdy_processing_mortality()] that distributes national mortality data among all colonies of a given species.
+```{r apportion_mortality}
+morta_iter_group <- bdy_processing_mortality(
+      collision = FormattedMortality,
+      season=seasons[which(seasons$Espèce==sp),][-1],
+      RW_group = apportionning$RW_group
+    )
+
+```
+
+
+### Model with no impact
+In this step, we will create the demographic model that estimates species trends if there were no collisions with windfarms. Note that these trends are not expected to be very accurate on their own as the demographic models are quite simple, they are only meant to be used in comparison with the model with collisions.
+
+```{r model_noimpact}
+no_impact_output <- bdy_model_no_impact(count_data=group_counts,
+                                        PI=ppa_yr,
+                                        survival=vital_rates[vital_rates$Espèce == sp, "Survie"],
+                                        fecundity=vital_rates[vital_rates$Espèce == sp, "Fecund"],
+                                        propRepro=prop_repro[vital_rates$Espèce == sp, "PropRepro"],
+                                        modelFile="C:/Users/TERRA/Documents/Projects/Birdynamic/app/0.Data/model_01.txt",
+                                        nimble=T)
+```
+
+The output includes XX. 
+
+
+### Model with impact
+We will now create the model with impact from collisions with windfarms by applying the mortalities processed in the apportionning step to the demographic trends estimated with the model with no impact. 
+
+```{r model_withimpact}
+with_impact_output <- bdy_model_with_impact(n_group=nlevels(colonies$group),
+                                                ny_data=ncol(group_counts),
+                                                posterior=no_impact_output,
+                                                mortality=morta_iter_group)
+
+```
+
+
+### Loop for multiple species
+
+
+## Display results
+
+
+
+
+
+<!-- ## RAW -->
+
+<!--     # Prepare binary distance > foraging -->
+<!--     Foraging_range <- foraging_range_tbl$Max_km[which(foraging_range_tbl$Espece==sp)] -->
+<!--     units(Foraging_range)<-"km" -->
+<!--     distanceBIN <- colo_parc_distances<Foraging_range ; rownames(distanceBIN)<-rownames(colo_parc_distances) ;  names(distanceBIN) <- names(colo_parc_distances) -->
+<!--     model_output[[sp]] <- list(no_impact=with_impact_output$sc0, with_impact=with_impact_output$sc1, colonies=colonies, mortality=morta_iter_group, distance=round(colo_parc_distances), distanceBIN=distanceBIN) -->
+
+<!--     rm(colonies,group_counts,ppa_yr) -->
+<!--   } #end species loop -->
+
+
+
+<!-- # Display results -->
+
+<!-- ## RAW -->
+
+<!--   ### Prepare tables (Subpop and National) -->
+<!--   Raw_ResTables <- bdy_raw_res_tables(model_output) -->
+<!--   Stored_results$Res_list$Raw_ResTables <- Raw_ResTables -->
+
+<!--   Pretty_table_national <- bdy_pretty_result_table(Raw_ResTables, type="national") -->
+<!--   Stored_results$Res_list$DT_table_national <- Bdy_InteractiveResultTable(Pretty_table_national, type="national") -->
+
+<!--   ### Prepare summary figures -->
+<!--   # Trends -->
+<!--   Summary_Figures<- bdy_summary_figure(Raw_ResTables, Pretty_table_national) -->
+<!--   Stored_results$Res_list$Summary_Gyeartrends <- Summary_Figures -->
+<!--   Height_plot <- length(unique(ggplot_build(Summary_Figures)$layout$layout$ROW)) * 200 + 150 -->
+<!--   Stored_results$Res_list$Summary_Gyeartrends_interactive <- ggplotly(Summary_Figures, tooltip="text", height=Height_plot, dynamicTicks = FALSE) %>% -->
+<!--     plotly::layout(xaxis = list(fixedrange = TRUE), xaxis2=list(fixedrange = TRUE), xaxis3=list(fixedrange = TRUE), xaxis4=list(fixedrange = TRUE), xaxis5=list(fixedrange = TRUE), yaxis = list(fixedrange = TRUE)) %>% -->
+<!--     config(displayModeBar = F) -->
+
+<!--   # Interactive map -->
+<!--   Stored_results$Res_list$Summary_Map <- Bdy_SummaryMap(model_output, Raw_ResTables, parcs_L93, BufferForaging) -->
+
+<!--   # Mortalite par parc -->
+<!--   Stored_results$Res_list$MortaParc <- Bdy_MortaParc(Raw_ResTables, FormattedMortality()[(FormattedMortality()$espece %in% sel_sp)  & (FormattedMortality()$parc %in% input$selected_parcs),]) -->
+
+
+
+# Conclusion
+
+
+
+

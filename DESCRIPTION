@@ -50,3 +50,7 @@ Depends:
 	units,
 	tools,
 	popbio
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr

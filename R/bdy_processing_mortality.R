@@ -19,7 +19,7 @@
 #' @export
 #'
 
-bdy_processing_mortality <- function(collision,season,n_iteration=1000,RW_group){
+bdy_processing_mortality <- function(collision, season, n_iteration=1000, RW_group){
 
   parcNames = colnames(RW_group)
 

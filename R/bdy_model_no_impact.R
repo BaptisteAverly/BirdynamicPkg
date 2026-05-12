@@ -54,7 +54,7 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
 
   if(nimble){
 
-    m01 <- bdy_modelCode()
+    m01 <- bdy_model_code()
 
     # Initial values
     y<-as.matrix(count_data)
