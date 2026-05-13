@@ -28,7 +28,7 @@ mortality <- bdydata_mortality_example
 mortality <- bdy_check_mortality(mortality,seasons$species_latin)$table #include inside overall function ?
 mortality$species_latin <- mortality$espece_latin
 
-bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(2009,2021),
+bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), foraging_ranges, mortality,
                              n_iteration=1000,ni_noImpact=10000,ni_withImpact=1000,...){
 
   ##checking count data and adding colonies code
@@ -75,11 +75,10 @@ bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(
     }else{
       distances <-  all_distances$shpa_dist
     }
-    idx <- which(row.names(distances) %in% count_processed$colonies_sp$colony_code)
-    distances <- distances[idx,]
+    distances <- distances[rownames(distances) %in% count_processed$colonies_sp$colony_code,]
 
     #calculating sea area for each colony
-    sea_area <- bdy_calculate_sea_area(shapefile=countryShape,
+    sea_area <- bdy_calculate_sea_area(country_polygon=countryShape,
                            max_foraging_range = foraging_range_sp,
                            colonies=count_processed$colonies_sp)
 
@@ -103,7 +102,7 @@ bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(
                                             survival=vital_rates[vital_rates$species_latin== sp, "survival"],
                                             fecundity=vital_rates[vital_rates$species_latin == sp, "fecundity"],
                                             propRepro=vital_rates[vital_rates$species_latin == sp, "propRepro"],
-                                            modelFile=modelFilePath, nimble=F,
+                                            modelFile=modelFilePath, nimble=T,
                                             ni=ni_noImpact,
                                             lightResults = T)
 
@@ -131,9 +130,5 @@ bdy_run_analysis <- function(species,countData,countryShape,parcs,timeRange = c(
   #raw results
   Raw_ResTables <- bdy_raw_res_tables(mod_out=model_output)
 
-  #pretty results
-  Pretty_table_national <- bdy_pretty_result_table(Raw_ResTables, type="national")
-
-  #summary figure
-  Summary_Figures <- bdy_summary_figure(Raw_ResTables, Pretty_table_national)
+  return(Raw_ResTables)
 }
