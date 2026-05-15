@@ -34,9 +34,6 @@ bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), f
   ##checking count data and adding colonies code
   colonies_all <- bdy_check_colonies(countData)
 
-  ## Add colony_code  to "countData"
-  countData$colony_code <- colonies_all$colony_code[match(countData$colony,colonies_all$colony)]
-
   # Prepare countryShape
   crop_extent <- colonies_all %>% st_bbox() %>% st_as_sfc() %>% st_buffer(., 100000) %>% st_transform(., 4326)
 
@@ -62,8 +59,8 @@ bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), f
 
     #processing count data
     count_processed <- bdy_process_count_data(sp=sp,
-                                              effec00=countData,
-                                              colonies00=colonies_all,first_year=timeRange[1],last_year = timeRange[2])
+                                              countData=countData,
+                                              colonies=colonies_all,first_year=timeRange[1],last_year = timeRange[2])
 
     # !! prevoir cas ou l'espece d'interet n'est pas dans la liste !!
     foraging_range_sp = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)]

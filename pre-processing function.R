@@ -17,6 +17,15 @@ effec00 <- data.frame("Colonie"=paste(effec00$secteur,effec00$Colonie,effec00$so
                  "EFF_Min"=effec00$EFF_Min,"EFF_Max"=effec00$EFF_Max,"EFF_Moy"=effec00$EFF_Moy)
 #rm(colonies00_L93,effec01)
 
+#effec03 <- arrange(effec01,facade, secteur, desc(Lat + Lon), Colonie, sous_unite)
+#effec03 <- data.frame("colony"=paste(effec03$secteur,effec03$Colonie,effec03$sous_unite,sep=" - "),
+#                      "lat"=effec03$Lat,"lon"=effec03$Lon,"species_fr"=effec03$espece,"year"=effec03$an,
+#                      "count_min"=effec03$EFF_Min,"count_max"=effec03$EFF_Max,"count_mean"=effec03$EFF_Moy,
+#                      "species_latin"=BD_list$Nom_latin[match(effec03$espece,BD_list$espece_BD)],
+#                      "seafront"=effec03$facade,"regroup"=effec03$regroupe)
+#
+#write.csv2(effec03,file="0.BV_Data_input/BD_Effectifs_clean.csv")
+
 colonies00 <- dplyr::select(.data = effec00,Colonie,Lat, Lon,) %>% unique
 
 #this is to make sure that colonie code is the same as in original code

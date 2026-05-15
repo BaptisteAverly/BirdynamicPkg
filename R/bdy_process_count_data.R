@@ -12,18 +12,30 @@
 #' @examples
 #'
 #'
-bdy_process_count_data <- function(sp,effec00,colonies00,first_year,last_year){
+bdy_process_count_data <- function(sp,countData,colonies,first_year,last_year){
 
   #---check species name-----
 
 
   #--------------------------
 
-  effecSp <- effec00[which(effec00$species_latin == sp &
-                             effec00$year >= first_year &
-                             effec00$year <= last_year), ]
+  #selecting only the count data for the species of interest
+  effecSp <- countData[which(countData$species_latin == sp &
+                             countData$year >= first_year &
+                             countData$year <= last_year), ]
 
-  coloniesSp <- colonies00[which(colonies00$colony_code %in% effecSp$colony_code),]
+  #adding colony code to count data
+  effecSp$colony_code <- colonies$colony_code[match(effecSp$colony,colonies$colony)]
+
+  #this is for consistency with Thierry's code, but unlikely to be used by users
+  if(is.null(effecSp$regroup)){
+    effecSp$regroup <- ""
+  }
+  effecSp$rgp <- FALSE
+  effecSp$rgp[(effecSp$regroup != "")] <- TRUE
+
+  #selecting only the colonies for the species of interest
+  coloniesSp <- colonies[which(colonies$colony_code %in% effecSp$colony_code),]
 
   ## Add column "effectifs"
   agrEff <- round(tapply(effecSp$count_mean,effecSp$colony_code,mean),1)
@@ -46,6 +58,7 @@ bdy_process_count_data <- function(sp,effec00,colonies00,first_year,last_year){
   ## Données de comptages agrégés : colonie x an
 
   counts00 <- as.data.frame(tapply(effecSp$count_mean,list(effecSp$colony_code,effecSp$year),mean))
+  rgp00 <- as.data.frame(tapply(effecSp$rgp,list(effecSp$colony_code,effecSp$year),function(x)as.numeric(isTRUE(x))))
 
   ## Define missing year
   u_yr <- (effecSp$year %>% unique %>% sort)
@@ -58,9 +71,13 @@ bdy_process_count_data <- function(sp,effec00,colonies00,first_year,last_year){
     for(k in 1:length(miss_yr)){
       counts00 <- counts00 %>% add_column(new = NA, .after = paste(miss_yr[k]-1))
       colnames(counts00)[colnames(counts00) == "new"] <- paste(miss_yr[k])
+
+      rgp00 <- rgp00 %>% add_column(new = NA, .after = paste(miss_yr[k]-1))
+      colnames(rgp00)[colnames(rgp00) == "new"] <- paste(miss_yr[k])
     } #k
   } # end if
   rownames(counts00) <- rowNames
+  rownames(rgp00) <- rowNames
 
   ## Total count et Moyenne (sur les années) par colonie
 
@@ -69,9 +86,17 @@ bdy_process_count_data <- function(sp,effec00,colonies00,first_year,last_year){
 
   counts01 <- as.matrix(counts00)
   for(j in 1:nrow(counts00)){
-    counts00$tot[j] <- sum(counts01[j,], na.rm = TRUE)
-    counts00$avg[j] <- mean(counts01[j,], na.rm = TRUE)
-    counts00$last[j] <- get_last(counts01[j,])
+    sel <- which(rgp00[j,] == 0) # use only data that are not part of a "regroup" thing
+    if(length(sel)>0){
+      counts00$tot[j] <- sum(counts01[j,sel])
+      counts00$avg[j] <- mean(counts01[j,sel])
+      counts00$last[j] <- get_last(counts01[j,sel])
+    }else{
+      counts00$tot[j] <- sum(counts01[j,], na.rm = TRUE)
+      counts00$avg[j] <- mean(counts01[j,], na.rm = TRUE)
+      counts00$last[j] <- get_last(counts01[j,])
+    }
+
   } # j
   rm(counts01)
 
