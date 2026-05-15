@@ -10,10 +10,13 @@ bdy_raw_res_tables(mod_out)
 \item{mod_out}{Output of the \code{\link[=bdy_model_with_impact]{bdy_model_with_impact()}} function, completed with colonies, mortality and distance data}
 }
 \value{
-Three tables: \cr
-- Simulated_National: Simulated counts for the 30 projected years at national level (used to plot temporal trends with \code{\link[=bdy_summary_figure]{bdy_summary_figure()}})
-- Tableau_Subpop: Summary table of results by colony (with relative impact, increase in probability of extinction, mortality, etc)
-- Tableau_National: Summary table of results at national level (with relative impact, increase in probability of extinction, mortality, etc)
+Three tables:
+\itemize{
+\item Simulated_National: Simulated counts for the 30 projected years at national level (used to plot temporal trends with \code{\link[=bdy_summary_figure]{bdy_summary_figure()}})
+\item Tableau_Subpop: Summary table of results by colony (with relative impact, increase in probability of extinction, mortality, etc)
+\item Tableau_National: Summary table of results at national level (with relative impact, increase in probability of extinction, mortality, etc)
+}
+\cr Relative impact was calculated for each iteration as \code{100*(C0-C1)/C0}where \code{C0} is the estimated abundance of the species after 30 years without windfarm impact and \code{C1} is the estimated abundance of the species after 30 years with windfarm impact (the median across simulations is provided, as well as the confidence interval). Increase in extinction probability is calculated as \code{100*(P1-P0)} where P0 is the probability of extinction without windfarm impact (calculated as the proportion of simulations that reach counts of 0 after 30 years) and P1 is the probability of extinction with windfarm impact.
 }
 \description{
 Compute result tables (national and by group of colonies)
