@@ -108,7 +108,7 @@ bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), f
                                        tbl_dist = distances)
 
     #distributing mortality
-    morta_iter_group <- bdy_processing_mortality(
+    morta_iter_group <- bdy_process_mortality(
       collision = mortality[which(mortality$species_latin==sp),],
       season=seasons[which(seasons$species_latin==sp),][month.abb],
       n_iteration=n_iteration,
@@ -372,7 +372,7 @@ head(sea_area)
 ```
 
 
-We can now apply the [bdy_apportionning()] function to run the apportionning calculations to set how mortality data should be distributed among colonies. The output includes absolute and relative weights at both colony and group of colonies scales. The value used to split mortality data in `bdy_processing_mortality` is the relative weight of mortality between the parcs for each group of colonies (`RW_group`).
+We can now apply the [bdy_apportionning()] function to run the apportionning calculations to set how mortality data should be distributed among colonies. The output includes absolute and relative weights at both colony and group of colonies scales. The value used to split mortality data in `bdy_process_mortality` is the relative weight of mortality between the parcs for each group of colonies (`RW_group`).
 ```{r apportionning}
 apportionning <- bdy_apportionning(max_foraging_range_km = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)],
                                    colonies = count_processed$colonies_sp,
@@ -384,9 +384,9 @@ print(apportionning$RW_group)
 ```
 
 
-This table can then be used in the [bdy_processing_mortality()] that distributes national mortality data among all colonies of a given species.
+This table can then be used in the [bdy_process_mortality()] that distributes national mortality data among all colonies of a given species.
 ```{r apportion_mortality}
-morta_iter_group <- bdy_processing_mortality(
+morta_iter_group <- bdy_process_mortality(
       collision = FormattedMortality,
       season=seasons[which(seasons$species_latin==sp),][-1],
       n_iteration = 1000,

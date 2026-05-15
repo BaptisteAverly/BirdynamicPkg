@@ -7,6 +7,7 @@
 #'
 #' @returns ggplot object
 #'
+#' @export
 
 bdy_plot_windfarm_impact <- function(Raw_ResTables, mortalities){
 

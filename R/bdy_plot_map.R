@@ -9,6 +9,7 @@
 #'
 #' @returns htmlwidget (leaflet)
 #'
+#' @export
 
 bdy_plot_map <- function(mod_out, Raw_ResTables, parcs, BufferForaging=NULL){
 
