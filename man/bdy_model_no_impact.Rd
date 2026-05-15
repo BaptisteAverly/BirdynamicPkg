@@ -16,7 +16,7 @@ bdy_model_no_impact(
   ny_proj = 30,
   na = 5000,
   nb = 1000,
-  ni = 20000 + nb,
+  ni = 20000,
   nc = 3,
   nt = 5
 )

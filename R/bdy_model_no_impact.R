@@ -25,7 +25,7 @@
 #'
 
 bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,modelFile,nimble=T,lightResults=T,
-                                ny_proj=30,na=5000,nb=1000,ni=20000 + nb,nc=3,nt=5){
+                                ny_proj=30,na=5000,nb=1000,ni=20000,nc=3,nt=5){
 
   ny_data <- ncol(count_data)
   ny_full <- ny_data + ny_proj
@@ -72,13 +72,13 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
         inits = inits(),
         monitors = parameters,
         thin = nt,
-        niter = ni,
+        niter = ni + nb,
         nburnin = nb,
         nchains = nc,
         WAIC = FALSE
       )  # close nimbleMCMC
 
-    posterior <- rbind(outNimble$chain1,outNimble$chain2,outNimble$chain3)
+    posterior <- rbind(outNimble$chain1,outNimble$chain2,outNimble$chain3) # Number of rows = (ni / nt) * 3 (because 3 chains)
     nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nrow(count_data), ", ", ny_data+1, "]"))
     growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nrow(count_data),"]"))
 
@@ -90,7 +90,7 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
       outJags <- jags(data = jags.data, inits = NULL,
                       parameters.to.save = parameters,
                       model.file = modelFile,
-                      n.chains = nc, n.iter = ni,
+                      n.chains = nc, n.iter = ni + nb,
                       n.burnin = nb, n.adapt = na,
                       n.thin = nt, DIC = FALSE,
                       parallel = FALSE

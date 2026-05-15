@@ -47,7 +47,6 @@ library(reshape2) # Needed to prepare output tables
 library(nimble)
 library(htmltools)
 
-
 bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), foraging_ranges, mortality,
                              n_iteration=1000,ni_noImpact=10000,ni_withImpact=1000,...){
 
@@ -149,7 +148,6 @@ bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), f
 
   return(model_output)
 }
-
 ```
 
 
@@ -202,7 +200,7 @@ dens_dt <- data.frame(
   row.names = month.name,
   month=month.name,
   mean=c(5,5,5,10,10,10,10,10,10,5,5,5),
-  sd=1
+  sd=0
 )
 
 chord_profile <- data.frame(
@@ -221,7 +219,7 @@ morta_results <- stoch_crm(
   avoid_bsc_pars = data.frame("mean"=0.99, "sd"=0),
   avoid_ext_pars = NULL,
   noct_act_pars = data.frame("mean"=0.2, "sd"=0),
-  prop_crh_pars = data.frame("mean"=0,"sd"=0),
+  prop_crh_pars = data.frame("mean"=0.5,"sd"=0),
   bird_dens_opt = "tnorm",
   bird_dens_dt = dens_dt,
   flight_type = "flapping",
@@ -266,6 +264,7 @@ Alternatively, mortality data that were compiled previously can be directly load
 
 ```{r load_mortality}
 FormattedMortality <- bdy_check_mortality(bdydata_mortality_example, bdydata_mortality_example$espece_latin)$table
+FormattedMortality$parc <- bdy_clean_names(FormattedMortality$parc) # TO INTEGRATE DIRECTLY IN CHECK MORTALITY FUNCTION!!!!!!!!!!!!!
 head(FormattedMortality)
 ```
 
@@ -305,6 +304,7 @@ countryShape <- bdydata_world_map %>%
 ggplot()+
   geom_sf(data=countryShape)+
   geom_sf(data=colonies_all, col="darkred")+
+  geom_sf(data=parcs_L93, fill="black")+
   theme_minimal()
 
 ```
@@ -388,7 +388,7 @@ This table can then be used in the [bdy_processing_mortality()] that distributes
 ```{r apportion_mortality}
 morta_iter_group <- bdy_processing_mortality(
       collision = FormattedMortality,
-      season=seasons[which(seasons$Espèce==sp),][-1],
+      season=seasons[which(seasons$species_latin==sp),][-1],
       n_iteration = 1000,
       RW_group = apportionning$RW_group
     )
@@ -409,8 +409,7 @@ no_impact_output <- bdy_model_no_impact(count_data = count_processed$group_count
                                         nimble=T)
 ```
 
-The output includes a count column and a growth parameter for each group of colonies. 
-XX A REVOIR AVEC BAPTISTE : pourquoi column 14 et pourquoi 12000 lignes ??
+The output includes initial population counts and a growth parameter for each group of colonies and iterations.
 
 
 ## Model with impact
@@ -439,8 +438,7 @@ Model_output <- list(
     with_impact=with_impact_output$sc1,
     colonies=count_processed$colonies_sp,
     mortality=morta_iter_group,
-    distance=round(distances)#,
-    #distanceBIN=distanceBIN
+    distance=round(distances)
   )
 )
 names(Model_output)[1] <- sp

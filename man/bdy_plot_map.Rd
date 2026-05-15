@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_plot_map.R
 \name{bdy_plot_map}
 \alias{bdy_plot_map}
-\title{Windfarm impact}
+\title{Result map}
 \usage{
 bdy_plot_map(mod_out, Raw_ResTables, parcs, BufferForaging = NULL)
 }
@@ -19,5 +19,5 @@ bdy_plot_map(mod_out, Raw_ResTables, parcs, BufferForaging = NULL)
 htmlwidget (leaflet)
 }
 \description{
-Plot impact of each windfarm on each species
+Summarise results in an interactive leaflet map
 }

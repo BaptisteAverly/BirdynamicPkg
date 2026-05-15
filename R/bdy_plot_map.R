@@ -1,6 +1,6 @@
-#' Windfarm impact
+#' Result map
 #'
-#' Plot impact of each windfarm on each species
+#' Summarise results in an interactive leaflet map
 #'
 #' @param mod_out Raw outputs of Bird dynamic models
 #' @param Raw_ResTables Raw result tables from function [bdy_raw_res_tables()]

@@ -6,7 +6,7 @@
 #'
 #' @returns Three tables:
 #' \itemize{
-#' \item Simulated_National: Simulated counts for the 30 projected years at national level (used to plot temporal trends with [bdy_summary_figure()])
+#' \item Simulated_National: Simulated counts for the 30 projected years at national level (used to plot temporal trends with [bdy_plot_trends()])
 #' \item Tableau_Subpop: Summary table of results by colony (with relative impact, increase in probability of extinction, mortality, etc)
 #' \item Tableau_National: Summary table of results at national level (with relative impact, increase in probability of extinction, mortality, etc)
 #' }
