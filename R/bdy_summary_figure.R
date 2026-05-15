@@ -3,13 +3,12 @@
 #' Plots figure of projected national trends
 #'
 #' @param Raw_ResTables Raw result tables from function [bdy_raw_res_tables()]
-#' @param Pretty_table_national Pretty table from function [bdy_pretty_result_table()]
 #'
 #' @returns A ggplot object with a facet plot per species showing trends with and without impact
 #' @export
 #'
 
-bdy_summary_figure <- function(Raw_ResTables, Pretty_table_national){
+bdy_summary_figure <- function(Raw_ResTables){
 
   # Prepare trends plot
   Summary_simulated <- ddply(Raw_ResTables$Simulated_National, .(Year, Species), function(x){data.frame(
@@ -23,6 +22,8 @@ bdy_summary_figure <- function(Raw_ResTables, Pretty_table_national){
   )})
 
   # Add text info (relative impact + extinction)
+  Pretty_table_national <- bdy_pretty_result_table(Raw_ResTables, type="national")
+
   for(SP in Pretty_table_national$Espece){
     Summary_simulated$Text[Summary_simulated$Species==SP] <- paste0("<b>Impact relatif : </b>", Pretty_table_national$Impact_Relatif[Pretty_table_national$Espece==SP], "\n<b>Augmentation extinction : </b>", Pretty_table_national$Augmentation_Extinction[Pretty_table_national$Espece==SP])
   }

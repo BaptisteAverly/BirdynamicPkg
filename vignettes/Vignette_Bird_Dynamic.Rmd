@@ -46,12 +46,114 @@ library(htmlwidgets) # Needed for onRender in leaflet map
 library(reshape2) # Needed to prepare output tables
 library(nimble)
 
+
+bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), foraging_ranges, mortality,
+                             n_iteration=1000,ni_noImpact=10000,ni_withImpact=1000,...){
+
+  ##checking count data and adding colonies code
+  colonies_all <- bdy_check_colonies(countData)
+
+  ## Add colony_code  to "countData"
+  countData$colony_code <- colonies_all$colony_code[match(countData$colony,colonies_all$colony)]
+
+  # Prepare countryShape
+  crop_extent <- colonies_all %>% st_bbox() %>% st_as_sfc() %>% st_buffer(., 100000) %>% st_transform(., 4326)
+
+  countryShape <- bdydata_world_map %>%
+    st_crop(., crop_extent) %>%
+    st_transform(., st_crs(colonies_all))
+
+  #calculating cost matrix for each seafront
+  cost_matrix <- bdy_get_cost_raster(countryShape,colonies_all,
+                                     pixel_size=10000 #to speed up testing, remove in final function
+  )
+
+  #calculating distances
+  all_distances <- bdy_get_distances(colonies=colonies_all,
+                                     parcs = parcs,
+                                     costMatrix=cost_matrix,
+                                     doShpa = any(!subset(foraging_ranges, species_latin %in% species)$terrestrial_habits))
+
+  #preparing a list to store model outpu for each species
+  model_output <- list()
+
+  for(sp in species){
+
+    #processing count data
+    count_processed <- bdy_process_count_data(sp=sp,
+                                              effec00=countData,
+                                              colonies00=colonies_all,first_year=timeRange[1],last_year = timeRange[2])
+
+    # !! prevoir cas ou l'espece d'interet n'est pas dans la liste !!
+    foraging_range_sp = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)]
+    terrestrial_habit = foraging_ranges$terrestrial_habits[which(foraging_ranges$species_latin==sp)]
+
+    #selecting apropriate distance table (shpa or eucl), and only for colonies where species is present
+    if(terrestrial_habit){
+      distances <-  all_distances$eucl_dist
+    }else{
+      distances <-  all_distances$shpa_dist
+    }
+    distances <- distances[rownames(distances) %in% count_processed$colonies_sp$colony_code,]
+
+    #calculating sea area for each colony
+    sea_area <- bdy_calculate_sea_area(country_polygon=countryShape,
+                           max_foraging_range = foraging_range_sp,
+                           colonies=count_processed$colonies_sp)
+
+    #apportionning
+    apportionning <- bdy_apportionning(max_foraging_range_km=foraging_range_sp,
+                                       colonies=count_processed$colonies_sp,
+                                       sea_area=sea_area,
+                                       tbl_dist = distances)
+
+    #distributing mortality
+    morta_iter_group <- bdy_processing_mortality(
+      collision = mortality[which(mortality$species_latin==sp),],
+      season=seasons[which(seasons$species_latin==sp),][month.abb],
+      n_iteration=n_iteration,
+      RW_group = apportionning$RW_group
+    )
+
+    #model without impact
+    no_impact_output <- bdy_model_no_impact(count_data=count_processed$group_counts_sp,
+                                            PI=count_processed$ppa_yr_sp,
+                                            survival=vital_rates[vital_rates$species_latin== sp, "survival"],
+                                            fecundity=vital_rates[vital_rates$species_latin == sp, "fecundity"],
+                                            propRepro=vital_rates[vital_rates$species_latin == sp, "propRepro"],
+                                            modelFile=modelFilePath, nimble=T,
+                                            ni=ni_noImpact,
+                                            lightResults = T)
+
+    #model with impact
+    with_impact_output <- bdy_model_with_impact(n_group=nlevels(count_processed$colonies_sp$group),
+                                                ny_data=ncol(count_processed$group_counts_sp),
+                                                posterior=no_impact_output,
+                                                mortality=morta_iter_group,
+                                                ni=ni_withImpact)
+
+    #preparing output
+    units(foraging_range_sp)<-"km"
+    distanceBIN <- distances<foraging_range_sp
+    rownames(distanceBIN)<-rownames(distances)
+    names(distanceBIN) <- names(distances)
+
+    model_output[[sp]] <- list(no_impact=with_impact_output$sc0,
+                               with_impact=with_impact_output$sc1,
+                               colonies=count_processed$colonies_sp,
+                               mortality=morta_iter_group,
+                               distance=round(distances),
+                               distanceBIN=distanceBIN)
+  }
+
+  return(model_output)
+}
+
 ```
 
 
 # Prepare data
-
-INCLURE RECAP DES DONNEES A UTILISER
+To run the analyses, you need to prepare data of seabird counts (TO DETAIL GISOM), location of windfarms (spatial data), mortality data from collision with windfarms (which you can calculate using the stochLAB package if you have seabird density estimates around the location of each windfarm, as detailed below). The other data (eg. species demographic parameters) are automatically loaded from the package data, but you can decide to edit them if you have better data or wish to add species that are not included in the package defaults.
 
 ## Count data
 TO COME (GISOM for now)
@@ -181,6 +283,11 @@ colonies_all$seafront <- "atlantique"
 ```
 
 
+If you don't have a shapefile ready, you can also create the sf object from coordinates using the following function
+```{r parc_example2}
+parcs_bis <- st_as_sf(data.frame(lon=c(3.214, 3.606, 5.026), lat=c(43.118, 43.283, 43.292), NAME=c("P1", "P2", "P3")), coords = c("lon","lat"), crs=st_crs(4326)) %>% st_transform(., st_crs(2154))
+```
+
 ADD Check mortality names
 
 
@@ -301,7 +408,8 @@ no_impact_output <- bdy_model_no_impact(count_data = count_processed$group_count
                                         nimble=T)
 ```
 
-The output includes XX. 
+The output includes a count column and a growth parameter for each group of colonies. 
+XX A REVOIR AVEC BAPTISTE : pourquoi column 14 et pourquoi 12000 lignes ??
 
 
 ## Model with impact
@@ -314,12 +422,15 @@ with_impact_output <- bdy_model_with_impact(n_group=nlevels(count_processed$colo
                                             mortality=morta_iter_group
 )
 
+with_impact_output$sc1[,,1]
+
 ```
 
-The output includes XX. 
+The output includes two lists: sc0 (which includes the counts with no impact from windfarms) and sc1 (counts with impact from windfarms). Each of these lists includes 1000 tables (if the number of iterations was set to 1000), with count estimates for the 30 years of projected demography (as columns) and each group of colonies (as rows). 
 
 ## Result table
 
+Results can be compiled from the previous outputs using the function `bdy_raw_res_tables()`, which will create 3 result tables, that will be used in all the functions used to display results.
 ```{r result_table}
 Model_output <- list(
   SP = list(
@@ -333,10 +444,24 @@ Model_output <- list(
 )
 names(Model_output)[1] <- sp
 
-# bdy_raw_res_tables(mod_out=Model_output)
+result_table <- bdy_raw_res_tables(mod_out=Model_output)
 
 ```
 
+First, the table `Simulated_National` includes estimated counts per year and per iteration with or without impact. It is used to plot and compare future trends.
+```{r result_1}
+result_table$Simulated_National
+```
+
+Second, the table `Tableau_National` includes the relative impact and the increase in probability of extinction for each species at national level. Relative impact was calculated for each iteration as `100*(C0-C1)/C0`where `C0` is the estimated abundance of the species after 30 years **without** windfarm impact and `C1` is the estimated abundance of the species after 30 years **with** windfarm impact (the median across simulations is provided, as well as the confidence interval). Increase in extinction probability is calculated as `100*(P1-P0)` where P0 is the probability of extinction **without** windfarm impact (calculated as the proportion of simulations that reach counts of 0 after 30 years) and P1 is the probability of extinction **with** windfarm impact. 
+```{r result_2}
+as.data.frame(result_table$Tableau_National)
+```
+
+Third, the table `Tableau_Subpop` includes the same results as `Tableau_National` but for each group of colonies.
+```{r result_3}
+as.data.frame(result_table$Tableau_Subpop)
+```
 
 
 # Grouped analysis for multiple species
@@ -351,23 +476,37 @@ mod_outputs <- bdy_run_analysis(
   parcs = parcs_L93
 )
 
-#mod_outputs
-```
+result_table <- bdy_raw_res_tables(mod_outputs)
 
-The output includes XX. 
+```
 
 
 
 # Display results
 Whether models were run using the individual functions or the grouped function, the package includes functions to display the different results, following the outputs displayed in the Bird Dynamic Shiny app.
 
-The tables returned from the function 
+First, you can create a pretty table including all the main results at national scale or at the scale of group of colonies:
+```{r res_tables}
+bdy_pretty_result_table(result_table, type="national")
+
+bdy_pretty_result_table(result_table, type="subpop")
+```
+
+Second, you can see relative trends with and without impact:
+```{r res_trends}
+bdy_summary_figure(result_table)
+```
+
+Third, you can obtain an interactive map summarising the results:
+```{r res_map}
+# Bdy_SummaryMap(mod_outputs, result_table, parcs_L93)
+```
 
 
-
-
-
-# Conclusion
+Fourth, you can obtain a plot summarising the effect of each windfarm:
+```{r res_parcs}
+# bdy_plot_mortality(result_table, FormattedMortality)
+```
 
 
 

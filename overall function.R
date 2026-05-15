@@ -127,8 +127,5 @@ bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), f
                                distanceBIN=distanceBIN)
   }
 
-  #raw results
-  Raw_ResTables <- bdy_raw_res_tables(mod_out=model_output)
-
-  return(Raw_ResTables)
+  return(model_output)
 }
