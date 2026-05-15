@@ -1,6 +1,6 @@
-#' Summary trends figure
+#' Plots trends
 #'
-#' Plots figure of projected national trends
+#' Plot figure of projected national trends
 #'
 #' @param Raw_ResTables Raw result tables from function [bdy_raw_res_tables()]
 #'
@@ -8,7 +8,7 @@
 #' @export
 #'
 
-bdy_summary_figure <- function(Raw_ResTables){
+bdy_plot_trends <- function(Raw_ResTables){
 
   # Prepare trends plot
   Summary_simulated <- ddply(Raw_ResTables$Simulated_National, .(Year, Species), function(x){data.frame(

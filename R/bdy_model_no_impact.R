@@ -26,7 +26,6 @@
 
 bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,modelFile,nimble=T,lightResults=T,
                                 ny_proj=30,na=5000,nb=1000,ni=20000 + nb,nc=3,nt=5){
-  # B - from our understanding, not sure that ny_proj really as to be set to 30, since we only output the first year of projection
 
   ny_data <- ncol(count_data)
   ny_full <- ny_data + ny_proj

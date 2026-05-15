@@ -45,6 +45,7 @@ library(units)
 library(htmlwidgets) # Needed for onRender in leaflet map
 library(reshape2) # Needed to prepare output tables
 library(nimble)
+library(htmltools)
 
 
 bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), foraging_ranges, mortality,
@@ -494,18 +495,21 @@ bdy_pretty_result_table(result_table, type="subpop")
 
 Second, you can see relative trends with and without impact:
 ```{r res_trends}
-bdy_summary_figure(result_table)
+bdy_plot_trends(result_table)
 ```
 
 Third, you can obtain an interactive map summarising the results:
 ```{r res_map}
-# Bdy_SummaryMap(mod_outputs, result_table, parcs_L93)
+leafmap <- bdy_plot_map(mod_outputs, result_table, parcs_L93)
+leafmap
+
+#htmlwidgets::saveWidget(leafmap, "Interactive_map_results_Bird_Dynamic.html")
 ```
 
 
 Fourth, you can obtain a plot summarising the effect of each windfarm:
 ```{r res_parcs}
-# bdy_plot_mortality(result_table, FormattedMortality)
+bdy_plot_windfarm_impact(result_table, FormattedMortality)
 ```
 
 
