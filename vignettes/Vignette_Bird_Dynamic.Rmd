@@ -294,7 +294,7 @@ ADD Check mortality names
 ## Prepare coast line
 A map of coastline is needed to create a cost matrix to calculate distance by sea, and to calculate the proportion of sea area around each colonies. We use data stored in the package and crop based on the location of colonies.
 
-```{r countryShape}
+```{r countryShape, out.width='100%'}
 crop_extent <- colonies_all %>% st_bbox() %>% st_as_sfc() %>% st_buffer(., 100000) %>% st_transform(., 4326)
 
 countryShape <- bdydata_world_map %>%
@@ -492,12 +492,12 @@ bdy_pretty_result_table(result_table, type="subpop")
 ```
 
 Second, you can see relative trends with and without impact:
-```{r res_trends}
+```{r res_trends, out.width='100%'}
 bdy_plot_trends(result_table)
 ```
 
 Third, you can obtain an interactive map summarising the results:
-```{r res_map}
+```{r res_map, out.width='100%'}
 leafmap <- bdy_plot_map(mod_outputs, result_table, parcs_L93)
 leafmap
 
@@ -506,7 +506,7 @@ leafmap
 
 
 Fourth, you can obtain a plot summarising the effect of each windfarm:
-```{r res_parcs}
+```{r res_parcs, out.width='100%'}
 bdy_plot_windfarm_impact(result_table, FormattedMortality)
 ```
 
