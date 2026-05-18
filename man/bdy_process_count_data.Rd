@@ -4,7 +4,14 @@
 \alias{bdy_process_count_data}
 \title{Title}
 \usage{
-bdy_process_count_data(sp, effec00, colonies00, first_year, last_year)
+bdy_process_count_data(
+  sp,
+  countData,
+  colonies,
+  first_year,
+  last_year,
+  max_foraging_range_km
+)
 }
 \arguments{
 \item{last_year}{}

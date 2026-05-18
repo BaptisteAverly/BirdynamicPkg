@@ -5,17 +5,20 @@
 \title{Get cost transition matrix}
 \usage{
 bdy_get_cost_raster(
-  shape,
   colonies,
+  shapeBuffer = 100,
+  pixel_size = 1000,
   N_buffer = 100,
   S_buffer = 100,
   W_buffer = 100,
   E_buffer = 100,
-  pixel_size = 1000,
-  returnRaster = F
+  returnRaster = F,
+  plotOutput = F
 )
 }
 \arguments{
+\item{pixel_size}{numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution, but greatly increase computing time.}
+
 \item{N_buffer}{north buffer to increase the extent of the raster beyond the northernmost colony or parc (numeric, in kilometers)}
 
 \item{S_buffer}{south buffer to increase the extent of the raster beyond the southernmost colony or parc (numeric, in kilometers)}
@@ -23,8 +26,6 @@ bdy_get_cost_raster(
 \item{W_buffer}{west buffer to increase the extent of the raster beyond the westernmost colony or parc (numeric, in kilometers)}
 
 \item{E_buffer}{east buffer to increase the extent of the raster beyond the easternmost colony or parc (numeric, in kilometers)}
-
-\item{pixel_size}{numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution, but greatly increase computing time.}
 
 \item{world_map}{sf object of the world with every country. Can be downloaded here:
 https://github.com/nvkelso/natural-earth-vector/blob/master/10m_cultural/ne_10m_admin_0_countries.shp}

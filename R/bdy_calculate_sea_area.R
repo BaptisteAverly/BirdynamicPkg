@@ -14,10 +14,9 @@
 #' @returns named numeric vector indicating the proportion of sea area for each colony provided
 #' @export
 
-bdy_calculate_sea_area <- function(country_polygon, max_foraging_range, colonies){
+bdy_calculate_sea_area <- function(max_foraging_range, colonies,buffer = 100){
 
-  # en L93
-  system.time(shape_L93 <- st_transform(country_polygon, 2154))
+  shape_L93 <-  bdy_prepare_countryShape(colonies[,"geometry"],buffer=buffer)
 
   # buffer de X km autour de tes points
   buf <- st_buffer(colonies, set_units(max_foraging_range, "km"))

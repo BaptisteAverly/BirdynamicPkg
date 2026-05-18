@@ -27,8 +27,12 @@
 #' @export
 #'
 
-bdy_get_cost_raster <- function(shape,colonies,
-                                N_buffer=100,S_buffer=100,W_buffer=100,E_buffer=100,pixel_size=1000,returnRaster=F){
+bdy_get_cost_raster <- function(colonies,shapeBuffer=100,pixel_size=1000,
+                                N_buffer=100,S_buffer=100,W_buffer=100,E_buffer=100,returnRaster=F,plotOutput=F){
+
+  #find way to take into account parc location
+  #shape <- bdy_prepare_countryShape(geom=rbind(colonies_all[,"geometry"], st_centroid(parcs[,"geometry"])),buffer=shapeBuffer)
+  shape <- bdy_prepare_countryShape(geom=colonies[,"geometry"],buffer=shapeBuffer)
 
   # Transform in L93 projection
   shape_L93 <- st_transform(shape, crs = 2154)
@@ -37,10 +41,12 @@ bdy_get_cost_raster <- function(shape,colonies,
   rast_cost_tot = list()
   for(seafront in unique(colonies$seafront)){
 
+    print(paste("Starting seafront",seafront))
+
     subColonies <- colonies[which(colonies$seafront==seafront),]
 
     # Take a subset of the raster based on the extent of colonies and parcs locations
-    ext_col <- subColonies$geometry %>% st_bbox
+    ext_col <- subColonies[,"geometry"] %>% st_bbox
 
     #st_bbox(colonies_L93)
 
@@ -74,8 +80,17 @@ bdy_get_cost_raster <- function(shape,colonies,
     rast_cost_tot[[seafront]] <- rast_cost
   }
 
+  if(plotOutput){
+    bb <- st_bbox(colonies$geometry)
+    plot(colonies$geometry,xlim=c(bb[1]-1000*W_buffer,bb[3]+1000*E_buffer),
+                           ylim=c(bb[2]-1000*S_buffer,bb[4]+1000*N_buffer))
+    for(seafront in unique(colonies$seafront)){
+      plot(tr_cost_tot[[seafront]]@extent,add=T)
+    }
+  }
+
   if(returnRaster){
-    return(list("transition_matrix"=trCost,"cost_raster"=rast_cost))
+    return(list("transition_matrix"=tr_cost_tot,"cost_raster"=rast_cost_tot))
   }else{
     return(tr_cost_tot)
   }

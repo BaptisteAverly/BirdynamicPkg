@@ -12,7 +12,7 @@
 #' @examples
 #'
 #'
-bdy_process_count_data <- function(sp,countData,colonies,first_year,last_year){
+bdy_process_count_data <- function(sp,countData,colonies,first_year,last_year,max_foraging_range_km){
 
   #---check species name-----
 
@@ -148,6 +148,10 @@ bdy_process_count_data <- function(sp,countData,colonies,first_year,last_year){
 
   rownames(ncs_yr) <- rownames(ppc_yr) <- rownames(ppa_yr) <- paste("group", levels(coloniesSp$group))
 
-  return(list("species"=sp,"group_counts_sp"=group_counts,"ppa_yr_sp"=as.data.frame(ppa_yr),"colonies_sp"=coloniesSp))
+  #calculating sea area for each colony
+  sea_area <- bdy_calculate_sea_area(max_foraging_range = max_foraging_range_km,
+                                     colonies=coloniesSp)
+
+  return(list("species"=sp,"group_counts_sp"=group_counts,"ppa_yr_sp"=as.data.frame(ppa_yr),"colonies_sp"=coloniesSp,"sea_area_sp"=sea_area))
 
 }

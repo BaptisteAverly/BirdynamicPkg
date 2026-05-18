@@ -4,11 +4,9 @@
 \alias{bdy_calculate_sea_area}
 \title{Calculate proportion of sea around colony}
 \usage{
-bdy_calculate_sea_area(country_polygon, max_foraging_range, colonies)
+bdy_calculate_sea_area(max_foraging_range, colonies, buffer = 100)
 }
 \arguments{
-\item{country_polygon}{st object of the area of interest}
-
 \item{max_foraging_range}{numeric, max foraging range of the species of interest in kilometers}
 
 \item{colonies}{sf object with each row being a colony where the species of interest is present. Must have at least the following columns:
@@ -16,6 +14,8 @@ bdy_calculate_sea_area(country_polygon, max_foraging_range, colonies)
 \item 'geometry': coordinates of the colony
 \item 'colony_code': character, unique identifier for the colony.
 }}
+
+\item{country_polygon}{st object of the area of interest}
 }
 \value{
 named numeric vector indicating the proportion of sea area for each colony provided
