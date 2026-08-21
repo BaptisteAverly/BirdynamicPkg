@@ -4,16 +4,16 @@
 #'
 #' @param collision data frame giving mortality estimates for the species of interest and the wind farms of interest.Should have at least the following columns:
 #'                  \itemize{
-#'                  \item 'parc': character, names of the parc for which the mortality due to collisions is estimated
+#'                  \item 'windfarm': character, names of the windfarm for which the mortality due to collisions is estimated ('parc' is also accepted as a column name)
 #'                  \item 'month': numeric, month of the year (1 to 12) for which the mortality is estimated
 #'                  \item 'iteration': numeric, iteration index of the collision model.
-#'                  \item 'coefficient': numeric, estimated mortality coefficient from the collision model, for a given combination of parc, month and iteration
+#'                  \item 'coefficient': numeric, estimated mortality coefficient from the collision model, for a given combination of windfarm, month and iteration
 #'                  }
 #' @param season character vector of length 12, giving the presence status of the bird of interest on the french coasts for each month of the year, with: \cr
 #'              'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. \cr
 #'              For more details refer to the Birdynamic report by Chambert et al.
-#' @param RW_group matrix (rows=groups of colonies, columns=parcs) giving relative weights for each group/parc combination,
-#'                with sum of weights for a given parc = 1, as outputed by [bdy_apportionning()]
+#' @param RW_group matrix (rows=groups of colonies, columns=windfarms) giving relative weights for each group/windfarm combination,
+#'                with sum of weights for a given windfarm = 1, as outputed by [bdy_apportionning()]
 #'
 #' @returns Matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies
 #' @export
@@ -21,17 +21,18 @@
 
 bdy_process_mortality <- function(collision, season, n_iteration=1000, RW_group){
 
-  parcNames = colnames(RW_group)
+  windfarmNames = colnames(RW_group)
 
-  ### Make the table to store distribution of collision risk for that species (Iter x Parc)
-  #morta_distri <- matrix(NA, nrow = max(collision$iteration), ncol = n_parc, dimnames = list(NULL, parcs_L93$NAME))
-  morta_distri <- matrix(NA, nrow = n_iteration, ncol = length(parcNames),dimnames=list(NULL, parcNames))
+  ### Make the table to store distribution of collision risk for that species (Iter x Mortality)
+  morta_distri <- matrix(NA, nrow = n_iteration, ncol = length(windfarmNames),dimnames=list(NULL, windfarmNames))
   collision$coefficient <- as.numeric(collision$coefficient)
-  ######################################################################-
-  ### 2. PARC : Loop over windfarms (Parc)
-  for(kk in 1:length(parcNames)){
+  names(collision) <- replace(names(collision), names(collision)=="parc", "windfarm")
 
-    sel <- which(collision$parc == parcNames[kk])
+  ######################################################################-
+  ### 2. Loop over windfarms
+  for(kk in 1:length(windfarmNames)){
+
+    sel <- which(collision$windfarm == windfarmNames[kk])
 
     if(length(sel) == 0){} else{
       cr <- collision[sel,]
@@ -70,9 +71,8 @@ bdy_process_mortality <- function(collision, season, n_iteration=1000, RW_group)
       cr_mix <- sample(cr_mix, size = n_iteration, replace = TRUE)
       cr_local <- sample(cr_local, size = n_iteration, replace = TRUE)
 
-      ### Fill the table (Iter x Parc)
-      # morta_distri[ , parcs_L93$NAME[kk]] <- cr_annual$coefficient
-      morta_distri[ , parcNames[kk]] <- cr_local + cr_mix
+      ### Fill the table (Iter x Windfarm)
+      morta_distri[ , windfarmNames[kk]] <- cr_local + cr_mix
 
     } # close if
     rm(sel)
@@ -86,12 +86,10 @@ bdy_process_mortality <- function(collision, season, n_iteration=1000, RW_group)
   dim(morta_distri)
   head(morta_distri)
 
-  ## Draw many (n_iteration) values for each parc (= shuffled distribution)
-  morta_iteration_parc <- apply(morta_distri, 2, sample, size = n_iteration, replace = TRUE)
-  #head(morta_iteration_parc)
-  #dim(morta_iteration_parc)
+  ## Draw many (n_iteration) values for each windfarm (= shuffled distribution)
+  morta_iteration_windfarm <- apply(morta_distri, 2, sample, size = n_iteration, replace = TRUE)
 
   ## Apportioning mortalities per cluster or group - dim : Iterations X Groups
-  morta_iteration_gp <- morta_iteration_parc %*% t(RW_group)
+  morta_iteration_gp <- morta_iteration_windfarm %*% t(RW_group)
   return(morta_iteration_gp)
 }

@@ -22,15 +22,13 @@ This is used to get the extent of the raster to calculate.}
 
 \item{pixel_size}{numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution, but greatly increase computing time.}
 
-\item{N_buffer}{north buffer to increase the extent of the raster beyond the northernmost colony or parc (numeric, in kilometers)}
+\item{N_buffer}{north buffer to increase the extent of the raster beyond the northernmost colony or windfarm (numeric, in kilometers)}
 
-\item{S_buffer}{south buffer to increase the extent of the raster beyond the southernmost colony or parc (numeric, in kilometers)}
+\item{S_buffer}{south buffer to increase the extent of the raster beyond the southernmost colony or windfarm (numeric, in kilometers)}
 
-\item{W_buffer}{west buffer to increase the extent of the raster beyond the westernmost colony or parc (numeric, in kilometers)}
+\item{W_buffer}{west buffer to increase the extent of the raster beyond the westernmost colony or windfarm (numeric, in kilometers)}
 
-\item{E_buffer}{east buffer to increase the extent of the raster beyond the easternmost colony or parc (numeric, in kilometers)}
-
-\item{plotOutput}{}
+\item{E_buffer}{east buffer to increase the extent of the raster beyond the easternmost colony or windfarm (numeric, in kilometers)}
 }
 \value{
 List of 2 elements:

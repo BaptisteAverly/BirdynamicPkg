@@ -42,7 +42,7 @@ bdy_model_with_impact <- function(n_group,ny_data,posterior,mortality,ni=1000,ny
   #(morta_iter_parc) %>% colMeans
 
 
-  ## Buil object to store subpop sizes (under both scenarios)
+  ## Build object to store subpop sizes (under both scenarios)
   n_sc0 <- array(NA, dim = c(n_group, ny_proj, ni))
   morta_rate <- array(NA, dim = c(n_group, ni))
 

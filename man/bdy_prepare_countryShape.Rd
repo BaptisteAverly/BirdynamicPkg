@@ -6,11 +6,6 @@
 \usage{
 bdy_prepare_countryShape(geom, buffer)
 }
-\arguments{
-\item{geom}{}
-
-\item{buffer}{}
-}
 \description{
 Title
 }

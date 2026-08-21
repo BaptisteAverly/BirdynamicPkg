@@ -14,11 +14,9 @@ modelFilePath <- "app/0.Data/model_01.txt"
 #these are user input
 countData <-  read.csv2("0.BV_Data_input/BD_Effectifs_clean.csv")
 
-#load("Test_data_Shiny/clean_data_parcs.RData")
-#parcs <- parcs_L93
-parcs <- bdydata_parcs_example %>% st_transform(., st_crs(2154))
-parcs$NAME <- bdy_clean_names(parcs$NAME)
-parcs$seafront <- "atlantique"
+windfarms <- bdydata_parcs_example %>% st_transform(., st_crs(2154))
+windfarms$NAME <- bdy_clean_names(windfarms$NAME)
+windfarms$seafront <- "atlantique"
 
 species = seasons$species_latin[1:4]
 
@@ -28,7 +26,7 @@ mortality <- bdydata_mortality_example
 mortality <- bdy_check_mortality(mortality,seasons$species_latin)$table #include inside overall function ?
 mortality$species_latin <- mortality$espece_latin
 
-bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), foraging_ranges, mortality,
+bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021), foraging_ranges, mortality,
                              n_iteration=1000,ni_noImpact=10000,ni_withImpact=1000,...){
 
   ##checking count data and adding colonies code
@@ -41,7 +39,7 @@ bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), f
 
   #calculating distances
   all_distances <- bdy_get_distances(colonies=colonies_all,
-                                     parcs = parcs,
+                                     windfarms = windfarms,
                                      costMatrix=cost_matrix,
                                      doShpa = any(!subset(foraging_ranges, species_latin %in% species)$terrestrial_habits))
 

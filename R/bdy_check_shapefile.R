@@ -13,7 +13,7 @@ bdy_check_shapefile <- function(LoadedShape, Names_mortality){
 
   Warning <- NULL
 
-  ### Check all parcs have names
+  ### Check all windfarms have names
   if((TRUE %in% is.na(LoadedShape$NAME)) | ("" %in% LoadedShape$NAME)){Warning <- "Certains parcs n'ont pas de nom attribué.<br>"}
 
   ### Check names from Parc are the same than names in mortality
@@ -36,13 +36,13 @@ bdy_check_shapefile <- function(LoadedShape, Names_mortality){
     Warning <- paste0("<p style='color:red'>", Warning, "</p>")
   }
 
-  ### Check parcs are within France limits (don't show names warning if it's not the case); only tested in Merge ObserveEvent
+  ### Check windfarms are within France limits (don't show names warning if it's not the case); only tested in Merge ObserveEvent
   if("CoverLimit_France" %in% names(LoadedShape)){
     if(0 %in% LoadedShape$CoverLimit_Europe){Warning <- "<p style='color:red'>Certains parcs sont hors des limites autorisées pour cette application (en rouge sur la carte); ne gardez que des parcs en pleine mer et localises sur les côtes atlantiques francaises (ou des pays adjacents).</p>"}
     if(0 %in% LoadedShape$CoverLimit_France & grepl("color:green", Warning)){Warning <- "<p style='color:purple'>Les données spatiales semblent conformes; notez toutefois que Bird Dynamic ne calcule que l'impact sur les colonies d'oiseaux marins en France alors que certains parcs que vous avez renseignés sont localisés hors de France.</p>"}
   }
 
-  ### Check we have a parc
+  ### Check we have a windfarm
   Warn_NoParc <- "<p style='color:red'>Les coordonnées d'un parc éolien doivent être fournies pour lancer l'analyse</p>"
   if(is.null(nrow(LoadedShape))){Warning <- Warn_NoParc} else {if(nrow(LoadedShape)==0){Warning <- Warn_NoParc}}
 

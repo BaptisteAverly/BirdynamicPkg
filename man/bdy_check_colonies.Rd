@@ -6,9 +6,6 @@
 \usage{
 bdy_check_colonies(effecTable)
 }
-\arguments{
-\item{effecTable}{}
-}
 \description{
 Title
 }

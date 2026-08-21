@@ -4,14 +4,14 @@
 \alias{bdy_plot_map}
 \title{Result map}
 \usage{
-bdy_plot_map(mod_out, Raw_ResTables, parcs, BufferForaging = NULL)
+bdy_plot_map(mod_out, Raw_ResTables, windfarms, BufferForaging = NULL)
 }
 \arguments{
 \item{mod_out}{Raw outputs of Bird dynamic models}
 
 \item{Raw_ResTables}{Raw result tables from function \code{\link[=bdy_raw_res_tables]{bdy_raw_res_tables()}}}
 
-\item{parcs}{sf object of windfarms}
+\item{windfarms}{sf object of windfarms}
 
 \item{BufferForaging}{sf object of species buffers of foraging around colonies to be plotted on the interactive map}
 }

@@ -13,9 +13,6 @@ bdy_process_count_data(
   max_foraging_range_km
 )
 }
-\arguments{
-\item{last_year}{}
-}
 \description{
 Title
 }

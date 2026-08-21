@@ -1,6 +1,6 @@
 #' Apportionning
 #'
-#' Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species. For a given colony, these weights are influenced by: (1) Distance between the colony and the wind parcs,
+#' Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species. For a given colony, these weights are influenced by: (1) Distance between the colony and the windfarms,
 #' (2) The population size of the species of interest for that colony and (3), the proportion of marine surface surrounding the colony.
 #'
 #' @param max_foraging_range_km numeric, maximum foraging range in kilometers for the species of interest
@@ -18,17 +18,17 @@
 #'
 #' @returns List of 4 matrices:
 #'          \itemize{
-#'          \item 'AW_colo' (rows=colonies, columns=parcs): absolute weights for each colony/parc combination
-#'          \item 'RW_colo' (rows=colonies, columns=parcs): relative (normalized) weights for each colony/parc combination (sum of weights for a given parc = 1)
-#'          \item 'AW_group' (rows=groups of colonies, columns=parcs): absolute weights for each group/parc combination
-#'          \item 'RW_group' (rows=groups of colonies, columns=parcs): relative (normalized) weights for each group/parc combination (sum of weights for a given parc = 1)
+#'          \item 'AW_colo' (rows=colonies, columns=windfarms): absolute weights for each colony/windfarm combination
+#'          \item 'RW_colo' (rows=colonies, columns=windfarms): relative (normalized) weights for each colony/windfarm combination (sum of weights for a given windfarm = 1)
+#'          \item 'AW_group' (rows=groups of colonies, columns=windfarms): absolute weights for each group/windfarm combination
+#'          \item 'RW_group' (rows=groups of colonies, columns=windfarms): relative (normalized) weights for each group/windfarm combination (sum of weights for a given windfarm = 1)
 #'          }
 #' @export
 
 
 bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,incl_pop_size=T,incl_sea_area=T){
 
-  n_parc = ncol(tbl_dist)
+  n_windfarms = ncol(tbl_dist)
   n_group <- nlevels(colonies$group) #B
 
   ### APPORTIONNING ###
@@ -43,9 +43,9 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
   tbl_dist <- tbl_dist[order(row.names(tbl_dist)),,drop=F]
 
   ## Table for Apportioning
-  parcNames = colnames(tbl_dist)
+  windfarmNames = colnames(tbl_dist)
   tbl_app <- as.data.frame(tbl_dist)
-  colnames(tbl_app) = parcNames
+  colnames(tbl_app) = windfarmNames
 
   ## Add info colony size
   tbl_app$size <- colonies$mean[match(row.names(tbl_dist),colonies$colony_code)]
@@ -75,10 +75,10 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
   #####################################
 
   ## Make table of Absolute Weights
-  AW_dist <- AW_size <- AW_area <- as.data.frame(matrix(NA, nrow = nrow(tbl_app), ncol = n_parc, dimnames = list(rownames(tbl_app), colnames(tbl_dist))))
+  AW_dist <- AW_size <- AW_area <- as.data.frame(matrix(NA, nrow = nrow(tbl_app), ncol = n_windfarms, dimnames = list(rownames(tbl_app), colnames(tbl_dist))))
 
   ## Relative weight including or not pop size and sea area
-  for(i in 1:n_parc){
+  for(i in 1:n_windfarms){
     AW_dist[,i] <- as.numeric(1/rel_weight((tbl_app[,i]^2)))
     AW_size[,i] <- rel_weight(tbl_app$size)
     AW_area[,i] <- rel_weight(1/tbl_app$sea_area)
@@ -110,7 +110,7 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
   #####################################
   #### CLUSTER/GROUP SCALE
   #####################################
-  group_dist <- as.data.frame(matrix(NA, nrow = n_group, ncol = n_parc, dimnames = list(levels(colonies$group), colnames(tbl_dist))))
+  group_dist <- as.data.frame(matrix(NA, nrow = n_group, ncol = n_windfarms, dimnames = list(levels(colonies$group), colnames(tbl_dist))))
   group_size <- group_area <- c()
 
   for(gg in 1:n_group){
@@ -118,7 +118,7 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
     ## Distance moyenne au group pondérée par la taille de colonie
     group_dist[gg,] <-
       (rel_weight(tbl_app[colonies$colony_code[colonies$group == gg], "size"]) *
-         tbl_app[colonies$colony_code[colonies$group == gg], 1:n_parc,drop=F]
+         tbl_app[colonies$colony_code[colonies$group == gg], 1:n_windfarms,drop=F]
       ) %>%
       colSums
 
@@ -136,10 +136,10 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
   rm(gg)
 
   ## Make table of Absolute Weights
-  AW_dist <- AW_size <- AW_area <- as.data.frame(matrix(NA, nrow = n_group, ncol = n_parc, dimnames = list(levels(colonies$group), colnames(tbl_dist))))
+  AW_dist <- AW_size <- AW_area <- as.data.frame(matrix(NA, nrow = n_group, ncol = n_windfarms, dimnames = list(levels(colonies$group), colnames(tbl_dist))))
   #dim(AW_size)
 
-  for(i in 1:n_parc){
+  for(i in 1:n_windfarms){
     AW_dist[,i] <- as.numeric(1/rel_weight((group_dist[,i]^2)))
     AW_size[,i] <- rel_weight(group_size)
     AW_area[,i] <- rel_weight(1/group_area)

@@ -6,10 +6,10 @@
 #'                This is used to get the extent of the raster to calculate.
 #' @param shapeBuffer
 #' @param pixel_size numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution, but greatly increase computing time.
-#' @param N_buffer north buffer to increase the extent of the raster beyond the northernmost colony or parc (numeric, in kilometers)
-#' @param S_buffer south buffer to increase the extent of the raster beyond the southernmost colony or parc (numeric, in kilometers)
-#' @param W_buffer west buffer to increase the extent of the raster beyond the westernmost colony or parc (numeric, in kilometers)
-#' @param E_buffer east buffer to increase the extent of the raster beyond the easternmost colony or parc (numeric, in kilometers)
+#' @param N_buffer north buffer to increase the extent of the raster beyond the northernmost colony or windfarm (numeric, in kilometers)
+#' @param S_buffer south buffer to increase the extent of the raster beyond the southernmost colony or windfarm (numeric, in kilometers)
+#' @param W_buffer west buffer to increase the extent of the raster beyond the westernmost colony or windfarm (numeric, in kilometers)
+#' @param E_buffer east buffer to increase the extent of the raster beyond the easternmost colony or windfarm (numeric, in kilometers)
 #' @param returnRaster
 #' @param plotOutput
 #'
@@ -24,8 +24,7 @@
 bdy_get_cost_raster <- function(colonies,shapeBuffer=100,pixel_size=1000,
                                 N_buffer=100,S_buffer=100,W_buffer=100,E_buffer=100,returnRaster=F,plotOutput=F){
 
-  #find way to take into account parc location
-  #shape <- bdy_prepare_countryShape(geom=rbind(colonies_all[,"geometry"], st_centroid(parcs[,"geometry"])),buffer=shapeBuffer)
+  #find way to take into account windfarm location
   shape <- bdy_prepare_countryShape(geom=colonies[,"geometry"],buffer=shapeBuffer)
 
   # Transform in L93 projection
@@ -39,7 +38,7 @@ bdy_get_cost_raster <- function(colonies,shapeBuffer=100,pixel_size=1000,
 
     subColonies <- colonies[which(colonies$seafront==seafront),]
 
-    # Take a subset of the raster based on the extent of colonies and parcs locations
+    # Take a subset of the raster based on the extent of colonies and windfarms locations
     ext_col <- subColonies[,"geometry"] %>% st_bbox
 
     #st_bbox(colonies_L93)

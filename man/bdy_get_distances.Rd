@@ -2,9 +2,9 @@
 % Please edit documentation in R/bdy_get_distances.R
 \name{bdy_get_distances}
 \alias{bdy_get_distances}
-\title{Calculates distance parc-colonies}
+\title{Calculates distance windfarm-colonies}
 \usage{
-bdy_get_distances(colonies, parcs, costMatrix, doShpa = T, progress = NULL)
+bdy_get_distances(colonies, windfarms, costMatrix, doShpa = T, progress = NULL)
 }
 \arguments{
 \item{colonies}{sf table where each row is a colony of interest.
@@ -15,7 +15,7 @@ Must contain the columns:
 \item 'seafront': character, which sea front is the colony located in
 }}
 
-\item{parcs}{sf table where each row is a wind farm of interest.
+\item{windfarms}{sf table where each row is a wind farm of interest.
 Must contain the columns:
 \itemize{
 \item 'NAME': character, unique identifier for each wind farm
@@ -24,7 +24,7 @@ Must contain the columns:
 }}
 
 \item{costMatrix}{named list containing cost rasters (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
-Must contain one object per sea front, with names identical to names in column 'facade' of argument 'colonies' and column 'Facade' of argument 'parcs'.
+Must contain one object per sea front, with names identical to names in column 'facade' of argument 'colonies' and column 'Facade' of argument 'windfarms'.
 Used to calculate shortest path distances for strictly marine birds which do not fly over the land.}
 
 \item{doShpa}{boolean. If set to false, only the euclidean distance is calculated which makes the computation faster, especially if there are many wind farms.}

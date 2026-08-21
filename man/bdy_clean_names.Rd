@@ -6,9 +6,6 @@
 \usage{
 bdy_clean_names(any_words)
 }
-\arguments{
-\item{any_words}{}
-}
 \description{
 Title
 }

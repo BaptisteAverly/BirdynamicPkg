@@ -47,7 +47,7 @@ library(reshape2) # Needed to prepare output tables
 library(nimble)
 library(htmltools)
 
-bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), foraging_ranges, mortality,
+bdy_run_analysis <- function(species, countData, windfarms, timeRange = c(2009,2021), foraging_ranges, mortality,
                              n_iteration=1000,ni_noImpact=10000,ni_withImpact=1000,...){
 
   ##checking count data and adding colonies code
@@ -70,7 +70,7 @@ bdy_run_analysis <- function(species,countData,parcs,timeRange = c(2009,2021), f
 
   #calculating distances
   all_distances <- bdy_get_distances(colonies=colonies_all,
-                                     parcs = parcs,
+                                     windfarms = windfarms,
                                      costMatrix=cost_matrix,
                                      doShpa = any(!subset(foraging_ranges, species_latin %in% species)$terrestrial_habits))
 
@@ -192,7 +192,7 @@ head(seasons)
 Mortality can be either calculated using the `stochLAB` package or directly loaded if they were calculated previously.
 
 ### Calculate mortality data
-To create them with the `stoch_crm()` function from the `stochLAB` package, you must define the density of your species for each parc and month, and all the parc and seabird parameters. The values entered below are only for the example, do not consider them as verified default values. 
+To create them with the `stoch_crm()` function from the `stochLAB` package, you must define the density of your species for each windfarm and month, and all the windfarm and seabird parameters. The values entered below are only for the example, do not consider them as verified default values. 
 
 ```{r calculate_mortality}
 
@@ -270,14 +270,14 @@ head(FormattedMortality)
 
 
 
-## Parc data
-Parc data must be provided to run the analyses, as a sf object (see `st_read(st_read)` for more details) using either points or polygons, projected in Lambert93 (EPSG:2154). As an example, we here use the `bdydata_parc_example` data included in the package and we apply the `bdy_clean_names()` function to the NAME column (to remove spaces and capital and ensure it matches with names in mortality data). They must include a column indicating the seafront (for France, it can be 'atlantique' or 'mediterranee'); this also has to be added as a column to the colony file.
+## Windfarm data
+Windfarm data must be provided to run the analyses, as a sf object (see `help(st_read)` for more details) using either points or polygons, projected in Lambert93 (EPSG:2154). As an example, we here use the `bdydata_parc_example` data included in the package and we apply the `bdy_clean_names()` function to the NAME column (to remove spaces and capital and ensure it matches with names in mortality data). They must include a column indicating the seafront (for France, it can be 'atlantique' or 'mediterranee'); this also has to be added as a column to the colony file.
 
 ```{r parc_example}
-parcs_L93 <- bdydata_parcs_example %>% st_transform(., st_crs(2154))
-parcs_L93$NAME <- bdy_clean_names(parcs_L93$NAME)
-parcs_L93$seafront <- "atlantique"
-parcs_L93
+windfarms_L93 <- bdydata_parcs_example %>% st_transform(., st_crs(2154))
+windfarms_L93$NAME <- bdy_clean_names(windfarms_L93$NAME)
+windfarms_L93$seafront <- "atlantique"
+windfarms_L93
 
 colonies_all$seafront <- "atlantique"
 ```
@@ -285,7 +285,7 @@ colonies_all$seafront <- "atlantique"
 
 If you don't have a shapefile ready, you can also create the sf object from coordinates using the following function
 ```{r parc_example2}
-parcs_bis <- st_as_sf(data.frame(lon=c(3.214, 3.606, 5.026), lat=c(43.118, 43.283, 43.292), NAME=c("P1", "P2", "P3")), coords = c("lon","lat"), crs=st_crs(4326)) %>% st_transform(., st_crs(2154))
+windfarms_bis <- st_as_sf(data.frame(lon=c(3.214, 3.606, 5.026), lat=c(43.118, 43.283, 43.292), NAME=c("W1", "W2", "P3")), coords = c("lon","lat"), crs=st_crs(4326)) %>% st_transform(., st_crs(2154))
 ```
 
 ADD Check mortality names
@@ -304,7 +304,7 @@ countryShape <- bdydata_world_map %>%
 ggplot()+
   geom_sf(data=countryShape)+
   geom_sf(data=colonies_all, col="darkred")+
-  geom_sf(data=parcs_L93, fill="black")+
+  geom_sf(data=windfarms_L93, fill="black")+
   theme_minimal()
 
 ```
@@ -313,14 +313,14 @@ ggplot()+
 
 # Detailed analysis for one species
 
-## Calculate distance between colonies and parcs
+## Calculate distance between colonies and windfarms
 We calculate two types of distance: euclidian distance is used for species that cross land (e.g., gulls), shortest sea path is used for purely marine species (e.g., Northern Gannet). Both distances are calculated for all colonies (if doShpa is set to TRUE) with the `bdy_get_distances()` function, the type of distance to use then depends on species later in the analysis. Before calculating distances, a cost matrix based on coastline must be calculated with the `bdy_get_cost_raster()`.
 
 ```{r calc_dist}
 cost_matrix <- bdy_get_cost_raster(countryShape, colonies_all)
 
 all_distances <- bdy_get_distances(colonies=colonies_all,
-                                   parcs = parcs_L93,
+                                   windfarms = windfarms_L93,
                                    costMatrix=cost_matrix,
                                    doShpa = T)
 
@@ -348,7 +348,7 @@ count_processed <- bdy_process_count_data(sp=sp,
 ## Apportionning and processing mortality data
 The first step to apply is the apportionning, where mortalities due to collisions with wind turbines (modelled or loaded earlier in the pipeline) are attributed to the different colonies depending on their distance to the windfarms or the configuration of the coastline.
 
-We first set the distance between parcs and colonies that include the selected species, keeping the shortest sea path if the species is purely marine, the euclidian distance otherwise.
+We first set the distance between windfarms and colonies that include the selected species, keeping the shortest sea path if the species is purely marine, the euclidian distance otherwise.
 
 ```{r select_dist}
 if(foraging_ranges$terrestrial_habits[foraging_ranges$species_latin==sp]){
@@ -372,7 +372,7 @@ head(sea_area)
 ```
 
 
-We can now apply the [bdy_apportionning()] function to run the apportionning calculations to set how mortality data should be distributed among colonies. The output includes absolute and relative weights at both colony and group of colonies scales. The value used to split mortality data in `bdy_process_mortality` is the relative weight of mortality between the parcs for each group of colonies (`RW_group`).
+We can now apply the [bdy_apportionning()] function to run the apportionning calculations to set how mortality data should be distributed among colonies. The output includes absolute and relative weights at both colony and group of colonies scales. The value used to split mortality data in `bdy_process_mortality` is the relative weight of mortality between the windfarms for each group of colonies (`RW_group`).
 ```{r apportionning}
 apportionning <- bdy_apportionning(max_foraging_range_km = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)],
                                    colonies = count_processed$colonies_sp,
@@ -472,7 +472,7 @@ mod_outputs <- bdy_run_analysis(
   countData = countData,
   foraging_ranges = foraging_ranges,
   mortality = FormattedMortality,
-  parcs = parcs_L93
+  windfarms = windfarms_L93
 )
 
 result_table <- bdy_raw_res_tables(mod_outputs)
@@ -498,7 +498,7 @@ bdy_plot_trends(result_table)
 
 Third, you can obtain an interactive map summarising the results:
 ```{r res_map, out.width='100%'}
-leafmap <- bdy_plot_map(mod_outputs, result_table, parcs_L93)
+leafmap <- bdy_plot_map(mod_outputs, result_table, windfarms_L93)
 leafmap
 
 #htmlwidgets::saveWidget(leafmap, "Interactive_map_results_Bird_Dynamic.html")

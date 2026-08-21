@@ -5,10 +5,10 @@
 #' @param Mortality A data frame giving mortality estimates for the species of interest and the wind farms of interest.Correctly formated ones should have the following columns:
 #'                  \itemize{
 #'                  \item 'espece_latin': character, name of the species in french
-#'                  \item 'parc': character, names of the parc for which the mortality due to collisions is estimated
+#'                  \item 'parc': character, names of the windfarm for which the mortality due to collisions is estimated
 #'                  \item 'month': numeric, month of the year (1 to 12) for which the mortality is estimated
 #'                  \item 'iteration': numeric, iteration index of the collision model.
-#'                  \item 'coefficient': numeric, estimated mortality coefficient from the collision modèle, for a given combination of species, parc, month and iteration
+#'                  \item 'coefficient': numeric, estimated mortality coefficient from the collision modèle, for a given combination of species, windfarm, month and iteration
 #'                  }
 
 #' @param speciesList character vector giving the names of all the species which are acceptable entries for the analysis

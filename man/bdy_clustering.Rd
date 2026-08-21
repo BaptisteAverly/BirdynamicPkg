@@ -10,8 +10,6 @@ bdy_clustering(coord, h_km = 5, dist_regr_isol = 4 * h_km, regroupIsolates = T)
 \item{h_km}{Define the bandwidth (in km) used by the Clustering Algorithm}
 
 \item{dist_regr_isol}{Define the max distance to regroup an isolated colony to closest cluster}
-
-\item{regroupIsolates}{}
 }
 \description{
 Clustering using Mean Shift Algorithm

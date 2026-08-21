@@ -35,13 +35,13 @@ Each value should be named with the unique identifier for the corresponding colo
 \value{
 List of 4 matrices:
 \itemize{
-\item 'AW_colo' (rows=colonies, columns=parcs): absolute weights for each colony/parc combination
-\item 'RW_colo' (rows=colonies, columns=parcs): relative (normalized) weights for each colony/parc combination (sum of weights for a given parc = 1)
-\item 'AW_group' (rows=groups of colonies, columns=parcs): absolute weights for each group/parc combination
-\item 'RW_group' (rows=groups of colonies, columns=parcs): relative (normalized) weights for each group/parc combination (sum of weights for a given parc = 1)
+\item 'AW_colo' (rows=colonies, columns=windfarms): absolute weights for each colony/windfarm combination
+\item 'RW_colo' (rows=colonies, columns=windfarms): relative (normalized) weights for each colony/windfarm combination (sum of weights for a given windfarm = 1)
+\item 'AW_group' (rows=groups of colonies, columns=windfarms): absolute weights for each group/windfarm combination
+\item 'RW_group' (rows=groups of colonies, columns=windfarms): relative (normalized) weights for each group/windfarm combination (sum of weights for a given windfarm = 1)
 }
 }
 \description{
-Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species. For a given colony, these weights are influenced by: (1) Distance between the colony and the wind parcs,
+Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species. For a given colony, these weights are influenced by: (1) Distance between the colony and the windfarms,
 (2) The population size of the species of interest for that colony and (3), the proportion of marine surface surrounding the colony.
 }
