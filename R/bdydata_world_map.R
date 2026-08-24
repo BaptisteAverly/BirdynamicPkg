@@ -7,4 +7,4 @@
 #' @usage print(bdydata_world_map)
 #'
 #' @format sf object (.rda)
-#'
+"bdydata_world_map"

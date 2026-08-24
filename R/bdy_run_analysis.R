@@ -1,30 +1,28 @@
-
-setwd(dir=ifelse(file.exists("C:/Users/TERRA"),
-                 "C:/Users/TERRA/Documents/Projects/Birdynamic", # Setwd Victor
-                 "D:/Documents/JOBS/Independant/Birdynamic")) # Setwd Baptiste
-
-#these should be included in the package
-world_map <- bdydata_world_map
-foraging_ranges <- bdydata_foraging_ranges
-seasons <- bdydata_seasons
-vital_rates <- bdydata_vital_rates
-
-modelFilePath <- "app/0.Data/model_01.txt"
-
-#these are user input
-countData <-  read.csv2("0.BV_Data_input/BD_Effectifs_clean.csv")
-
-windfarms <- bdydata_parcs_example %>% st_transform(., st_crs(2154))
-windfarms$NAME <- bdy_clean_names(windfarms$NAME)
-windfarms$seafront <- "atlantique"
-
-species = seasons$species_latin[1:4]
-
-timeRange = c(2009,2021)
-#mortality <- read.csv(file="Test_data_Shiny/mortality_all/formatted/01_collisionRisk_Fou de Bassan.csv")
-mortality <- bdydata_mortality_example
-mortality <- bdy_check_mortality(mortality,seasons$species_latin)$table #include inside overall function ?
-mortality$species_latin <- mortality$espece_latin
+#' Run complete analysis
+#'
+#' This function can be used to run the complete analysis (from calculating cost raster to getting model outputs). See the package vignette for more information.
+#'
+#' @param species vector of species names to include in the analysis
+#' @param countData table of bird counts
+#' @param windfarms sf object indicating the position of windfarms, for instance using [bdydata_parcs_example]; must be in EPSG 2154
+#' @param timeRange minimum and maximum years of bird counts to integrate in trends estimates
+#' @param foraging_ranges table of species foraging ranges, for instance using [bdydata_foraging_ranges]
+#' @param mortality table of collision from [bdy_check_mortality()], for instance using [bdydata_mortality_example]
+#' @param n_iteration Number of iterations for the collision model (parameter used in [bdy_process_mortality()])
+#' @param ni_noImpact Number of iterations to use in [bdy_model_no_impact()]
+#' @param ni_withImpact Number of iterations to use in [bdy_model_with_impact()]
+#'
+#' @returns List of model outputs for each species, including:
+#'          \itemize{
+#'          \item 'no_impact': Bird counts assuming no impact from windfarm; see [bdy_model_no_impact()] for more details
+#'          \item 'with_impact': Bird counts assuming no impact from windfarm; see [bdy_model_with_impact()] for more details
+#'          \item 'colonies': Table of colonies where the species is present
+#'          \item 'mortality': Table of collision per group of colony (see more details in [bdy_process_mortality()])
+#'          \item 'distance': Table of distances between colonies and windfarms
+#'          \item 'distanceBIN': Binarised table of distances between colonies and windfarms binarised, reporting whether the windfarm is accessible to the individuals from the colony (i.e., the distance is smaller than the maximum foraging distance of the species)
+#'          }
+#' @export
+#'
 
 bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021), foraging_ranges, mortality,
                              n_iteration=1000,ni_noImpact=10000,ni_withImpact=1000,...){
@@ -73,7 +71,7 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
                                        tbl_dist = distances)
 
     #distributing mortality
-    morta_iter_group <- bdy_processing_mortality(
+    morta_iter_group <- bdy_process_mortality(
       collision = mortality[which(mortality$species_latin==sp),],
       season=seasons[which(seasons$species_latin==sp),][month.abb],
       n_iteration=n_iteration,

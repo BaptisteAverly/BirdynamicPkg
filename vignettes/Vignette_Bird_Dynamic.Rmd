@@ -7,6 +7,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+
 ```{r, include = FALSE}
 knitr::opts_chunk$set(
   collapse = TRUE,
@@ -28,6 +29,7 @@ The R package 'BirdynamicPkg' enables modelling the demographic impact of windfa
 library(BirdynamicPkg)
 
 library(stochLAB)
+library(LPCM)
 library(rhandsontable)
 library(popbio)
 library(plyr)
@@ -47,107 +49,6 @@ library(reshape2) # Needed to prepare output tables
 library(nimble)
 library(htmltools)
 
-bdy_run_analysis <- function(species, countData, windfarms, timeRange = c(2009,2021), foraging_ranges, mortality,
-                             n_iteration=1000,ni_noImpact=10000,ni_withImpact=1000,...){
-
-  ##checking count data and adding colonies code
-  colonies_all <- bdy_check_colonies(countData)
-
-  ## Add colony_code  to "countData"
-  countData$colony_code <- colonies_all$colony_code[match(countData$colony,colonies_all$colony)]
-
-  # Prepare countryShape
-  crop_extent <- colonies_all %>% st_bbox() %>% st_as_sfc() %>% st_buffer(., 100000) %>% st_transform(., 4326)
-
-  countryShape <- bdydata_world_map %>%
-    st_crop(., crop_extent) %>%
-    st_transform(., st_crs(colonies_all))
-
-  #calculating cost matrix for each seafront
-  cost_matrix <- bdy_get_cost_raster(countryShape,colonies_all,
-                                     pixel_size=10000 #to speed up testing, remove in final function
-  )
-
-  #calculating distances
-  all_distances <- bdy_get_distances(colonies=colonies_all,
-                                     windfarms = windfarms,
-                                     costMatrix=cost_matrix,
-                                     doShpa = any(!subset(foraging_ranges, species_latin %in% species)$terrestrial_habits))
-
-  #preparing a list to store model outpu for each species
-  model_output <- list()
-
-  for(sp in species){
-
-    #processing count data
-    count_processed <- bdy_process_count_data(sp=sp,
-                                              effec00=countData,
-                                              colonies00=colonies_all,first_year=timeRange[1],last_year = timeRange[2])
-
-    # !! prevoir cas ou l'espece d'interet n'est pas dans la liste !!
-    foraging_range_sp = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)]
-    terrestrial_habit = foraging_ranges$terrestrial_habits[which(foraging_ranges$species_latin==sp)]
-
-    #selecting apropriate distance table (shpa or eucl), and only for colonies where species is present
-    if(terrestrial_habit){
-      distances <-  all_distances$eucl_dist
-    }else{
-      distances <-  all_distances$shpa_dist
-    }
-    distances <- distances[rownames(distances) %in% count_processed$colonies_sp$colony_code,]
-
-    #calculating sea area for each colony
-    sea_area <- bdy_calculate_sea_area(country_polygon=countryShape,
-                           max_foraging_range = foraging_range_sp,
-                           colonies=count_processed$colonies_sp)
-
-    #apportionning
-    apportionning <- bdy_apportionning(max_foraging_range_km=foraging_range_sp,
-                                       colonies=count_processed$colonies_sp,
-                                       sea_area=sea_area,
-                                       tbl_dist = distances)
-
-    #distributing mortality
-    morta_iter_group <- bdy_process_mortality(
-      collision = mortality[which(mortality$species_latin==sp),],
-      season=seasons[which(seasons$species_latin==sp),][month.abb],
-      n_iteration=n_iteration,
-      RW_group = apportionning$RW_group
-    )
-
-    #model without impact
-    no_impact_output <- bdy_model_no_impact(count_data=count_processed$group_counts_sp,
-                                            PI=count_processed$ppa_yr_sp,
-                                            survival=vital_rates[vital_rates$species_latin== sp, "survival"],
-                                            fecundity=vital_rates[vital_rates$species_latin == sp, "fecundity"],
-                                            propRepro=vital_rates[vital_rates$species_latin == sp, "propRepro"],
-                                            modelFile=modelFilePath, nimble=T,
-                                            ni=ni_noImpact,
-                                            lightResults = T)
-
-    #model with impact
-    with_impact_output <- bdy_model_with_impact(n_group=nlevels(count_processed$colonies_sp$group),
-                                                ny_data=ncol(count_processed$group_counts_sp),
-                                                posterior=no_impact_output,
-                                                mortality=morta_iter_group,
-                                                ni=ni_withImpact)
-
-    #preparing output
-    units(foraging_range_sp)<-"km"
-    distanceBIN <- distances<foraging_range_sp
-    rownames(distanceBIN)<-rownames(distances)
-    names(distanceBIN) <- names(distances)
-
-    model_output[[sp]] <- list(no_impact=with_impact_output$sc0,
-                               with_impact=with_impact_output$sc1,
-                               colonies=count_processed$colonies_sp,
-                               mortality=morta_iter_group,
-                               distance=round(distances),
-                               distanceBIN=distanceBIN)
-  }
-
-  return(model_output)
-}
 ```
 
 
@@ -263,9 +164,9 @@ head(morta_format)
 Alternatively, mortality data that were compiled previously can be directly loaded, as long as they are formatted as in `bdydata_mortality_example` (which we will use in this vignette):
 
 ```{r load_mortality}
-FormattedMortality <- bdy_check_mortality(bdydata_mortality_example, bdydata_mortality_example$espece_latin)$table
-FormattedMortality$parc <- bdy_clean_names(FormattedMortality$parc) # TO INTEGRATE DIRECTLY IN CHECK MORTALITY FUNCTION!!!!!!!!!!!!!
-head(FormattedMortality)
+formatted_mortality <- bdy_check_mortality(bdydata_mortality_example, bdydata_mortality_example$espece_latin)$table
+formatted_mortality$parc <- bdy_clean_names(formatted_mortality$parc) # TO INTEGRATE DIRECTLY IN CHECK MORTALITY FUNCTION!!!!!!!!!!!!!
+head(formatted_mortality)
 ```
 
 
@@ -310,6 +211,14 @@ ggplot()+
 ```
 
 
+## Check data
+Before running the analyses, we need to check that all required data are loaded. This is done by the function `bdy_check_alldata` that will either return a message saying all data are good, or an error.
+
+```{r check_data}
+bdy_check_alldata(windfarms_L93, formatted_mortality, colonies_all, countData, vital_rates, seasons, foraging_ranges, countryShape)
+```
+
+
 
 # Detailed analysis for one species
 
@@ -317,7 +226,7 @@ ggplot()+
 We calculate two types of distance: euclidian distance is used for species that cross land (e.g., gulls), shortest sea path is used for purely marine species (e.g., Northern Gannet). Both distances are calculated for all colonies (if doShpa is set to TRUE) with the `bdy_get_distances()` function, the type of distance to use then depends on species later in the analysis. Before calculating distances, a cost matrix based on coastline must be calculated with the `bdy_get_cost_raster()`.
 
 ```{r calc_dist}
-cost_matrix <- bdy_get_cost_raster(countryShape, colonies_all)
+cost_matrix <- bdy_get_cost_raster(colonies_all)
 
 all_distances <- bdy_get_distances(colonies=colonies_all,
                                    windfarms = windfarms_L93,
@@ -337,10 +246,11 @@ For this example, we will select the Northern Gannett (**Morus bassanus**) and p
 sp <- "Morus bassanus"
 
 count_processed <- bdy_process_count_data(sp=sp,
-                                          effec00=countData,
-                                          colonies00=colonies_all,
-                                          first_year=2009,
-                                          last_year = 2021
+                                          countData=countData,
+                                          colonies=colonies_all,
+                                          first_year = 2009,
+                                          last_year = 2021,
+                                          max_foraging_range_km =foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)]
 )
 ```
 
@@ -363,8 +273,7 @@ distances <- distances[rownames(distances) %in% count_processed$colonies_sp$colo
 We can then calculate the proportion of sea area around each colony, which is used in the apportionning step to account for the higher density of individuals at sea if the proportion of sea area around a colony is low (as the species is not using the terrestrial habitat). 
 
 ```{r sea_area}
-sea_area <- bdy_calculate_sea_area(country_polygon=countryShape, 
-                                   max_foraging_range = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)],
+sea_area <- bdy_calculate_sea_area(max_foraging_range = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)],
                                    colonies=count_processed$colonies_sp
                                    )
 
@@ -387,7 +296,7 @@ print(apportionning$RW_group)
 This table can then be used in the [bdy_process_mortality()] that distributes national mortality data among all colonies of a given species.
 ```{r apportion_mortality}
 morta_iter_group <- bdy_process_mortality(
-      collision = FormattedMortality,
+      collision = formatted_mortality,
       season=seasons[which(seasons$species_latin==sp),][-1],
       n_iteration = 1000,
       RW_group = apportionning$RW_group
@@ -466,12 +375,12 @@ as.data.frame(result_table$Tableau_Subpop)
 # Grouped analysis for multiple species
 The same analysis can be run using the grouped function `bdy_run_analysis`, which includes the steps described in the previous section, and allowing running the analysis for multiple species.
 
-```{r analyses_multiple}
+```{r run_analysis, echo = FALSE, warning = FALSE, message = FALSE}
 mod_outputs <- bdy_run_analysis(
   species = c("Morus bassanus", "Uria aalge", "Sterna dougallii"),
   countData = countData,
   foraging_ranges = foraging_ranges,
-  mortality = FormattedMortality,
+  mortality = formatted_mortality,
   windfarms = windfarms_L93
 )
 
@@ -507,7 +416,7 @@ leafmap
 
 Fourth, you can obtain a plot summarising the effect of each windfarm:
 ```{r res_parcs, out.width='100%'}
-bdy_plot_windfarm_impact(result_table, FormattedMortality)
+bdy_plot_windfarm_impact(result_table, formatted_mortality)
 ```
 
 

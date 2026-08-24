@@ -7,5 +7,4 @@
 #' @usage print(bdydata_seasons)
 #'
 #' @format Dataframe (.rda)
-#'
-
+"bdydata_seasons"

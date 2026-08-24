@@ -124,7 +124,7 @@ bdy_check_mortality <- function(Mortality,speciesList,returnFormattedTable=T){
     }
 
     if(anyNA(Mortality$coefficient)){
-      Warning <- paste0(Warning,"<p style='color:purple'>Certaines valeures dans la colonne coefficient ne sont pas numériques, création de NAs</p>")
+      Warning <- paste0(Warning,"<p style='color:purple'>Certaines valeurs dans la colonne coefficient ne sont pas numériques, création de NAs</p>")
     }
   }else {
     Warning <- paste0("<p style='color:red'>", Warning, "</p>")
