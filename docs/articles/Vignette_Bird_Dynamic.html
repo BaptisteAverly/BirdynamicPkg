@@ -153,7 +153,7 @@ each species:</p>
 <span><span class="co">#&gt; 5   134.6    90.1   Direct       Good              FALSE</span></span>
 <span><span class="co">#&gt; 6   136.1    88.7   Direct   Moderate              FALSE</span></span></code></pre></div>
 <p>The table <code>seasons</code> includes the presence of each species
-at each month (see <code>help(bdydata_seasons)</code> to see details on
+at each month (see <code><a href="../reference/bdydata_seasons.html">help(bdydata_seasons)</a></code> to see details on
 attributes):</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">seasons</span> <span class="op">&lt;-</span> <span class="va">bdydata_seasons</span></span>
@@ -334,9 +334,9 @@ location of colonies.</p>
 <h3 id="check-data">Check data<a class="anchor" aria-label="anchor" href="#check-data"></a>
 </h3>
 <p>Before running the analyses, we need to check that all required data
-are loaded. This is done by the function <code>bdy_check_alldata</code>
-that will either return a message saying all data are good, or an
-error.</p>
+are loaded. This is done by the function
+<code><a href="../reference/bdy_check_alldata.html">bdy_check_alldata()</a></code> that will either return a message
+saying all data are good, or an error.</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/bdy_check_alldata.html">bdy_check_alldata</a></span><span class="op">(</span><span class="va">windfarms_L93</span>, <span class="va">formatted_mortality</span>, <span class="va">colonies_all</span>, <span class="va">countData</span>, <span class="va">vital_rates</span>, <span class="va">seasons</span>, <span class="va">foraging_ranges</span>, <span class="va">countryShape</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] "All required datasets are loaded and valid"</span></span></code></pre></div>
@@ -620,15 +620,7 @@ colonies.</p>
 <code>bdy_run_analysis</code>, which includes the steps described in the
 previous section, and allowing running the analysis for multiple
 species.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod_outputs</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bdy_run_analysis.html">bdy_run_analysis</a></span><span class="op">(</span></span>
-<span>  species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Morus bassanus"</span>, <span class="st">"Uria aalge"</span>, <span class="st">"Sterna dougallii"</span><span class="op">)</span>,</span>
-<span>  countData <span class="op">=</span> <span class="va">countData</span>,</span>
-<span>  foraging_ranges <span class="op">=</span> <span class="va">foraging_ranges</span>,</span>
-<span>  mortality <span class="op">=</span> <span class="va">formatted_mortality</span>,</span>
-<span>  windfarms <span class="op">=</span> <span class="va">windfarms_L93</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] "Starting seafront atlantique"</span></span>
+<pre><code><span><span class="co">#&gt; [1] "Starting seafront atlantique"</span></span>
 <span><span class="co">#&gt; Warning: R object of different size than NimArrDouble. R obj has size 1 but NimArrDbl has size 43.</span></span>
 <span><span class="co">#&gt; |-------------|-------------|-------------|-------------|</span></span>
 <span><span class="co">#&gt; |-------------------------------------------------------|</span></span>
@@ -680,9 +672,7 @@ species.</p>
 <span><span class="co">#&gt; |-------------------------------------------------------|</span></span>
 <span><span class="co">#&gt; Warning: R object of different size than NimArrDouble. R obj has size 1 but NimArrDbl has size 43.</span></span>
 <span><span class="co">#&gt; |-------------|-------------|-------------|-------------|</span></span>
-<span><span class="co">#&gt; |-------------------------------------------------------|</span></span>
-<span></span>
-<span><span class="va">result_table</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bdy_raw_res_tables.html">bdy_raw_res_tables</a></span><span class="op">(</span><span class="va">mod_outputs</span><span class="op">)</span></span></code></pre></div>
+<span><span class="co">#&gt; |-------------------------------------------------------|</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="display-results">Display results<a class="anchor" aria-label="anchor" href="#display-results"></a>

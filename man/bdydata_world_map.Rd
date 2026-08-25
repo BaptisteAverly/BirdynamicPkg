@@ -8,7 +8,7 @@
 sf object (.rda)
 }
 \usage{
-print(bdydata_world_map)
+bdydata_world_map
 }
 \description{
 Map of the world, to be used in functions \code{\link[=bdy_get_cost_raster]{bdy_get_cost_raster()}} and \code{\link[=bdy_calculate_sea_area]{bdy_calculate_sea_area()}}. Be aware that at the moment the package use Lambert93 projection so can only be used for European regions (mainly designed for France).

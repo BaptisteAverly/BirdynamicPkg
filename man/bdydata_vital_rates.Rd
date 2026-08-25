@@ -8,7 +8,7 @@
 Dataframe (.rda)
 }
 \usage{
-print(bdydata_vital_rates)
+bdydata_vital_rates
 }
 \description{
 Includes the default parameters for survival and proportion of breeder by age class used for French seabirds included in Bird dynamic.

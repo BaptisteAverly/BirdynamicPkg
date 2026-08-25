@@ -4,7 +4,7 @@
 #'
 #' @docType data
 #'
-#' @usage print(bdydata_foraging_ranges)
+#' @usage bdydata_foraging_ranges
 #'
 #' @format Dataframe (.rda)
 "bdydata_foraging_ranges"

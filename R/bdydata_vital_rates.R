@@ -4,7 +4,7 @@
 #'
 #' @docType data
 #'
-#' @usage print(bdydata_vital_rates)
+#' @usage bdydata_vital_rates
 #'
 #' @format Dataframe (.rda)
 "bdydata_vital_rates"

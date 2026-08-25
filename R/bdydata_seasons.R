@@ -4,7 +4,7 @@
 #'
 #' @docType data
 #'
-#' @usage print(bdydata_seasons)
+#' @usage bdydata_seasons
 #'
 #' @format Dataframe (.rda)
 "bdydata_seasons"

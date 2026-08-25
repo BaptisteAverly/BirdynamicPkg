@@ -8,7 +8,7 @@
 sf object (.rda)
 }
 \usage{
-print(bdydata_parcs_example)
+bdydata_parcs_example
 }
 \description{
 Example data of windfarm location

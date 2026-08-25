@@ -8,7 +8,7 @@
 Dataframe (.rda)
 }
 \usage{
-print(bdydata_mortality_example)
+bdydata_mortality_example
 }
 \description{
 Example data of mortality from collision with windfarms
