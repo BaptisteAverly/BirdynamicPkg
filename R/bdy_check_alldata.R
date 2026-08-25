@@ -107,6 +107,9 @@ bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, 
   ### Check colonies
 
 
+  ### Check countData
+
+
 
 
   return("All required datasets are loaded and valid")

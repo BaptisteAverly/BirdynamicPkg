@@ -1,23 +1,24 @@
-#' Title
+#' Process bird count data
 #'
-#' @param sp
-#' @param effec00
-#' @param colonies00
-#' @param first_year
-#' @param last_year
+#' @param sp character, latin name of the species of interest; this has to be a single species (not a vector)
+#' @param countData table of bird counts
+#' @param colonies table of colonies from [bdy_check_colonies()]
+#' @param first_year numeric, minimum year of bird counts to integrate in trends estimates
+#' @param last_year numeric, maximum year of bird counts to integrate in trends estimates
+#' @param max_foraging_range_km numeric, maximum foraging range in kilometers for the species of interest
 #'
-#' @returns
+#' @returns List of 5 objects:
+#'          \itemize{
+#'          \item species: character, latin name of the species of interest
+#'          \item group_counts_sp: table of counts summarised by year and group of colonies
+#'          \item ppa_yr_sp: table of proportion of colonies that are surveyed within a given group of colonies (rows) and a given year (columns)
+#'          \item colonies_sp: table of colonies where the species of interest breeds
+#'          \item sea_area_sp: numeric vector, proportion of sea area around each colony
+#'          }
 #' @export
 #'
-#' @examples
-#'
-#'
-bdy_process_count_data <- function(sp,countData,colonies,first_year,last_year,max_foraging_range_km){
+bdy_process_count_data <- function(sp, countData, colonies, first_year, last_year, max_foraging_range_km){
 
-  #---check species name-----
-
-
-  #--------------------------
 
   #selecting only the count data for the species of interest
   effecSp <- countData[which(countData$species_latin == sp &
@@ -55,8 +56,6 @@ bdy_process_count_data <- function(sp,countData,colonies,first_year,last_year,ma
   n_group <- nlevels(coloniesSp$group)
 
   ## Get count data
-  ## Données de comptages agrégés : colonie x an
-
   counts00 <- as.data.frame(tapply(effecSp$count_mean,list(effecSp$colony_code,effecSp$year),mean))
   rgp00 <- as.data.frame(tapply(effecSp$rgp,list(effecSp$colony_code,effecSp$year),function(x)as.numeric(isTRUE(x))))
 
@@ -152,6 +151,11 @@ bdy_process_count_data <- function(sp,countData,colonies,first_year,last_year,ma
   sea_area <- bdy_calculate_sea_area(max_foraging_range = max_foraging_range_km,
                                      colonies=coloniesSp)
 
-  return(list("species"=sp,"group_counts_sp"=group_counts,"ppa_yr_sp"=as.data.frame(ppa_yr),"colonies_sp"=coloniesSp,"sea_area_sp"=sea_area))
+  return(list("species" = sp,
+              "group_counts_sp" = group_counts,
+              "ppa_yr_sp" = as.data.frame(ppa_yr),
+              "colonies_sp" = coloniesSp,
+              "sea_area_sp" = sea_area
+              ))
 
 }

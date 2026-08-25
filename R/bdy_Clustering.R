@@ -1,17 +1,16 @@
-#' Clustering
+#' Cluster bird counts into colonies
 #'
-#'Clustering using Mean Shift Algorithm
+#' Clustering using Mean Shift Algorithm
 #'
-#' @param coord
-#' @param h_km Define the bandwidth (in km) used by the Clustering Algorithm
-#' @param dist_regr_isol Define the max distance to regroup an isolated colony to closest cluster
-#' @param regroupIsolates
+#' @param coord longitude and latitude coordinates associated to a bird count
+#' @param h_km bandwidth (in km) used by the Clustering Algorithm
+#' @param dist_regr_isol max distance to regroup an isolated colony to closest cluster
+#' @param regroupIsolates logical; whether isolated colonies should be grouped with closest cluster (based on dist_regr_isol)
 #'
-#' @returns
+#' @returns Vector of the group of colonies attributed to each coordinate from coord.
 #' @export
 #'
-#' @examples
-bdy_clustering <- function(coord,h_km=5,dist_regr_isol=4*h_km,regroupIsolates=T){
+bdy_clustering <- function(coord, h_km=5, dist_regr_isol=4*h_km, regroupIsolates=T){
 
   ## Define range of Lat/Lon values
   rg <-  apply(coord, 2, range)
@@ -33,7 +32,6 @@ bdy_clustering <- function(coord,h_km=5,dist_regr_isol=4*h_km,regroupIsolates=T)
   }
 
   ## Regrouping of isolated cluster (small spatial scale : 15km)
-  ## Regroupement des cluster isolés
 
   if(regroupIsolates){
 

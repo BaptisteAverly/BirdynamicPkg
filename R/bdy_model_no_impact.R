@@ -18,8 +18,10 @@
 #' @param nt Thinning rate. Must be a positive integer.
 #'
 #' @returns Data frame with nrow = ni. \cr
-#'          If lightResults=T, columns contain estimated group size for the first year of projection (one column per group of colonies) and estimated annual growth rate (one column per group of colonies).\cr
-#'          If lightRestuls=F, columns contain the full posterior distribution: different estimated output for each group of colonies, and each year of interest (count years + projection years). \cr
+#' \itemize{
+#'          \item If lightResults=T, columns contain estimated group size for the first year of projection (one column per group of colonies) and estimated annual growth rate (one column per group of colonies).
+#'          \item If lightRestuls=F, columns contain the full posterior distribution: different estimated output for each group of colonies, and each year of interest (count years + projection years).
+#'          } \cr
 #'          Refer to the documentation of packages 'nimble' or 'jagsUI' for details.
 #' @export
 #'

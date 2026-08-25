@@ -60,7 +60,7 @@ TO COME (GISOM for now)
 
 ```{r count_data}
 countData <-  read.csv2("../../Birdynamic/0.BV_Data_input/BD_Effectifs_clean.csv") %>% subset(., seafront=="atlantique")
-colonies_all <- bdy_check_colonies(countData)
+colonies_all <- bdy_summarise_colonies(countData)
 countData$colony_code <- colonies_all$colony_code[match(countData$colony,colonies_all$colony)]
 ```
 
@@ -255,6 +255,13 @@ count_processed <- bdy_process_count_data(sp=sp,
 ```
 
 
+The function `bdy_process_count_data()` calls `bdy_calculate_sea_area()` to calculate the proportion of sea area around each colony, which is used in the apportionning step to account for the higher density of individuals at sea if the proportion of sea area around a colony is low (as the species is not using the terrestrial habitat). 
+
+```{r sea_area}
+head(count_processed$sea_area)
+```
+
+
 ## Apportionning and processing mortality data
 The first step to apply is the apportionning, where mortalities due to collisions with wind turbines (modelled or loaded earlier in the pipeline) are attributed to the different colonies depending on their distance to the windfarms or the configuration of the coastline.
 
@@ -270,22 +277,12 @@ distances <- distances[rownames(distances) %in% count_processed$colonies_sp$colo
 ```
 
 
-We can then calculate the proportion of sea area around each colony, which is used in the apportionning step to account for the higher density of individuals at sea if the proportion of sea area around a colony is low (as the species is not using the terrestrial habitat). 
-
-```{r sea_area}
-sea_area <- bdy_calculate_sea_area(max_foraging_range = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)],
-                                   colonies=count_processed$colonies_sp
-                                   )
-
-head(sea_area)
-```
-
 
 We can now apply the [bdy_apportionning()] function to run the apportionning calculations to set how mortality data should be distributed among colonies. The output includes absolute and relative weights at both colony and group of colonies scales. The value used to split mortality data in `bdy_process_mortality` is the relative weight of mortality between the windfarms for each group of colonies (`RW_group`).
 ```{r apportionning}
 apportionning <- bdy_apportionning(max_foraging_range_km = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)],
                                    colonies = count_processed$colonies_sp,
-                                   sea_area = sea_area,
+                                   sea_area = count_processed$sea_area,
                                    tbl_dist = distances
 )
 

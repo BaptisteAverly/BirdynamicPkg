@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_process_count_data.R
 \name{bdy_process_count_data}
 \alias{bdy_process_count_data}
-\title{Title}
+\title{Process bird count data}
 \usage{
 bdy_process_count_data(
   sp,
@@ -13,6 +13,29 @@ bdy_process_count_data(
   max_foraging_range_km
 )
 }
+\arguments{
+\item{sp}{character, latin name of the species of interest; this has to be a single species (not a vector)}
+
+\item{countData}{table of bird counts}
+
+\item{colonies}{table of colonies from \code{\link[=bdy_check_colonies]{bdy_check_colonies()}}}
+
+\item{first_year}{numeric, minimum year of bird counts to integrate in trends estimates}
+
+\item{last_year}{numeric, maximum year of bird counts to integrate in trends estimates}
+
+\item{max_foraging_range_km}{numeric, maximum foraging range in kilometers for the species of interest}
+}
+\value{
+List of 5 objects:
+\itemize{
+\item species: character, latin name of the species of interest
+\item group_counts_sp: table of counts summarised by year and group of colonies
+\item ppa_yr_sp: table of proportion of colonies that are surveyed within a given group of colonies (rows) and a given year (columns)
+\item colonies_sp: table of colonies where the species of interest breeds
+\item sea_area_sp: numeric vector, proportion of sea area around each colony
+}
+}
 \description{
-Title
+Process bird count data
 }

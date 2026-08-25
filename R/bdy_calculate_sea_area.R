@@ -3,20 +3,20 @@
 #' Calculates the proportion of sea area around the colonies of interest (the ratio between marine surface and terrestrial surface within the foraging range of the species of interest).
 #' Used by [bdy_apportionning()] to compute mortality weights between colonies.
 #'
-#' @param country_polygon st object of the area of interest
 #' @param max_foraging_range numeric, max foraging range of the species of interest in kilometers
 #' @param colonies sf object with each row being a colony where the species of interest is present. Must have at least the following columns:
 #'                \itemize{
 #'                \item 'geometry': coordinates of the colony
 #'                \item 'colony_code': character, unique identifier for the colony.
 #'                }
+#'@param buffer Buffer size (in km) to map countries shorelines (parameter 'buffer' in [bdy_calculate_sea_area()])
 #'
 #' @returns named numeric vector indicating the proportion of sea area for each colony provided
 #' @export
 
-bdy_calculate_sea_area <- function(max_foraging_range, colonies,buffer = 100){
+bdy_calculate_sea_area <- function(max_foraging_range, colonies, buffer = 100){
 
-  shape_L93 <-  bdy_prepare_countryShape(colonies[,"geometry"],buffer=buffer)
+  shape_L93 <-  bdy_prepare_countryShape(colonies[,"geometry"], buffer=buffer)
 
   # buffer de X km autour de tes points
   buf <- st_buffer(colonies, set_units(max_foraging_range, "km"))

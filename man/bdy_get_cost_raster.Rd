@@ -17,8 +17,9 @@ bdy_get_cost_raster(
 )
 }
 \arguments{
-\item{colonies}{vector of geometries, giving the coordinates of bird colonies, wind farms, or others.
-This is used to get the extent of the raster to calculate.}
+\item{colonies}{vector of geometries, giving the coordinates of bird colonies, wind farms, or others. This is used to get the extent of the raster to calculate.}
+
+\item{shapeBuffer}{Buffer size (in km) to map countries shorelines (parameter 'buffer' in \code{\link[=bdy_prepare_countryShape]{bdy_prepare_countryShape()}})}
 
 \item{pixel_size}{numeric, size in meter of the cells represented by one pixel of the raster. Lower numbers give higher resolution, but greatly increase computing time.}
 
@@ -29,6 +30,10 @@ This is used to get the extent of the raster to calculate.}
 \item{W_buffer}{west buffer to increase the extent of the raster beyond the westernmost colony or windfarm (numeric, in kilometers)}
 
 \item{E_buffer}{east buffer to increase the extent of the raster beyond the easternmost colony or windfarm (numeric, in kilometers)}
+
+\item{returnRaster}{binary parameter specifying whether the cost raster should be outputted or not}
+
+\item{plotOutput}{binary parameter specifying whether the cost raster should be plotted or not}
 }
 \value{
 List of 2 elements:

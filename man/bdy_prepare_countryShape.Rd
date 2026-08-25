@@ -2,10 +2,26 @@
 % Please edit documentation in R/bdy_prepare_countryshape.R
 \name{bdy_prepare_countryShape}
 \alias{bdy_prepare_countryShape}
-\title{Title}
+\title{Prepare polygon of country shorelines}
 \usage{
-bdy_prepare_countryShape(geom, buffer)
+bdy_prepare_countryShape(colonies, buffer)
+}
+\arguments{
+\item{colonies}{sf object including colonies to cover by the polygon}
+
+\item{buffer}{buffer size (in km) around the colonies to include in the polygon}
+}
+\value{
+sf object of countries shorline in EPSG 2154
 }
 \description{
-Title
+This polygon of shorelines in the area covered by colonies selected is used in maps and in geospatial analyses (e.g., in \code{\link[=bdy_calculate_sea_area]{bdy_calculate_sea_area()}}). The map is based on the global map included in the package \link{bdydata_world_map}.
+}
+\examples{
+\dontrun{
+data_pts <- st_as_sf(data.frame(lon=c(-2.3, -5.1, -1.9), lat=c(46.7, 48.5, 49.8)), coords = c("lon","lat"), remove = FALSE, crs=st_crs(4326))
+countryShape <- bdy_prepare_countryShape(data_pts, buffer=100)
+ggplot(countryShape)+geom_sf()
+}
+
 }

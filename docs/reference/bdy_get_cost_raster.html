@@ -72,8 +72,11 @@
 
 
 <dl><dt id="arg-colonies">colonies<a class="anchor" aria-label="anchor" href="#arg-colonies"></a></dt>
-<dd><p>vector of geometries, giving the coordinates of bird colonies, wind farms, or others.
-This is used to get the extent of the raster to calculate.</p></dd>
+<dd><p>vector of geometries, giving the coordinates of bird colonies, wind farms, or others. This is used to get the extent of the raster to calculate.</p></dd>
+
+
+<dt id="arg-shapebuffer">shapeBuffer<a class="anchor" aria-label="anchor" href="#arg-shapebuffer"></a></dt>
+<dd><p>Buffer size (in km) to map countries shorelines (parameter 'buffer' in <code><a href="bdy_prepare_countryShape.html">bdy_prepare_countryShape()</a></code>)</p></dd>
 
 
 <dt id="arg-pixel-size">pixel_size<a class="anchor" aria-label="anchor" href="#arg-pixel-size"></a></dt>
@@ -94,6 +97,14 @@ This is used to get the extent of the raster to calculate.</p></dd>
 
 <dt id="arg-e-buffer">E_buffer<a class="anchor" aria-label="anchor" href="#arg-e-buffer"></a></dt>
 <dd><p>east buffer to increase the extent of the raster beyond the easternmost colony or windfarm (numeric, in kilometers)</p></dd>
+
+
+<dt id="arg-returnraster">returnRaster<a class="anchor" aria-label="anchor" href="#arg-returnraster"></a></dt>
+<dd><p>binary parameter specifying whether the cost raster should be outputted or not</p></dd>
+
+
+<dt id="arg-plotoutput">plotOutput<a class="anchor" aria-label="anchor" href="#arg-plotoutput"></a></dt>
+<dd><p>binary parameter specifying whether the cost raster should be plotted or not</p></dd>
 
 </dl></div>
     <div id="value">

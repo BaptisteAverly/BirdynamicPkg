@@ -1,19 +1,12 @@
-#' Title
+#' Summarise bird counts into a table of colonies
 #'
-#' @param effecTable
+#' @param effecTable table of bird counts (at species level)
 #'
-#' @returns
+#' @returns table of all colonies (without species level)
 #' @export
 #'
-#' @examples
 #'
-bdy_check_colonies <- function(effecTable){
-
-  #-------add checks-------
-
-
-
-  #------------------------
+bdy_summarise_colonies <- function(effecTable){
 
   colonies00 <- dplyr::select(.data = effecTable,colony,lat, lon,seafront) %>% unique
 

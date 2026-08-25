@@ -2,14 +2,21 @@
 % Please edit documentation in R/bdy_clustering.R
 \name{bdy_clustering}
 \alias{bdy_clustering}
-\title{Clustering}
+\title{Cluster bird counts into colonies}
 \usage{
 bdy_clustering(coord, h_km = 5, dist_regr_isol = 4 * h_km, regroupIsolates = T)
 }
 \arguments{
-\item{h_km}{Define the bandwidth (in km) used by the Clustering Algorithm}
+\item{coord}{longitude and latitude coordinates associated to a bird count}
 
-\item{dist_regr_isol}{Define the max distance to regroup an isolated colony to closest cluster}
+\item{h_km}{bandwidth (in km) used by the Clustering Algorithm}
+
+\item{dist_regr_isol}{max distance to regroup an isolated colony to closest cluster}
+
+\item{regroupIsolates}{logical; whether isolated colonies should be grouped with closest cluster (based on dist_regr_isol)}
+}
+\value{
+Vector of the group of colonies attributed to each coordinate from coord.
 }
 \description{
 Clustering using Mean Shift Algorithm

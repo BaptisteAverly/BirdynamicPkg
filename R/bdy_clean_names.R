@@ -1,11 +1,11 @@
-#' Title
+#' Clean windfarm names
 #'
-#' @param any_words
+#' @param any_words Vector of names to clean
 #'
-#' @returns
+#' @returns Vector of clean names
 #' @export
 #'
-#' @examples
+#' @examples bdy_clean_names("Port-Leucate___23:bis")
 #'
 bdy_clean_names <- function(any_words){
   any_words %>%

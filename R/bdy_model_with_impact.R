@@ -5,7 +5,7 @@
 #' @param n_group numeric, number of groups of colonies for the bird species of interest
 #' @param ny_data numeric, number of years for which count data exist for the bird species of interest
 #' @param posterior dataframe, estimated output from [bdy_model_no_impact()]
-#' @param mortality distribution of mortality accross groups of colonies, as outputted by [bdy_processing_mortality()]
+#' @param mortality distribution of mortality accross groups of colonies, as outputted by [bdy_process_mortality()]
 #' @param ni number of iterations
 #' @param ny_proj number of years from the last annual count for which to compute population projections
 #' @param progress R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.

@@ -21,7 +21,7 @@ bdy_model_with_impact(
 
 \item{posterior}{dataframe, estimated output from \code{\link[=bdy_model_no_impact]{bdy_model_no_impact()}}}
 
-\item{mortality}{distribution of mortality accross groups of colonies, as outputted by \code{\link[=bdy_processing_mortality]{bdy_processing_mortality()}}}
+\item{mortality}{distribution of mortality accross groups of colonies, as outputted by \code{\link[=bdy_process_mortality]{bdy_process_mortality()}}}
 
 \item{ni}{number of iterations}
 

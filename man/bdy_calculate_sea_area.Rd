@@ -15,7 +15,7 @@ bdy_calculate_sea_area(max_foraging_range, colonies, buffer = 100)
 \item 'colony_code': character, unique identifier for the colony.
 }}
 
-\item{country_polygon}{st object of the area of interest}
+\item{buffer}{Buffer size (in km) to map countries shorelines (parameter 'buffer' in \code{\link[=bdy_calculate_sea_area]{bdy_calculate_sea_area()}})}
 }
 \value{
 named numeric vector indicating the proportion of sea area for each colony provided

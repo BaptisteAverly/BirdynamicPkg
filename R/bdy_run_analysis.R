@@ -28,7 +28,7 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
                              n_iteration=1000,ni_noImpact=10000,ni_withImpact=1000,...){
 
   ##checking count data and adding colonies code
-  colonies_all <- bdy_check_colonies(countData)
+  colonies_all <- bdy_summarise_colonies(countData)
 
   #calculating cost matrix for each seafront
   cost_matrix <- bdy_get_cost_raster(colonies_all,

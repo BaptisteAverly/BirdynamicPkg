@@ -110,7 +110,7 @@ species that are not included in the package defaults.</p>
 <p>TO COME (GISOM for now)</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">countData</span> <span class="op">&lt;-</span>  <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv2</a></span><span class="op">(</span><span class="st">"../../Birdynamic/0.BV_Data_input/BD_Effectifs_clean.csv"</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu"><a href="https://rdrr.io/r/base/subset.html" class="external-link">subset</a></span><span class="op">(</span><span class="va">.</span>, <span class="va">seafront</span><span class="op">==</span><span class="st">"atlantique"</span><span class="op">)</span></span>
-<span><span class="va">colonies_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bdy_check_colonies.html">bdy_check_colonies</a></span><span class="op">(</span><span class="va">countData</span><span class="op">)</span></span>
+<span><span class="va">colonies_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bdy_summarise_colonies.html">bdy_summarise_colonies</a></span><span class="op">(</span><span class="va">countData</span><span class="op">)</span></span>
 <span><span class="va">countData</span><span class="op">$</span><span class="va">colony_code</span> <span class="op">&lt;-</span> <span class="va">colonies_all</span><span class="op">$</span><span class="va">colony_code</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">countData</span><span class="op">$</span><span class="va">colony</span>,<span class="va">colonies_all</span><span class="op">$</span><span class="va">colony</span><span class="op">)</span><span class="op">]</span></span></code></pre></div>
 </div>
 <div class="section level3">
@@ -404,6 +404,16 @@ column <code>group</code>).</p>
 <span>                                          last_year <span class="op">=</span> <span class="fl">2021</span>,</span>
 <span>                                          max_foraging_range_km <span class="op">=</span><span class="va">foraging_ranges</span><span class="op">$</span><span class="va">max_km</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">foraging_ranges</span><span class="op">$</span><span class="va">species_latin</span><span class="op">==</span><span class="va">sp</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="op">)</span></span></code></pre></div>
+<p>The function <code><a href="../reference/bdy_process_count_data.html">bdy_process_count_data()</a></code> calls
+<code><a href="../reference/bdy_calculate_sea_area.html">bdy_calculate_sea_area()</a></code> to calculate the proportion of sea
+area around each colony, which is used in the apportionning step to
+account for the higher density of individuals at sea if the proportion
+of sea area around a colony is low (as the species is not using the
+terrestrial habitat).</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">count_processed</span><span class="op">$</span><span class="va">sea_area</span><span class="op">)</span></span>
+<span><span class="co">#&gt;  colo_852  colo_075 </span></span>
+<span><span class="co">#&gt; 0.9749742 0.9749742</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="apportionning-and-processing-mortality-data">Apportionning and processing mortality data<a class="anchor" aria-label="anchor" href="#apportionning-and-processing-mortality-data"></a>
@@ -415,25 +425,13 @@ distance to the windfarms or the configuration of the coastline.</p>
 <p>We first set the distance between windfarms and colonies that include
 the selected species, keeping the shortest sea path if the species is
 purely marine, the euclidian distance otherwise.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="va">foraging_ranges</span><span class="op">$</span><span class="va">terrestrial_habits</span><span class="op">[</span><span class="va">foraging_ranges</span><span class="op">$</span><span class="va">species_latin</span><span class="op">==</span><span class="va">sp</span><span class="op">]</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">distances</span> <span class="op">&lt;-</span> <span class="va">all_distances</span><span class="op">$</span><span class="va">eucl_dist</span></span>
 <span><span class="op">}</span><span class="kw">else</span><span class="op">{</span></span>
 <span>  <span class="va">distances</span> <span class="op">&lt;-</span> <span class="va">all_distances</span><span class="op">$</span><span class="va">shpa_dist</span></span>
 <span><span class="op">}</span></span>
 <span><span class="va">distances</span> <span class="op">&lt;-</span> <span class="va">distances</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">distances</span><span class="op">)</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="va">count_processed</span><span class="op">$</span><span class="va">colonies_sp</span><span class="op">$</span><span class="va">colony_code</span>,<span class="op">]</span></span></code></pre></div>
-<p>We can then calculate the proportion of sea area around each colony,
-which is used in the apportionning step to account for the higher
-density of individuals at sea if the proportion of sea area around a
-colony is low (as the species is not using the terrestrial habitat).</p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">sea_area</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bdy_calculate_sea_area.html">bdy_calculate_sea_area</a></span><span class="op">(</span>max_foraging_range <span class="op">=</span> <span class="va">foraging_ranges</span><span class="op">$</span><span class="va">max_km</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">foraging_ranges</span><span class="op">$</span><span class="va">species_latin</span><span class="op">==</span><span class="va">sp</span><span class="op">)</span><span class="op">]</span>,</span>
-<span>                                   colonies<span class="op">=</span><span class="va">count_processed</span><span class="op">$</span><span class="va">colonies_sp</span></span>
-<span>                                   <span class="op">)</span></span>
-<span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">sea_area</span><span class="op">)</span></span>
-<span><span class="co">#&gt;  colo_852  colo_075 </span></span>
-<span><span class="co">#&gt; 0.9749742 0.9749742</span></span></code></pre></div>
 <p>We can now apply the [bdy_apportionning()] function to run the
 apportionning calculations to set how mortality data should be
 distributed among colonies. The output includes absolute and relative
@@ -444,7 +442,7 @@ colonies (<code>RW_group</code>).</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">apportionning</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bdy_apportionning.html">bdy_apportionning</a></span><span class="op">(</span>max_foraging_range_km <span class="op">=</span> <span class="va">foraging_ranges</span><span class="op">$</span><span class="va">max_km</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/which.html" class="external-link">which</a></span><span class="op">(</span><span class="va">foraging_ranges</span><span class="op">$</span><span class="va">species_latin</span><span class="op">==</span><span class="va">sp</span><span class="op">)</span><span class="op">]</span>,</span>
 <span>                                   colonies <span class="op">=</span> <span class="va">count_processed</span><span class="op">$</span><span class="va">colonies_sp</span>,</span>
-<span>                                   sea_area <span class="op">=</span> <span class="va">sea_area</span>,</span>
+<span>                                   sea_area <span class="op">=</span> <span class="va">count_processed</span><span class="op">$</span><span class="va">sea_area</span>,</span>
 <span>                                   tbl_dist <span class="op">=</span> <span class="va">distances</span></span>
 <span><span class="op">)</span></span>
 <span></span>

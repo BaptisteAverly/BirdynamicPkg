@@ -2,10 +2,20 @@
 % Please edit documentation in R/bdy_clean_names.R
 \name{bdy_clean_names}
 \alias{bdy_clean_names}
-\title{Title}
+\title{Clean windfarm names}
 \usage{
 bdy_clean_names(any_words)
 }
+\arguments{
+\item{any_words}{Vector of names to clean}
+}
+\value{
+Vector of clean names
+}
 \description{
-Title
+Clean windfarm names
+}
+\examples{
+bdy_clean_names("Port-Leucate___23:bis")
+
 }
