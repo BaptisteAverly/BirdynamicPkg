@@ -6,5 +6,7 @@
 #'
 #' @usage bdydata_world_map
 #'
+#' @source Taken from https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/
+#'
 #' @format sf object (.rda)
 "bdydata_world_map"

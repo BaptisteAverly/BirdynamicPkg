@@ -31,9 +31,7 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
   colonies_all <- bdy_summarise_colonies(countData)
 
   #calculating cost matrix for each seafront
-  cost_matrix <- bdy_get_cost_raster(colonies_all,
-                                     pixel_size=10000 #to speed up testing, remove in final function
-  )
+  cost_matrix <- bdy_get_cost_raster(colonies_all)
 
   #calculating distances
   all_distances <- bdy_get_distances(colonies=colonies_all,
@@ -80,7 +78,7 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
 
     #model without impact
     no_impact_output <- bdy_model_no_impact(count_data=count_processed$group_counts_sp,
-                                            PI=count_processed$ppa_yr_sp,
+                                            ppa=count_processed$ppa_yr_sp,
                                             survival=vital_rates[vital_rates$species_latin== sp, "survival"],
                                             fecundity=vital_rates[vital_rates$species_latin == sp, "fecundity"],
                                             propRepro=vital_rates[vital_rates$species_latin == sp, "propRepro"],

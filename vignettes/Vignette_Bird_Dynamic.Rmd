@@ -306,8 +306,8 @@ morta_iter_group <- bdy_process_mortality(
 In this step, we will create the demographic model that estimates species trends if there were no collisions with windfarms. Note that these trends are not expected to be very accurate on their own as the demographic models are quite simple, they are only meant to be used in comparison with the model with collisions.
 
 ```{r model_noimpact}
-no_impact_output <- bdy_model_no_impact(count_data = count_processed$group_counts_sp,
-                                        PI = count_processed$ppa_yr_sp,
+no_impact_output <- bdy_model_no_impact(group_counts = count_processed$group_counts_sp,
+                                        ppa = count_processed$ppa_yr_sp,
                                         survival = vital_rates[vital_rates$species_latin == sp, "survival"],
                                         fecundity = vital_rates[vital_rates$species_latin == sp, "fecundity"],
                                         propRepro = vital_rates[vital_rates$species_latin == sp, "propRepro"],

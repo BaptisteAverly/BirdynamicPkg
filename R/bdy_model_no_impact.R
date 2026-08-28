@@ -2,8 +2,8 @@
 #'
 #' Computes the null population model (without impact from wind farms) for the birds species of interest
 #'
-#' @param count_data matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns)
-#' @param PI matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns)
+#' @param group_counts matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns)
+#' @param ppa matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns)
 #' @param survival numeric vector giving the survival rates for the different age classes of the species of interest
 #' @param fecundity numeric vector giving the fecundity rates for the different age classes of the species of interest
 #' @param propRepro numeric vector giving the proportion of reproductive individual for the different age classes of the species of interest
@@ -26,14 +26,14 @@
 #' @export
 #'
 
-bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,modelFile,nimble=T,lightResults=T,
+bdy_model_no_impact <- function(group_counts,ppa,survival,fecundity,propRepro,modelFile,nimble=T,lightResults=T,
                                 ny_proj=30,na=5000,nb=1000,ni=20000,nc=3,nt=5){
 
-  ny_data <- ncol(count_data)
+  ny_data <- ncol(group_counts)
   ny_full <- ny_data + ny_proj
-  count_data[, (ny_data+(1:ny_proj))] <- NA
-  colnames(count_data)[ny_data+(1:ny_proj)] <- paste0("X", as.numeric(gsub("X", "", names(count_data)[ny_data])) + (1:ny_proj))
-  PI[, (ny_data+1:ny_proj)] <- 1
+  group_counts[, (ny_data+(1:ny_proj))] <- NA
+  colnames(group_counts)[ny_data+(1:ny_proj)] <- paste0("X", as.numeric(gsub("X", "", names(group_counts)[ny_data])) + (1:ny_proj))
+  ppa[, (ny_data+1:ny_proj)] <- 1
 
   ### VITAL RATES & SAD #####
   # Get SAD factor "g"
@@ -42,11 +42,11 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
 
   ### BAYESIAN ANALYSIS #####
   # Define max.N0 for the model
-  max.N0 <- round(sum(count_data[,1]/(PI[,1]), na.rm = TRUE)*1.5)
+  max.N0 <- round(sum(group_counts[,1]/(ppa[,1]), na.rm = TRUE)*1.5)
 
 
-  jags.data <- list(y = as.matrix(count_data), I = nrow(count_data), T = ny_full, ny_data = ny_data,
-                    ny_proj = ny_proj, max.N0 = max.N0, PI=PI, g=g)
+  jags.data <- list(y = as.matrix(group_counts), I = nrow(group_counts), T = ny_full, ny_data = ny_data,
+                    ny_proj = ny_proj, max.N0 = max.N0, ppa=ppa, g=g)
 
   # Parameters monitored
   parameters <- c("mu.lam_0", "b0", "b1", "N", "n", "n_TOT", "N_TOT", "gamma", "sig.y",
@@ -58,7 +58,7 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
     m01 <- bdy_model_code()
 
     # Initial values
-    y<-as.matrix(count_data)
+    y<-as.matrix(group_counts)
     inits <- function(){
       list(
         N = round(sum(y[,1], na.rm = TRUE)*(1+runif(1,0,0.5))),
@@ -81,8 +81,8 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
       )  # close nimbleMCMC
 
     posterior <- rbind(outNimble$chain1,outNimble$chain2,outNimble$chain3) # Number of rows = (ni / nt) * 3 (because 3 chains)
-    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nrow(count_data), ", ", ny_data+1, "]"))
-    growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nrow(count_data),"]"))
+    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nrow(group_counts), ", ", ny_data+1, "]"))
+    growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nrow(group_counts),"]"))
 
     no_impact_output <- posterior[,c(nTotCol,growthCol)]
     colnames(no_impact_output) <- str_replace(colnames(no_impact_output)," ","")
@@ -99,8 +99,8 @@ bdy_model_no_impact <- function(count_data,PI,survival,fecundity,propRepro,model
       )
     )
     posterior <- rbind(outJags$samples[[1]],outJags$samples[[2]],outJags$samples[[3]])
-    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nrow(count_data), ",", ny_data+1, "]"))
-    growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nrow(count_data),"]"))
+    nTotCol <- which(colnames(posterior) %in% paste0("n_TOT[", 1:nrow(group_counts), ",", ny_data+1, "]"))
+    growthCol <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:nrow(group_counts),"]"))
 
     no_impact_output <- posterior[,c(nTotCol,growthCol)]
   }
