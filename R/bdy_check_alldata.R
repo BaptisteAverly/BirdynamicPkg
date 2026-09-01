@@ -65,6 +65,8 @@ bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, 
   Dupli_names <- windfarms_L93$NAME %>% table(.) %>% subset(., .>1) %>% names(.)
   if(length(Dupli_names)>0){stop(paste0("Some windfarm names are duplicated: ", paste0(Dupli_names, collapse=", "), ". Each windfarm should have a different name"))}
 
+  # Check projection
+  if(st_crs(windfarms_L93) != st_crs(2154)){stop("Windfarms are not projected in Lambert 93; please use st_transform(windfarms_L93, st_crs(2154))")}
 
 
   ### Check species names match between formatted_mortality and all species data
