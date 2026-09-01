@@ -2,7 +2,7 @@
 #'
 #' @param sp character, latin name of the species of interest; this has to be a single species (not a vector)
 #' @param countData table of bird counts
-#' @param colonies table of colonies from [bdy_check_colonies()]
+#' @param colonies table of colonies from [bdy_summarise_colonies()]
 #' @param first_year numeric, minimum year of bird counts to integrate in trends estimates
 #' @param last_year numeric, maximum year of bird counts to integrate in trends estimates
 #' @param max_foraging_range_km numeric, maximum foraging range in kilometers for the species of interest

@@ -47,7 +47,7 @@ bdy_process_mortality <- function(collision, season, n_iteration=1000, RW_group)
       ## Months when only local individuals are present
       # cr_sel <- cr[cr$Month %in% months_breeding,]
       sel_local <- which(season %in% c("B", "R"))
-      cr_sel <- cr[cr$mois %in% sel_local,]
+      cr_sel <- cr[cr$month %in% sel_local,]
       cr_local <- aggregate(coefficient ~ iteration, data = cr_sel, sum) # sum over the Breeding season
       cr_local <- (cr_local$coefficient * rep(1, n_iter_morta))
       rm(cr_sel) ; rm(sel_local)
@@ -56,7 +56,7 @@ bdy_process_mortality <- function(collision, season, n_iteration=1000, RW_group)
       # cr_sel <- cr[cr$Month %in% months_winter,]
       sel_mix <- which(season %in% c("M", "T"))
       if(length(sel_mix) > 0){
-        cr_sel <- cr[cr$mois %in% sel_mix,]
+        cr_sel <- cr[cr$month %in% sel_mix,]
         cr_mix <- aggregate(coefficient ~ iteration, data = cr_sel, sum) # sum over the Breeding season
         # Incertitude sur la proportion des collisions concernant les populations locales
         min_PROP_LOCAL <- min((mean(cr_local)/mean(cr_mix$coefficient)), 1, na.rm = TRUE) # si il y a moins de collisions en période hors-repro qu'en repro, on considère que hors période repro les collisions affectent à 100% les individus locaux

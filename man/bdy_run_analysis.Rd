@@ -22,7 +22,7 @@ bdy_run_analysis(
 
 \item{countData}{table of bird counts}
 
-\item{windfarms}{sf object indicating the position of windfarms, for instance using \link{bdydata_parcs_example}; must be in EPSG 2154}
+\item{windfarms}{sf object indicating the position of windfarms, for instance using \link{bdydata_windfarm_example}; must be in EPSG 2154}
 
 \item{timeRange}{minimum and maximum years of bird counts to integrate in trends estimates}
 

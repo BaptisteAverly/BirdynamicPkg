@@ -5,8 +5,8 @@
 \title{Model with no impact}
 \usage{
 bdy_model_no_impact(
-  count_data,
-  PI,
+  group_counts,
+  ppa,
   survival,
   fecundity,
   propRepro,
@@ -22,9 +22,9 @@ bdy_model_no_impact(
 )
 }
 \arguments{
-\item{count_data}{matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns)}
+\item{group_counts}{matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns)}
 
-\item{PI}{matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns)}
+\item{ppa}{matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns)}
 
 \item{survival}{numeric vector giving the survival rates for the different age classes of the species of interest}
 

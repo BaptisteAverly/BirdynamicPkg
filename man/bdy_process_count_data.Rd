@@ -18,7 +18,7 @@ bdy_process_count_data(
 
 \item{countData}{table of bird counts}
 
-\item{colonies}{table of colonies from \code{\link[=bdy_check_colonies]{bdy_check_colonies()}}}
+\item{colonies}{table of colonies from \code{\link[=bdy_summarise_colonies]{bdy_summarise_colonies()}}}
 
 \item{first_year}{numeric, minimum year of bird counts to integrate in trends estimates}
 

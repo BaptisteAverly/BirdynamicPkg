@@ -149,9 +149,9 @@ morta_results <- stoch_crm(
   seed = NULL
 )
 
-morta_format <- data.frame("espece_latin"="Larus fuscus",
-                           "parc"="parc_1",
-                           "mois"=rep(1:12, n_iterations),
+morta_format <- data.frame("species_latin"="Larus fuscus",
+                           "windfarm"="windfarm_1",
+                           "month"=rep(1:12, n_iterations),
                            "iteration"=rep(1:n_iterations, each=12),
                            "coefficient"=as.vector(t(morta_results[["opt1"]]))
                            )
@@ -164,18 +164,19 @@ head(morta_format)
 Alternatively, mortality data that were compiled previously can be directly loaded, as long as they are formatted as in `bdydata_mortality_example` (which we will use in this vignette):
 
 ```{r load_mortality}
-formatted_mortality <- bdy_check_mortality(bdydata_mortality_example, bdydata_mortality_example$espece_latin)$table
-formatted_mortality$parc <- bdy_clean_names(formatted_mortality$parc) # TO INTEGRATE DIRECTLY IN CHECK MORTALITY FUNCTION!!!!!!!!!!!!!
+#formatted_mortality <- bdy_check_mortality(bdydata_mortality_example, bdydata_mortality_example$species_latin)$table
+formatted_mortality <- bdydata_mortality_example
+formatted_mortality$windfarm <- bdy_clean_names(formatted_mortality$windfarm)
 head(formatted_mortality)
 ```
 
 
 
 ## Windfarm data
-Windfarm data must be provided to run the analyses, as a sf object (see `help(st_read)` for more details) using either points or polygons, projected in Lambert93 (EPSG:2154). As an example, we here use the `bdydata_parc_example` data included in the package and we apply the `bdy_clean_names()` function to the NAME column (to remove spaces and capital and ensure it matches with names in mortality data). They must include a column indicating the seafront (for France, it can be 'atlantique' or 'mediterranee'); this also has to be added as a column to the colony file.
+Windfarm data must be provided to run the analyses, as a sf object (see `help(st_read)` for more details) using either points or polygons, projected in Lambert93 (EPSG:2154). As an example, we here use the `bdydata_windfarm_example` data included in the package and we apply the `bdy_clean_names()` function to the NAME column (to remove spaces and capital and ensure it matches with names in mortality data). They must include a column indicating the seafront (for France, it can be 'atlantique' or 'mediterranee'); this also has to be added as a column to the colony file.
 
 ```{r parc_example}
-windfarms_L93 <- bdydata_parcs_example %>% st_transform(., st_crs(2154))
+windfarms_L93 <- bdydata_windfarm_example %>% st_transform(., st_crs(2154))
 windfarms_L93$NAME <- bdy_clean_names(windfarms_L93$NAME)
 windfarms_L93$seafront <- "atlantique"
 windfarms_L93
@@ -186,10 +187,9 @@ colonies_all$seafront <- "atlantique"
 
 If you don't have a shapefile ready, you can also create the sf object from coordinates using the following function
 ```{r parc_example2}
-windfarms_bis <- st_as_sf(data.frame(lon=c(3.214, 3.606, 5.026), lat=c(43.118, 43.283, 43.292), NAME=c("W1", "W2", "P3")), coords = c("lon","lat"), crs=st_crs(4326)) %>% st_transform(., st_crs(2154))
+windfarms_bis <- st_as_sf(data.frame(lon=c(3.214, 3.606, 5.026), lat=c(43.118, 43.283, 43.292), NAME=c("W1", "W2", "W3")), coords = c("lon","lat"), crs=st_crs(4326)) %>% st_transform(., st_crs(2154))
 ```
 
-ADD Check mortality names
 
 
 ## Prepare coast line

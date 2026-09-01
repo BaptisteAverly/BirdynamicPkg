@@ -2,9 +2,9 @@
 #'
 #' Checks that all data required for the analyses are loaded; see Vignette for more details.
 #'
-#' @param windfarms_L93 sf object indicating the position of windfarms, for instance using [bdydata_parcs_example]; must be in EPSG 2154
+#' @param windfarms_L93 sf object indicating the position of windfarms, for instance using [bdydata_windfarm_example]; must be in EPSG 2154
 #' @param formatted_mortality table of collision from [bdy_check_mortality()], for instance using [bdydata_mortality_example]
-#' @param colonies_all table of colonies from [bdy_check_colonies()]
+#' @param colonies_all table of colonies from [bdy_summarise_colonies()]
 #' @param countData table of bird counts
 #' @param vital_rates table of species vital rates, for instance using [bdydata_vital_rates]
 #' @param seasons table of species seasonal activities, for instance using [bdydata_seasons]
@@ -23,7 +23,7 @@ bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, 
   if(length(col_missing_windfarms)>0){stop(paste0("Missing columns in 'windfarms_L93': ", paste0(col_missing_windfarms, collapse=", ")))}
 
   # formatted_mortality
-  col_missing_morta <- c("species_latin", "parc", "mois", "iteration", "coefficient") %>% .[! . %in% names(formatted_mortality)]
+  col_missing_morta <- c("species_latin", "windfarm", "month", "iteration", "coefficient") %>% .[! . %in% names(formatted_mortality)]
   if(length(col_missing_morta)>0){stop(paste0("Missing columns in 'formatted_mortality': ", paste0(col_missing_morta, collapse=", ")))}
 
   # colonies_all
@@ -51,7 +51,7 @@ bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, 
   ### Check windfarm data
   # Check names match between windfarms_L93 and formatted_mortality
   Farms_shp <- unique(windfarms_L93$NAME)
-  Farms_morta <- unique(formatted_mortality$parc)
+  Farms_morta <- unique(formatted_mortality$windfarm)
 
   Farms_shp_missing <- unique(Farms_shp[! Farms_shp %in% Farms_morta])
   if(length(Farms_shp_missing)>0){stop(paste0("Some windfarms are mentionned in 'windfarms_L93' but not in 'formatted_mortality': ", paste0(Farms_shp_missing, collapse=", ")))}
@@ -93,9 +93,9 @@ bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, 
   ### Check formatted_mortality columns
 
   # Check that month is numeric, with all values, only 1 to 12
-  if(all(is.na(formatted_mortality$mois))){stop("The column 'mois' from 'formatted_mortality' is not numeric.")}
-  if(any(!(1:12) %in% formatted_mortality$mois)){stop("The column 'mois' from 'formatted_mortality' does not include all month values (1 to 12 are required).")}
-  if(any(!formatted_mortality$mois %in% 1:12)){stop("The column 'mois' from 'formatted_mortality' includes values other than 1:12.")}
+  if(all(is.na(formatted_mortality$month))){stop("The column 'month' from 'formatted_mortality' is not numeric.")}
+  if(any(!(1:12) %in% formatted_mortality$month)){stop("The column 'month' from 'formatted_mortality' does not include all month values (1 to 12 are required).")}
+  if(any(!formatted_mortality$month %in% 1:12)){stop("The column 'month' from 'formatted_mortality' includes values other than 1:12.")}
 
   ### check that coefficient is numeric
   if(all(is.na(formatted_mortality$coefficient))){stop("The column 'coefficient' from 'formatted_mortality' is not numeric.")}

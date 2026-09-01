@@ -2,7 +2,7 @@
 #'
 #' @docType data
 #'
-#' @usage bdydata_parcs_example
+#' @usage bdydata_windfarm_example
 #'
 #' @format sf object (.rda)
-"bdydata_parcs_example"
+"bdydata_windfarm_example"

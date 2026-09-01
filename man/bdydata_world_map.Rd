@@ -7,6 +7,9 @@
 \format{
 sf object (.rda)
 }
+\source{
+Taken from https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-0-countries/
+}
 \usage{
 bdydata_world_map
 }

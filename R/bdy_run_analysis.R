@@ -4,7 +4,7 @@
 #'
 #' @param species vector of species names to include in the analysis
 #' @param countData table of bird counts
-#' @param windfarms sf object indicating the position of windfarms, for instance using [bdydata_parcs_example]; must be in EPSG 2154
+#' @param windfarms sf object indicating the position of windfarms, for instance using [bdydata_windfarm_example]; must be in EPSG 2154
 #' @param timeRange minimum and maximum years of bird counts to integrate in trends estimates
 #' @param foraging_ranges table of species foraging ranges, for instance using [bdydata_foraging_ranges]
 #' @param mortality table of collision from [bdy_check_mortality()], for instance using [bdydata_mortality_example]
@@ -77,7 +77,7 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
     )
 
     #model without impact
-    no_impact_output <- bdy_model_no_impact(count_data=count_processed$group_counts_sp,
+    no_impact_output <- bdy_model_no_impact(group_counts=count_processed$group_counts_sp,
                                             ppa=count_processed$ppa_yr_sp,
                                             survival=vital_rates[vital_rates$species_latin== sp, "survival"],
                                             fecundity=vital_rates[vital_rates$species_latin == sp, "fecundity"],

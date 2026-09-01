@@ -16,11 +16,11 @@ bdy_check_alldata(
 )
 }
 \arguments{
-\item{windfarms_L93}{sf object indicating the position of windfarms, for instance using \link{bdydata_parcs_example}; must be in EPSG 2154}
+\item{windfarms_L93}{sf object indicating the position of windfarms, for instance using \link{bdydata_windfarm_example}; must be in EPSG 2154}
 
 \item{formatted_mortality}{table of collision from \code{\link[=bdy_check_mortality]{bdy_check_mortality()}}, for instance using \link{bdydata_mortality_example}}
 
-\item{colonies_all}{table of colonies from \code{\link[=bdy_check_colonies]{bdy_check_colonies()}}}
+\item{colonies_all}{table of colonies from \code{\link[=bdy_summarise_colonies]{bdy_summarise_colonies()}}}
 
 \item{countData}{table of bird counts}
 

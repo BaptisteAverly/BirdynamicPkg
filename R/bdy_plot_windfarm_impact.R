@@ -12,7 +12,7 @@
 bdy_plot_windfarm_impact <- function(Raw_ResTables, mortalities){
 
   moyenne <- mortalities %>%
-    dplyr::group_by(species_latin, parc) %>%
+    dplyr::group_by(species_latin, windfarm) %>%
     dplyr::summarise(Mean=mean(coefficient, na.rm=T)) %>%
     group_by(species_latin) %>%
     mutate(Prop_morta = Mean/sum(Mean,na.rm=T))
@@ -21,7 +21,7 @@ bdy_plot_windfarm_impact <- function(Raw_ResTables, mortalities){
   moyenne$Impact_parc <- moyenne$IR * moyenne$Prop_morta
 
   G <- ggplot(moyenne)+
-    geom_bar(aes(x=species_latin, y=Impact_parc, fill=parc), stat="identity")+
+    geom_bar(aes(x=species_latin, y=Impact_parc, fill=windfarm), stat="identity")+
     scale_fill_brewer(palette="Set3")+
     ylab("Impact relatif par parc (%)")+xlab("")+
     theme_minimal()
