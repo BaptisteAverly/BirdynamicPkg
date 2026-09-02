@@ -26,7 +26,7 @@ bdy_plot_windfarm_impact <- function(Raw_ResTables, formatted_mortality){
     mutate(Prop_morta = Mean/sum(Mean,na.rm=T))
 
   # Split relative impact by mortality proportions
-  moyenne$IR <- Raw_ResTables$Tableau_National$RelImpact_med[match(moyenne$Species_col, Raw_ResTables$Tableau_National$Species)]
+  moyenne$IR <- Raw_ResTables$Tableau_National$RelImpact_95[match(moyenne$Species_col, Raw_ResTables$Tableau_National$Species)]
   moyenne$Impact_parc <- moyenne$IR * moyenne$Prop_morta
 
   # Plot

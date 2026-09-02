@@ -23,11 +23,11 @@ bdy_pretty_result_table <- function(Raw_ResTables, type){
     mutate(
       Population_initiale = paste0(round(Pop_Init_med), " [", round(Pop_Init_2.5), "-", round(Pop_Init_97.5), "]"),
       Nombre_collisions = paste0(round(Mortality_med, 2), " [", round(Mortality_2.5, 2), "-", round(Mortality_97.5, 2), "]"),
-      Impact_Relatif = paste0(round(RelImpact_med, 2), "% [", round(RelImpact_2.5, 2), "-", round(RelImpact_97.5, 2), "]"),
+      Impact_Relatif = paste0("Q95=", round(RelImpact_95, 2), "%; med=", round(RelImpact_med,2), "%; IC=[", round(RelImpact_2.5, 2), "-", round(RelImpact_97.5, 2), "]"),
       Augmentation_Extinction=paste0(round(Ext_Relative,2), "%")
     ) %>%
     dplyr::rename(Espece=Species) %>%
-    subset(., select=names(.)[grepl("_med", names(.))==F & grepl("_2.5", names(.))==F & grepl("_97.5", names(.))==F & grepl("Ext_", names(.))==F])
+    subset(., select=names(.)[grepl("_med", names(.))==F & grepl("_2.5", names(.))==F & grepl("_95", names(.))==F & grepl("_97.5", names(.))==F & grepl("Ext_", names(.))==F])
 
   # Add max impact
   if(type=="national"){

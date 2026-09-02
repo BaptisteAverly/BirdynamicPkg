@@ -61,7 +61,7 @@ bdy_plot_map <- function(mod_out, Raw_ResTables, windfarms, BufferForaging=NULL)
 
     # Add Relative Impact and PopInit
     Raw_ResSP <- subset(Raw_ResTables$Tableau_Subpop, Species==names(mod_out)[SP])
-    GrColo_SP$RelImpact <- Raw_ResSP$RelImpact_med[match(GrColo_SP$group, Raw_ResSP$GrColo)]
+    GrColo_SP$RelImpact <- Raw_ResSP$RelImpact_95[match(GrColo_SP$group, Raw_ResSP$GrColo)]
     GrColo_SP$PopInit <- Raw_ResSP$Pop_Init_med[match(GrColo_SP$group, Raw_ResSP$GrColo)]
 
 
@@ -74,7 +74,7 @@ bdy_plot_map <- function(mod_out, Raw_ResTables, windfarms, BufferForaging=NULL)
       "<b>Parc le plus proche : </b>", GrColo_SP$Windfarm_min, " (", GrColo_SP$Dist_min, "km)<br>",
       "<b>Parcs dans zone d'alimentation: </b>", GrColo_SP$Windfarm_foraging, "<br><br>",
 
-      "<p style='color:FireBrick'><b>Impact relatif sur les tendances : </b>", round(Res_match$RelImpact_med,2), "% [", round(Res_match$RelImpact_2.5,2), " ; ", round(Res_match$RelImpact_97.5,2), "]<br>",
+      "<p style='color:FireBrick'><b>Impact relatif sur les tendances : </b>Q95=", round(Res_match$RelImpact_95,2), "%; med=", round(Res_match$RelImpact_med,2), "%; IC=[", round(Res_match$RelImpact_2.5,2), " ; ", round(Res_match$RelImpact_97.5,2), "]<br>",
       "<b>Augmentation de la probabilité d'extinction : </b>", round(Res_match$Ext_Relative,2), "%</p>",
 
       "<b>Population en 2021 : </b>", Res_match$Pop_Init_med, " [", Res_match$Pop_Init_2.5, " ; ", Res_match$Pop_Init_97.5, "]<br>",

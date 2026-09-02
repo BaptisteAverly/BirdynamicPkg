@@ -64,10 +64,11 @@ bdy_raw_res_tables <- function(mod_out){
                      Trend_impact_2.5=quantile(Trend_impact, probs=0.025, na.rm=T),
                      Trend_impact_97.5=quantile(Trend_impact, probs=0.975, na.rm=T),
 
-                     Mortality_med=NA, Mortality_2.5=NA, Mortality_97.5=NA, Parc_proche=NA,
+                     Mortality_med=NA, Mortality_2.5=NA, Mortality_95=NA, Mortality_97.5=NA, Parc_proche=NA,
 
                      RelImpact_med=median(Rel_impact, na.rm=T),
                      RelImpact_2.5=quantile(Rel_impact, probs=0.025, na.rm=T),
+                     RelImpact_95=quantile(Rel_impact, probs=0.95, na.rm=T),
                      RelImpact_97.5=quantile(Rel_impact, probs=0.975, na.rm=T),
 
                      Ext_Noimpact=mean(Count_noimpact==0, na.rm=T),
@@ -81,10 +82,11 @@ bdy_raw_res_tables <- function(mod_out){
   for(SP in 1:length(mod_out)){
 
     # Mortality
-    Morta <- as.data.frame(t(apply(mod_out[[SP]]$mortality, 2, quantile, probs = c(0.025, 0.5, 0.975))))
+    Morta <- as.data.frame(t(apply(mod_out[[SP]]$mortality, 2, quantile, probs = c(0.025, 0.5, 0.95, 0.975))))
 
     Tableau_Subpop$Mortality_med[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`50%`
     Tableau_Subpop$Mortality_2.5[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`2.5%`
+    Tableau_Subpop$Mortality_95[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`95%`
     Tableau_Subpop$Mortality_97.5[Tableau_Subpop$Species==names(mod_out)[SP]] <- Morta$`97.5%`
 
     # Distance to parcs
@@ -134,10 +136,11 @@ bdy_raw_res_tables <- function(mod_out){
       Pop_Init_2.5=round(quantile(Sum_PopInit, probs=0.025, na.rm=T)),
       Pop_Init_97.5=round(quantile(Sum_PopInit, probs=0.975, na.rm=T)),
 
-      Mortality_med=NA, Mortality_2.5=NA, Mortality_97.5=NA,
+      Mortality_med=NA, Mortality_2.5=NA, Mortality_95=NA, Mortality_97.5=NA,
 
       RelImpact_med = median(Rel_impact, na.rm=T),
       RelImpact_2.5 = quantile(Rel_impact, probs=0.025, na.rm=T),
+      RelImpact_95 = quantile(Rel_impact, probs=0.95, na.rm=T),
       RelImpact_97.5 = quantile(Rel_impact, probs=0.975, na.rm=T),
 
       Ext_Noimpact=mean(Sum_noimpact==0, na.rm=T),
@@ -149,10 +152,11 @@ bdy_raw_res_tables <- function(mod_out){
   # Add mortality from another table
   for(SP in 1:length(mod_out)){
 
-    Morta <- quantile(apply(mod_out[[SP]]$mortality, 1, sum), probs = c(0.025, 0.5, 0.975))
+    Morta <- quantile(apply(mod_out[[SP]]$mortality, 1, sum), probs = c(0.025, 0.5, 0.95, 0.975))
 
     Tableau_National$Mortality_med[Tableau_National$Species==names(mod_out)[SP]] <- Morta["50%"]
     Tableau_National$Mortality_2.5[Tableau_National$Species==names(mod_out)[SP]] <- Morta["2.5%"]
+    Tableau_National$Mortality_95[Tableau_National$Species==names(mod_out)[SP]] <- Morta["95%"]
     Tableau_National$Mortality_97.5[Tableau_National$Species==names(mod_out)[SP]] <- Morta["97.5%"]
 
   }
