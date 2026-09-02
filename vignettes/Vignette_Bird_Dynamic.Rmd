@@ -164,13 +164,20 @@ head(morta_format)
 Alternatively, mortality data that were compiled previously can be directly loaded, as long as they are formatted as in `bdydata_mortality_example` (which we will use in this vignette):
 
 ```{r load_mortality}
-#formatted_mortality <- bdy_check_mortality(bdydata_mortality_example, bdydata_mortality_example$species_latin)$table
 formatted_mortality <- bdydata_mortality_example
 formatted_mortality$windfarm <- bdy_clean_names(formatted_mortality$windfarm)
 head(formatted_mortality)
 ```
 
 
+If your mortality data table is in French (as requested in the Shiny app), you can easily translate column names with:
+```{r translate_mortality}
+names(formatted_mortality) <- revalue(names(formatted_mortality), c(
+  "parc"="windfarm",
+  "espece_latin"="species_latin",
+  "mois"="month"
+), warn_missing = F)
+```
 
 ## Windfarm data
 Windfarm data must be provided to run the analyses, as a sf object (see `help(st_read)` for more details) using either points or polygons, projected in Lambert93 (EPSG:2154). As an example, we here use the `bdydata_windfarm_example` data included in the package and we apply the `bdy_clean_names()` function to the NAME column (to remove spaces and capital and ensure it matches with names in mortality data). They must include a column indicating the seafront (for France, it can be 'atlantique' or 'mediterranee'); this also has to be added as a column to the colony file.
@@ -243,7 +250,7 @@ The next steps of the analysis are applied species by species. In this vignette,
 
 For this example, we will select the Northern Gannett (**Morus bassanus**) and process count data. The processing step includes an important step, which is to cluster close colonies (reported in the column `group`).
 ```{r select_species}
-sp <- "Morus bassanus"
+sp <- "Sterna dougallii"
 
 count_processed <- bdy_process_count_data(sp=sp,
                                           countData=countData,

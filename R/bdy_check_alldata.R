@@ -3,7 +3,7 @@
 #' Checks that all data required for the analyses are loaded; see Vignette for more details.
 #'
 #' @param windfarms_L93 sf object indicating the position of windfarms, for instance using [bdydata_windfarm_example]; must be in EPSG 2154
-#' @param formatted_mortality table of collision from [bdy_check_mortality()], for instance using [bdydata_mortality_example]
+#' @param formatted_mortality formatted table of collision, for instance using [bdydata_mortality_example]
 #' @param colonies_all table of colonies from [bdy_summarise_colonies()]
 #' @param countData table of bird counts
 #' @param vital_rates table of species vital rates, for instance using [bdydata_vital_rates]
@@ -103,6 +103,13 @@ bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, 
 
   ### check that iteration is numeric
   if(all(is.na(formatted_mortality$iteration))){stop("The column 'iteration' from 'formatted_mortality' is not numeric.")}
+
+  # Check if duplicated values
+  dupl <- which(duplicated(formatted_mortality[,c("species_latin", "windfarm", "month", "iteration")]))
+  if(length(dupl)>0){stop("Some mortality data are duplicated (i.e., same species / windfarm / month / iteration")}
+
+  # Check if missing coefficient
+  if(anyNA(formatted_mortality$coefficient)){stop("Some mortality coefficient values are missing")}
 
 
 

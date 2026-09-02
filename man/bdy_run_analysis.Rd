@@ -28,7 +28,7 @@ bdy_run_analysis(
 
 \item{foraging_ranges}{table of species foraging ranges, for instance using \link{bdydata_foraging_ranges}}
 
-\item{mortality}{table of collision from \code{\link[=bdy_check_mortality]{bdy_check_mortality()}}, for instance using \link{bdydata_mortality_example}}
+\item{mortality}{table of collision, for instance using \link{bdydata_mortality_example}}
 
 \item{n_iteration}{Number of iterations for the collision model (parameter used in \code{\link[=bdy_process_mortality]{bdy_process_mortality()}})}
 

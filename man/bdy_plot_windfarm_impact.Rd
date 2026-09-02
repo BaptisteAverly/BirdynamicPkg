@@ -4,12 +4,12 @@
 \alias{bdy_plot_windfarm_impact}
 \title{Windfarm impact}
 \usage{
-bdy_plot_windfarm_impact(Raw_ResTables, mortalities)
+bdy_plot_windfarm_impact(Raw_ResTables, formatted_mortality)
 }
 \arguments{
 \item{Raw_ResTables}{Raw result tables from function \code{\link[=bdy_raw_res_tables]{bdy_raw_res_tables()}}}
 
-\item{mortalities}{Mortality data formatted with function \code{\link[=bdy_check_mortality]{bdy_check_mortality()}}}
+\item{formatted_mortality}{formatted table of collision, for instance using \link{bdydata_mortality_example}}
 }
 \value{
 ggplot object

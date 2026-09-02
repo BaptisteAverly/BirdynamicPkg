@@ -3,8 +3,6 @@
 export(bdy_apportionning)
 export(bdy_calculate_sea_area)
 export(bdy_check_alldata)
-export(bdy_check_mortality)
-export(bdy_check_shapefile)
 export(bdy_clean_names)
 export(bdy_clustering)
 export(bdy_get_cost_raster)

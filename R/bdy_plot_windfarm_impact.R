@@ -3,15 +3,15 @@
 #' Plot impact of each windfarm on each species
 #'
 #' @param Raw_ResTables Raw result tables from function [bdy_raw_res_tables()]
-#' @param mortalities Mortality data formatted with function [bdy_check_mortality()]
+#' @param formatted_mortality formatted table of collision, for instance using [bdydata_mortality_example]
 #'
 #' @returns ggplot object
 #'
 #' @export
 
-bdy_plot_windfarm_impact <- function(Raw_ResTables, mortalities){
+bdy_plot_windfarm_impact <- function(Raw_ResTables, formatted_mortality){
 
-  moyenne <- mortalities %>%
+  moyenne <- formatted_mortality %>%
     dplyr::group_by(species_latin, windfarm) %>%
     dplyr::summarise(Mean=mean(coefficient, na.rm=T)) %>%
     group_by(species_latin) %>%

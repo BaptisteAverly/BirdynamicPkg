@@ -7,7 +7,7 @@
 #' @param windfarms sf object indicating the position of windfarms, for instance using [bdydata_windfarm_example]; must be in EPSG 2154
 #' @param timeRange minimum and maximum years of bird counts to integrate in trends estimates
 #' @param foraging_ranges table of species foraging ranges, for instance using [bdydata_foraging_ranges]
-#' @param mortality table of collision from [bdy_check_mortality()], for instance using [bdydata_mortality_example]
+#' @param mortality table of collision, for instance using [bdydata_mortality_example]
 #' @param n_iteration Number of iterations for the collision model (parameter used in [bdy_process_mortality()])
 #' @param ni_noImpact Number of iterations to use in [bdy_model_no_impact()]
 #' @param ni_withImpact Number of iterations to use in [bdy_model_with_impact()]
@@ -39,7 +39,7 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
                                      costMatrix=cost_matrix,
                                      doShpa = any(!subset(foraging_ranges, species_latin %in% species)$terrestrial_habits))
 
-  #preparing a list to store model outpu for each species
+  #preparing a list to store model output for each species
   model_output <- list()
 
   for(sp in species){

@@ -20,5 +20,5 @@ You can install the development version of BirdynamicPkg from
 pak::pak("BaptisteAverly/BirdynamicPkg")
 ```
 
-Check out the vignette Vignette_Bird_Dynamic to see how to use the
+Check out the [vignette](articles/Vignette_Bird_Dynamic.html) to see how to use the package.
 package.

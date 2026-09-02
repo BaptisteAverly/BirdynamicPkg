@@ -24,4 +24,4 @@ You can install the development version of BirdynamicPkg from [GitHub](https://g
 pak::pak("BaptisteAverly/BirdynamicPkg")
 ```
 
-Check out the vignette Vignette_Bird_Dynamic to see how to use the package.
+Check out the vignette `r vignette("BaptisteAverly/BirdynamicPkg")` XX Vignette_Bird_Dynamic to see how to use the package.
