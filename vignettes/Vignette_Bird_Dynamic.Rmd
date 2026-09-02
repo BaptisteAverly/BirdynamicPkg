@@ -250,7 +250,7 @@ The next steps of the analysis are applied species by species. In this vignette,
 
 For this example, we will select the Northern Gannett (**Morus bassanus**) and process count data. The processing step includes an important step, which is to cluster close colonies (reported in the column `group`).
 ```{r select_species}
-sp <- "Sterna dougallii"
+sp <- "Morus bassanus"
 
 count_processed <- bdy_process_count_data(sp=sp,
                                           countData=countData,

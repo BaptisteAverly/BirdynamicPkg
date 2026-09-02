@@ -11,17 +11,27 @@
 
 bdy_plot_windfarm_impact <- function(Raw_ResTables, formatted_mortality){
 
+  # Fix species french / latin depending on app or package
+  if(any(Raw_ResTables$Simulated_National$Species %in% formatted_mortality$species_latin)){
+    formatted_mortality$Species_col <- formatted_mortality$species_latin
+  } else {
+    formatted_mortality$Species_col <- formatted_mortality$espece
+  }
+
+  # Calculate mean mortality per species and windfarm
   moyenne <- formatted_mortality %>%
-    dplyr::group_by(species_latin, windfarm) %>%
+    dplyr::group_by(Species_col, windfarm) %>%
     dplyr::summarise(Mean=mean(coefficient, na.rm=T)) %>%
-    group_by(species_latin) %>%
+    group_by(Species_col) %>%
     mutate(Prop_morta = Mean/sum(Mean,na.rm=T))
 
-  moyenne$IR <- Raw_ResTables$Tableau_National$RelImpact_med[match(moyenne$species_latin, Raw_ResTables$Tableau_National$Species)]
+  # Split relative impact by mortality proportions
+  moyenne$IR <- Raw_ResTables$Tableau_National$RelImpact_med[match(moyenne$Species_col, Raw_ResTables$Tableau_National$Species)]
   moyenne$Impact_parc <- moyenne$IR * moyenne$Prop_morta
 
+  # Plot
   G <- ggplot(moyenne)+
-    geom_bar(aes(x=species_latin, y=Impact_parc, fill=windfarm), stat="identity")+
+    geom_bar(aes(x=Species_col, y=Impact_parc, fill=windfarm), stat="identity")+
     scale_fill_brewer(palette="Set3")+
     ylab("Impact relatif par parc (%)")+xlab("")+
     theme_minimal()
