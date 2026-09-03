@@ -31,7 +31,7 @@ bdy_plot_windfarm_impact <- function(Raw_ResTables, formatted_mortality){
 
   # Plot
   G <- ggplot(moyenne)+
-    geom_bar(aes(x=Species_col, y=Impact_parc, fill=windfarm), stat="identity", width=min(c(0.8), 0.1*(nrow(result_table$Tableau_National)+1)))+
+    geom_bar(aes(x=Species_col, y=Impact_parc, fill=windfarm), stat="identity", width=min(c(0.8), 0.1*(nrow(Raw_ResTables$Tableau_National)+1)))+
     scale_fill_brewer(palette="Set3")+
     ylab("Impact relatif par parc (%)")+xlab("")+
     theme_minimal()
