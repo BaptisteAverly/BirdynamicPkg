@@ -46,7 +46,7 @@ bdy_model_no_impact <- function(group_counts,ppa,survival,fecundity,propRepro,mo
 
 
   jags.data <- list(y = as.matrix(group_counts), I = nrow(group_counts), T = ny_full, ny_data = ny_data,
-                    ny_proj = ny_proj, max.N0 = max.N0, ppa=ppa, g=g)
+                    ny_proj = ny_proj, max.N0 = max.N0, PI=ppa, g=g)
 
   # Parameters monitored
   parameters <- c("mu.lam_0", "b0", "b1", "N", "n", "n_TOT", "N_TOT", "gamma", "sig.y",

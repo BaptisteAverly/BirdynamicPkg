@@ -27,6 +27,8 @@
 bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021), foraging_ranges, mortality,
                              n_iteration=1000,ni_noImpact=10000,ni_withImpact=1000,...){
 
+  message("Prepare data")
+
   ##checking count data and adding colonies code
   colonies_all <- bdy_summarise_colonies(countData)
 
@@ -43,6 +45,7 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
   model_output <- list()
 
   for(sp in species){
+    message("Start analysis ", sp)
 
     # !! prevoir cas ou l'espece d'interet n'est pas dans la liste !!
     foraging_range_sp = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)]
