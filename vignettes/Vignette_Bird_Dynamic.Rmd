@@ -381,7 +381,7 @@ The same analysis can be run using the grouped function `bdy_run_analysis`, whic
 
 ```{r run_analysis, echo = FALSE, warning = FALSE, message = FALSE}
 mod_outputs <- bdy_run_analysis(
-  species = c("Morus bassanus", "Uria aalge", "Sterna dougallii"),
+  species = c("Morus bassanus", "Sterna dougallii"),
   countData = countData,
   foraging_ranges = foraging_ranges,
   mortality = formatted_mortality,
@@ -413,8 +413,6 @@ Third, you can obtain an interactive map summarising the results:
 ```{r res_map, out.width='100%'}
 leafmap <- bdy_plot_map(mod_outputs, result_table, windfarms_L93)
 leafmap
-
-#htmlwidgets::saveWidget(leafmap, "Interactive_map_results_Bird_Dynamic.html")
 ```
 
 
