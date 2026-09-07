@@ -1,14 +1,20 @@
-#' Summarise bird counts into a table of colonies
+#' Summarizes a table of bird counts into a table of colonies
 #'
-#' @param effecTable table of bird counts (at species level)
+#' @param countData data frame of bird counts (at species level), where each line gives the number of birds counted for a given colony, species, and year. Must have at least the following columns:
+#'                    \itemize{
+#'                    \item 'colony': character, name of the colony
+#'                    \item 'lat': numeric, latitude of the colony
+#'                    \item 'lon': numeric, longitude of the colony
+#'                    \item 'seafront': character, name of the seafront on which the colony is located (for instance 'Atlantic', 'Mediterranean'...)
+#'                    }
 #'
-#' @returns table of all colonies (without species level)
+#' @returns Sf table of colony information ('colony', 'lat', 'lon', 'seafront', 'colony_code', and 'geometry'), where each line is a different colony and the following columns:
 #' @export
 #'
 #'
-bdy_summarise_colonies <- function(effecTable){
+bdy_summarise_colonies <- function(countData){
 
-  colonies00 <- dplyr::select(.data = effecTable,colony,lat, lon,seafront) %>% unique
+  colonies00 <- dplyr::select(.data = countData,colony,lat, lon,seafront) %>% unique
 
   colonies00$colony_code <- paste0("colo_", sprintf("%03d", 1:nrow(colonies00)))
   colonies00 <- colonies00[which(!is.na(colonies00$lat)),]

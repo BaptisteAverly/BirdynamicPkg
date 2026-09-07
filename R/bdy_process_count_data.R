@@ -1,8 +1,22 @@
 #' Process bird count data
 #'
+#' Uses bird counts and colony information to output several formatted tables used in the next steps of the analysis
+#'
 #' @param sp character, latin name of the species of interest; this has to be a single species (not a vector)
-#' @param countData table of bird counts
-#' @param colonies table of colonies from [bdy_summarise_colonies()]
+#' @param countData data frame of bird counts (at species level), where each line gives the number of individuals counted for a given colony, species, and year. Must have at least the following columns:
+#'                    \itemize{
+#'                    \item 'species_latin': character, latin name of the species
+#'                    \item 'year': numeric, year during which the observation was made
+#'                    \item 'colony': character, name of the colony where the observation was made, which should be found also in th column 'colony' of argument 'colonies'
+#'                    \item 'count': numeric, the count value for this given year, colony, species
+#'                    }
+#' @param colonies sf table where each row is a colony of interest, as outputted by [bdy_summarise_colonies()]
+#'                Must contain the columns:
+#'                \itemize{
+#'                \item 'colony': character, name of the colony
+#'                \item 'colony_code': character, unique identifiers for each colony
+#'                \item 'lat': numeric, latitude of the colony
+#'                \item 'lon': numeric, longitude of the colony
 #' @param first_year numeric, minimum year of bird counts to integrate in trends estimates
 #' @param last_year numeric, maximum year of bird counts to integrate in trends estimates
 #' @param max_foraging_range_km numeric, maximum foraging range in kilometers for the species of interest
@@ -28,7 +42,7 @@ bdy_process_count_data <- function(sp, countData, colonies, first_year, last_yea
   #adding colony code to count data
   effecSp$colony_code <- colonies$colony_code[match(effecSp$colony,colonies$colony)]
 
-  #this is for consistency with Thierry's code, but unlikely to be used by users
+  #this is for consistency with original code, but unlikely to be used by users
   if(is.null(effecSp$regroup)){
     effecSp$regroup <- ""
   }
@@ -39,7 +53,7 @@ bdy_process_count_data <- function(sp, countData, colonies, first_year, last_yea
   coloniesSp <- colonies[which(colonies$colony_code %in% effecSp$colony_code),]
 
   ## Add column "effectifs"
-  agrEff <- round(tapply(effecSp$count_mean,effecSp$colony_code,mean),1)
+  agrEff <- round(tapply(effecSp$count,effecSp$colony_code,mean),1)
   coloniesSp$mean <- agrEff[match(coloniesSp$colony_code,names(agrEff))]
 
   ## Remove colonies with effectif max = 0
@@ -56,7 +70,7 @@ bdy_process_count_data <- function(sp, countData, colonies, first_year, last_yea
   n_group <- nlevels(coloniesSp$group)
 
   ## Get count data
-  counts00 <- as.data.frame(tapply(effecSp$count_mean,list(effecSp$colony_code,effecSp$year),mean))
+  counts00 <- as.data.frame(tapply(effecSp$count,list(effecSp$colony_code,effecSp$year),mean))
   rgp00 <- as.data.frame(tapply(effecSp$rgp,list(effecSp$colony_code,effecSp$year),function(x)as.numeric(isTRUE(x))))
 
   ## Define missing year
@@ -78,7 +92,7 @@ bdy_process_count_data <- function(sp, countData, colonies, first_year, last_yea
   rownames(counts00) <- rowNames
   rownames(rgp00) <- rowNames
 
-  ## Total count et Moyenne (sur les années) par colonie
+  ## Total count et mean (over years) per colony
 
   ## Function "get_last survey"
   get_last <- function(x) x[max(which(!is.na(x)))]

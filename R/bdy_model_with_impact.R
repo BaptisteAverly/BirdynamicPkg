@@ -4,8 +4,9 @@
 #'
 #' @param n_group numeric, number of groups of colonies for the bird species of interest
 #' @param ny_data numeric, number of years for which count data exist for the bird species of interest
-#' @param posterior dataframe, estimated output from [bdy_model_no_impact()]
-#' @param mortality distribution of mortality accross groups of colonies, as outputted by [bdy_process_mortality()]
+#' @param posterior dataframe, estimated output from [bdy_model_no_impact()]  \cr
+#'                  columns contain estimated group size for the first year of projection (one column per group of colonies) and estimated annual growth rate (one column per group of colonies).
+#' @param mortality Matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies, as outputted by [bdy_process_mortality()]
 #' @param ni number of iterations
 #' @param ny_proj number of years from the last annual count for which to compute population projections
 #' @param progress R shiny Progress object used to show the calculation progress to the user. Only for use within a shiny application.
@@ -34,14 +35,6 @@ bdy_model_with_impact <- function(n_group,ny_data,posterior,mortality,ni=1000,ny
   sel <- which(colnames(posterior) %in% paste0("growth_i_proj[", 1:n_group,"]"))
   post_lam <- posterior[,sel]
 
-  ## Draw values of initial subpop sizes
-  #n0_distri <- apply(post_n0, 2, sample, size = ni, replace = TRUE)
-
-  #colMeans(morta_distri)
-  #head(mortality)
-  #(morta_iter_parc) %>% colMeans
-
-
   ## Build object to store subpop sizes (under both scenarios)
   n_sc0 <- array(NA, dim = c(n_group, ny_proj, ni))
   morta_rate <- array(NA, dim = c(n_group, ni))
@@ -53,19 +46,14 @@ bdy_model_with_impact <- function(n_group,ny_data,posterior,mortality,ni=1000,ny
   n_sc1 <- n_sc0
 
   ## Draw iterations for subpop growth rates
-  #### ATTENTION : DO NOT resample 'spl" here ; needs to keep correlation structure ; otherwise UNCERTAINTY is underestimated
   lam <- t(post_lam[spl,])
-  # lam[,1]
 
   ##### Run #####-
-  # mu_m <- apply(mortality, 2, median) # without uncertainty on mortality
 
   ### Loop over iterations
   time_sim <- system.time(
 
     for(k in 1:ni){
-
-      #if((k %% (ni/100)) == 0) print(paste("simulation :", (k/ni)*100, "%"))
 
       ### Mortalities (collisions)
       # mu_m <- mortality[k,] # NUMBER of mortalities (independent from Current Pop Size) -- with uncertainty on mortality
@@ -84,7 +72,6 @@ bdy_model_with_impact <- function(n_group,ny_data,posterior,mortality,ni=1000,ny
         # sc1: with collision fatalities : MORTALITY RATE
         n_tmp <- round((n_sc1[,t-1,k]*lam[,k]) * fac_ds)
 
-        #real_m <- rpois(n=n_group, mu_m) # Apply mortality as a NUMBER independent from Current Pop Size
         real_m <- rpois(n=n_group, (mu_m*n_tmp)) # Apply mortality as a RATE
 
         for(i in 1:n_group) real_m[i] <- min(real_m[i], n_tmp[i])

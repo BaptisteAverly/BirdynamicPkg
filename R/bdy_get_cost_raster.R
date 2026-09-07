@@ -1,6 +1,6 @@
 #' Get cost transition matrix
 #'
-#' Produces the transition matrix and cost raster used to calculate shortest path distances for birds with marine exclusive livestyles.
+#' Produces the transition matrix and cost raster used to calculate shortest path distances for birds with marine-exclusive lifestyles.
 #'
 #' @param colonies vector of geometries, giving the coordinates of bird colonies, wind farms, or others. This is used to get the extent of the raster to calculate.
 #' @param shapeBuffer Buffer size (in km) to map countries shorelines (parameter 'buffer' in [bdy_prepare_countryShape()])
@@ -40,8 +40,6 @@ bdy_get_cost_raster <- function(colonies,shapeBuffer=100,pixel_size=1000,
     # Take a subset of the raster based on the extent of colonies and windfarms locations
     ext_col <- subColonies[,"geometry"] %>% st_bbox
 
-    #st_bbox(colonies_L93)
-
     ext_col <- extent(c(
       ext_col$xmin-(W_buffer*1000),
       ext_col$xmax+(E_buffer*1000),
@@ -51,22 +49,21 @@ bdy_get_cost_raster <- function(colonies,shapeBuffer=100,pixel_size=1000,
     # create a raster with this extent which will serve as the cost surface
     rast_cost <- raster(ext_col)
 
-    # pixel size (m) : 1000 m.
+    # set resolution
     res(rast_cost) <- pixel_size
 
     # transfer the coordinate system to the raster
     crs(rast_cost) <- CRS("+init=epsg:2154") %>% suppressWarnings()
 
-    # Now you can add data to the cells in your raster to mark the ones that fall within your polygon.
+    # Now data can be added to the raster cells to mark the ones that fall within the polygon.
     (rast_cost[as_Spatial(shape_L93),] <- 10000) %>% suppressWarnings()
 
     ## Create cost surface : "land" = high cost, sea = low cost
-    #rast_cost[rast_cost == 1] <- 10000
     rast_cost[is.na(rast_cost)] <- 1
 
     ## Produce transition matrices, and correct because 8 directions
-    system.time( trCost <- transition(1/rast_cost, mean, directions=8) )
-    system.time( trCost <- geoCorrection(trCost, type="c") )
+    trCost <- transition(1/rast_cost, mean, directions=8)
+    trCost <- geoCorrection(trCost, type="c")
 
     tr_cost_tot[[seafront]] <- trCost
     rast_cost_tot[[seafront]] <- rast_cost

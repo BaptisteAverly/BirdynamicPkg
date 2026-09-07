@@ -2,16 +2,19 @@
 #'
 #' Distributes national mortality among all colonies of a given species, based on weights calculated with [bdy_apportionning()]
 #'
-#' @param collision data frame giving mortality estimates for the species of interest and the wind farms of interest.Should have at least the following columns:
+#' @param mortality data frame giving mortality estimates for the species of interest and the wind farms of interest, for instance modeled with package stochLAB. Should have at least the following columns:
 #'                  \itemize{
 #'                  \item 'windfarm': character, names of the windfarm for which the mortality due to collisions is estimated ('parc' is also accepted as a column name)
 #'                  \item 'month': numeric, month of the year (1 to 12) for which the mortality is estimated
-#'                  \item 'iteration': numeric, iteration index of the collision model.
-#'                  \item 'coefficient': numeric, estimated mortality coefficient from the collision model, for a given combination of windfarm, month and iteration
+#'                  \item 'iteration': numeric, iteration index of the mortality model.
+#'                  \item 'coefficient': numeric, estimated mortality coefficient from the mortality model, for a given combination of windfarm, month and iteration
 #'                  }
-#' @param season character vector of length 12, giving the presence status of the bird of interest on the french coasts for each month of the year, with: \cr
+#' @param season character vector of length 12, giving the presence status of the bird of interest on the coast of interest for each month of the year, with: \cr
 #'              'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. \cr
-#'              For more details refer to the Birdynamic report by Chambert et al.
+#'              For example, see [bdydata_seasons], and for more details refer to the Birdynamic report by Chambert et al.
+#'
+#' @param iter numeric, number of iterations to draw from
+#'
 #' @param RW_group matrix (rows=groups of colonies, columns=windfarms) giving relative weights for each group/windfarm combination,
 #'                with sum of weights for a given windfarm = 1, as outputed by [bdy_apportionning()]
 #'
@@ -19,33 +22,27 @@
 #' @export
 #'
 
-bdy_process_mortality <- function(collision, season, n_iteration=1000, RW_group){
+bdy_process_mortality <- function(mortality, season, n_iteration=1000, RW_group){
 
   windfarmNames = colnames(RW_group)
 
-  ### Make the table to store distribution of collision risk for that species (Iter x Mortality)
+  ### Make the table to store distribution of mortality risk for that species (Iter x Mortality)
   morta_distri <- matrix(NA, nrow = n_iteration, ncol = length(windfarmNames),dimnames=list(NULL, windfarmNames))
-  collision$coefficient <- as.numeric(collision$coefficient)
-  names(collision) <- replace(names(collision), names(collision)=="parc", "windfarm")
+  mortality$coefficient <- as.numeric(mortality$coefficient)
+  names(mortality) <- replace(names(mortality), names(mortality)=="parc", "windfarm")
 
   ######################################################################-
   ### 2. Loop over windfarms
   for(kk in 1:length(windfarmNames)){
 
-    sel <- which(collision$windfarm == windfarmNames[kk])
+    sel <- which(mortality$windfarm == windfarmNames[kk])
 
     if(length(sel) == 0){} else{
-      cr <- collision[sel,]
+      cr <- mortality[sel,]
 
-      ### 3. OPTION : select the option to keep - B no need for options anymore
-      #tmp <- aggregate(coefficient ~ Option, data = cr, mean)
-      #sel_option <- tmp$Option[which.max(tmp$coefficient)]
-      #cr <- cr[cr$Option == sel_option,]
-
-      n_iter_morta <- length(unique(collision$iteration)) #B
+      n_iter_morta <- length(unique(mortality$iteration))
 
       ## Months when only local individuals are present
-      # cr_sel <- cr[cr$Month %in% months_breeding,]
       sel_local <- which(season %in% c("B", "R"))
       cr_sel <- cr[cr$month %in% sel_local,]
       cr_local <- aggregate(coefficient ~ iteration, data = cr_sel, sum) # sum over the Breeding season
@@ -53,19 +50,17 @@ bdy_process_mortality <- function(collision, season, n_iteration=1000, RW_group)
       rm(cr_sel) ; rm(sel_local)
 
       ## Months when both local and migrants are present (X% affects local populations)
-      # cr_sel <- cr[cr$Month %in% months_winter,]
       sel_mix <- which(season %in% c("M", "T"))
       if(length(sel_mix) > 0){
         cr_sel <- cr[cr$month %in% sel_mix,]
         cr_mix <- aggregate(coefficient ~ iteration, data = cr_sel, sum) # sum over the Breeding season
-        # Incertitude sur la proportion des collisions concernant les populations locales
-        min_PROP_LOCAL <- min((mean(cr_local)/mean(cr_mix$coefficient)), 1, na.rm = TRUE) # si il y a moins de collisions en période hors-repro qu'en repro, on considère que hors période repro les collisions affectent à 100% les individus locaux
+        # Uncertainty on collision proportions with regard to local populations
+        min_PROP_LOCAL <- min((mean(cr_local)/mean(cr_mix$coefficient)), 1, na.rm = TRUE) # if there are less collisions outside of breeding period, it is considered that collisions impact 100% of the local individuals outside of the breeding period
         max_PROP_LOCAL <- 1
         cr_mix <- (cr_mix$coefficient * runif(n_iter_morta, min_PROP_LOCAL, max_PROP_LOCAL))
       } else {
         cr_mix <- 0
-      } # close if
-
+      }
 
       ## Draw many (n_iteration) values (= shuffled distribution)
       cr_mix <- sample(cr_mix, size = n_iteration, replace = TRUE)
@@ -74,14 +69,14 @@ bdy_process_mortality <- function(collision, season, n_iteration=1000, RW_group)
       ### Fill the table (Iter x Windfarm)
       morta_distri[ , windfarmNames[kk]] <- cr_local + cr_mix
 
-    } # close if
+    } # if
     rm(sel)
   } # kk
   dim(morta_distri)
   head(morta_distri)
 
 
-  ## Replace remaining NA by ZERO (these are correct !)
+  ## Replace remaining NA by ZERO
   morta_distri[is.na(morta_distri)] <- 0
   dim(morta_distri)
   head(morta_distri)

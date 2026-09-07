@@ -1,11 +1,11 @@
 #' Get a population size vector
 #'
-#' Builds a vector of population size, for each age class, using a Leslie matrix to get the Stable Age Distribution (SAD)
+#' Builds a vector of population size, for each age class, using a Leslie matrix to get the Stable Age Distribution (SAD). Used by [bdy_model_no_impact]
 #'
 #' @param nb_pair a single number. Number of Pairs of reproductive individuals.
-#' @param s a numeric vector of survival probabilities for each age class
-#' @param f a numeric vector of fecundity values for each age class
-#' @param pr a numeric vector of proportions of reproductive individuals for each age class
+#' @param s numeric vector giving the survival rates for the different age classes of the species of interest, for example from column 'survival' of [bdydata_vital_rates]
+#' @param f numeric vector giving the fecundity rates for the different age classes of the species of interest, for example from column 'fecundity' of [bdydata_vital_rates]
+#' @param pr numeric vector giving the proportion of reproductive individual for the different age classes of the species of interest, for example from column 'propRepro' of [bdydata_vital_rates]
 #' @param type character, either "pre" or "post" breeding
 #'
 #' @returns numeric vector giving for each age class the estimated total number of individuals

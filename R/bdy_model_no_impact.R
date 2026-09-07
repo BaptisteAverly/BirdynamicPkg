@@ -2,13 +2,13 @@
 #'
 #' Computes the null population model (without impact from wind farms) for the birds species of interest
 #'
-#' @param group_counts matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns)
-#' @param ppa matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns)
-#' @param survival numeric vector giving the survival rates for the different age classes of the species of interest
-#' @param fecundity numeric vector giving the fecundity rates for the different age classes of the species of interest
-#' @param propRepro numeric vector giving the proportion of reproductive individual for the different age classes of the species of interest
+#' @param group_counts matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns), as outputted by [bdy_process_count_data]
+#' @param ppa matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns), as outputted by [bdy_process_count_data]
+#' @param survival numeric vector giving the survival rates for the different age classes of the species of interest, for example from column 'survival' of [bdydata_vital_rates]
+#' @param fecundity numeric vector giving the fecundity rates for the different age classes of the species of interest, for example from column 'fecundity' of [bdydata_vital_rates]
+#' @param propRepro numeric vector giving the proportion of reproductive individual for the different age classes of the species of interest, for example from column 'propRepro' of [bdydata_vital_rates]
 #' @param modelFile character, relative path for the text file containing the population model as jags code
-#' @param nimble boolean, whether to use nimble of jags to compute the bayesian model
+#' @param nimble boolean, whether to use nimble or jags to compute the bayesian model. Jags must be installed on your local machine in order to use it.
 #' @param lightResults boolean, whether the output should only be the estimated output useful for the model with impact, or the full posterior distribution (can be quite heavy)
 #' @param ny_proj number of years from the last annual count for which to compute population projections
 #' @param na Number of iterations to run in the JAGS adaptive phase
@@ -36,7 +36,7 @@ bdy_model_no_impact <- function(group_counts,ppa,survival,fecundity,propRepro,mo
   ppa[, (ny_data+1:ny_proj)] <- 1
 
   ### VITAL RATES & SAD #####
-  # Get SAD factor "g"
+  # Get Stable Age Distribution (SAD) factor "g"
   # from vital rates for that species
   g <- sum(bdy_get_pop_vector(nb_pair = 1000, s = survival, f = fecundity, pr = propRepro)[-1])/1000
 

@@ -5,7 +5,7 @@
 #' @param colonies sf object including colonies to cover by the polygon
 #' @param buffer buffer size (in km) around the colonies to include in the polygon
 #'
-#' @returns sf object of countries shorline in EPSG 2154
+#' @returns sf object of countries shoreline in EPSG 2154
 #' @export
 #'
 #' @examples

@@ -1,4 +1,4 @@
-#' Clean windfarm names
+#' Removes white spaces and special characters in each string of a vector. Used to homogenize windfarm names.
 #'
 #' @param any_words Vector of names to clean
 #'

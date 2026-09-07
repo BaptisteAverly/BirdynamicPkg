@@ -18,33 +18,33 @@ bdy_calculate_sea_area <- function(max_foraging_range, colonies, buffer = 100){
 
   shape_L93 <-  bdy_prepare_countryShape(colonies[,"geometry"], buffer=buffer)
 
-  # buffer de X km autour de tes points
+  # X km buffer around colonies
   buf <- st_buffer(colonies, set_units(max_foraging_range, "km"))
   buf$id <- 1:nrow(buf)
   buf$buffer_area <- st_area(buf)
 
-  # aire de "terre = france" dans chaque buffer qui recoupe la "terre"
+  # getting area of overlap of each buffer with the land
   system.time(
     intersect_buf <- st_intersection(st_as_sf(shape_L93), buf) %>%
       mutate(intersect_area = st_area(.))   # create new column with shape area
   )
 
-  ### Pourcentage #####
+  ### Percentage #####
 
-  # on r?cup?re les info des chevauchements des buffers avec la terre
-  st_geometry(buf) <- NULL # on retire la g?om?trie
-  st_geometry(intersect_buf) <- NULL # on retire la g?om?trie
+  # getting land/buffers overlap
+  st_geometry(buf) <- NULL # removing geometry
+  st_geometry(intersect_buf) <- NULL # removing geometry
   intersect_buf <- intersect_buf[,c("id","intersect_area")]
-  buf_ok <- merge(buf, intersect_buf, by = "id", all.x = T) # on merge
+  buf_ok <- merge(buf, intersect_buf, by = "id", all.x = T) # merging
 
-  # on remplace NA dans colonne "intersect_buf" par 0
+  # replacing Nas by 0
   buf_ok$intersect_area[is.na(buf_ok$intersect_area)] <- 0
 
-  # on calcule le pourcentage de terre
+  # calculating land percentage
   buf_ok$pct_terre <- as.numeric(buf_ok$intersect_area)/as.numeric(buf_ok$buffer_area) # entre 0 et 1
   buf_ok$pct_terre
 
-  # pourcentage de mer
+  # sea percentage
   sea_area <- (1 - buf_ok$pct_terre)
   names(sea_area) <- colonies$colony_code
 

@@ -2,20 +2,64 @@
 #'
 #' Checks that all data required for the analyses are loaded; see Vignette for more details.
 #'
-#' @param windfarms_L93 sf object indicating the position of windfarms, for instance using [bdydata_windfarm_example]; must be in EPSG 2154
-#' @param formatted_mortality formatted table of collision, for instance using [bdydata_mortality_example]
-#' @param colonies_all table of colonies from [bdy_summarise_colonies()]
-#' @param countData table of bird counts
-#' @param vital_rates table of species vital rates, for instance using [bdydata_vital_rates]
-#' @param seasons table of species seasonal activities, for instance using [bdydata_seasons]
-#' @param foraging_ranges table of species foraging ranges, for instance using [bdydata_foraging_ranges]
+#' @param windfarms_L93 sf object indicating the position of windfarms, for instance [bdydata_windfarm_example]; must be in EPSG 2154
+#'
+#' @param formatted_mortality data frame giving mortality estimates for the species of interest and the wind farms of interest. Should have at least the following columns:
+#'                  \itemize{
+#'                  \item 'species_latin': character, latin name of the species
+#'                  \item 'windfarm': character, names of the windfarm for which the mortality due to collisions is estimated ('parc' is also accepted as a column name)
+#'                  \item 'month': numeric, month of the year (1 to 12) for which the mortality is estimated
+#'                  \item 'iteration': numeric, iteration index of the mortality model.
+#'                  \item 'coefficient': numeric, estimated mortality coefficient from the mortality model, for a given combination of windfarm, month and iteration
+#'                  }
+#'                  For an example see [bdydata_mortality_example]
+#'
+#' @param countData data frame of bird counts (at species level), where each line gives the number of individuals counted for a given colony, species, and year. Should have at least the following columns:
+#'                    \itemize{
+#'                    \item 'species_latin': character, latin name of the species
+#'                    \item 'year': numeric, year during which the observation was made
+#'                    \item 'colony': character, name of the colony where the observation was made, which should be found also in th column 'colony' of argument 'colonies'
+#'                    \item 'count': numeric, the count value for this given year, colony, species
+#'                    }
+#'
+#' @param colonies_all sf table with information about colonies, as outputed by [bdy_summarise_colonies()].  Should have at least the following columns:
+#'                    \itemize{
+#'                    \item 'colony': character, textual name for the colony
+#'                    \item 'lat': numeric, latitude of the colony centroid
+#'                    \item 'lon': numeric, longitude of the colony centroid
+#'                    \item 'seafront': character, name of the seafront on which the colony is located (for instance 'Atlantic', 'Mediterranean'...)
+#'                    \item 'colony_code': character, unique identifier for each colony
+#'                    \item ' geometry" : sf coordinates of the colony centroid
+#'                    }
+#'
+#' @param vital_rates table of species vital rates (rows = species), for instance [bdydata_vital_rates]. Should contain at least the following columns:
+#'                    \itemize{
+#'                    \item 'species_latin': character, latin name of the species
+#'                    \item 'age': numeric, the age corresponding to the given parameters
+#'                    \item 'class': character, the age class corresponding to a given age for this species ('Juv' for juvenile, 'Imm' for immature, 'Sub' for subadult, 'Adu' for adult)
+#'                    \item 'survival': numeric between 0 and 1, the survival rate for the given species and age
+#'                    \item 'fecundity': numeric between 0 and 1, the fecundity rate for the given species and age
+#'                    \item ' propRepro" : numeric between 0 and 1, the proportion of reproductive individuals for the given species and age
+#'                    }
+#'
+#' @param season table of species presence status on the coast of interest for each month of the year (rows = species). \cr
+#'               Should have a column named 'species_latin" with the latin name of each species, and one column per month (named 'Jan','Feb','Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec') giving the presence status, with: \cr
+#'              'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. \cr
+#'              For example, see [bdydata_seasons], and for more details refer to the Birdynamic report by Chambert et al.
+#'
+#' @param foraging_ranges table of species foraging ranges, for instance [bdydata_foraging_ranges]. Should contain at least the following columns:
+#'                  \itemize{
+#'                    \item 'species_latin': character, latin name of the species
+#'                    \item 'terrestrial_habits': boolean, whether this species may fly overland (True) or is strictly marine (False)
+#'                    \item 'max_km': numeric, the maximum foraging range of this species in kilometers
+#'                    }
 #' @param countryShape sf object with the shape of countries shoreline, for instance cropped from [bdydata_world_map]
 #'
 #' @returns a text message if all data are valid, an error if any problem was detected
 #' @export
 #'
 
-bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, countData, vital_rates, seasons, foraging_ranges, countryShape){
+bdy_check_alldata <- function(windfarms_L93, colonies_all, formatted_mortality, countData, vital_rates, seasons, foraging_ranges, countryShape){
 
   ### Check column names
   # windfarms_L93
@@ -27,7 +71,7 @@ bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, 
   if(length(col_missing_morta)>0){stop(paste0("Missing columns in 'formatted_mortality': ", paste0(col_missing_morta, collapse=", ")))}
 
   # colonies_all
-  col_missing_colonies <- c("seafront", "colony_code", "colony") %>% .[! . %in% names(colonies_all)]
+  col_missing_colonies <- c("seafront", "colony_code", "colony", "lat", "lon") %>% .[! . %in% names(colonies_all)]
   if(length(col_missing_colonies)>0){stop(paste0("Missing columns in 'colonies_all': ", paste0(col_missing_colonies, collapse=", ")))}
 
   # countData
@@ -45,8 +89,6 @@ bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, 
   # foraging_ranges
   col_missing_foraging <- c("species_latin", "terrestrial_habits", "max_km") %>% .[! . %in% names(foraging_ranges)]
   if(length(col_missing_foraging)>0){stop(paste0("Missing columns in 'foraging_ranges': ", paste0(col_missing_foraging, collapse=", ")))}
-
-
 
   ### Check windfarm data
   # Check names match between windfarms_L93 and formatted_mortality
@@ -87,7 +129,6 @@ bdy_check_alldata <- function(windfarms_L93, formatted_mortality, colonies_all, 
   # foraging_ranges
   SP_missing_foraging <- SP_list[! SP_list %in% foraging_ranges$species_latin]
   if(length(SP_missing_foraging)>0){stop(paste0("Some species are included in 'formatted_mortality' but are missing from 'foraging_ranges': ", paste0(SP_missing_foraging, collapse=", ")))}
-
 
 
   ### Check formatted_mortality columns

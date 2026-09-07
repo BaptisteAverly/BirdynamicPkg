@@ -7,7 +7,7 @@
 #' @param colonies data frame with each row being a colony where the species of interest is present. Must have at least the following columns:
 #'                \itemize{
 #'                \item 'group': numeric, colonies with the same number belong to the same cluster
-#'                \item 'avg': numeric, average population size in that colony over the years of interests
+#'                \item 'mean: numeric, average population size in that colony over the years of interests
 #'                \item 'colony_code': character, unique identifier for the colony.
 #'                }
 #' @param sea_area named numeric vector giving for each colony the proportion of marine surface surrounding it.
@@ -29,15 +29,12 @@
 bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,incl_pop_size=T,incl_sea_area=T){
 
   n_windfarms = ncol(tbl_dist)
-  n_group <- nlevels(colonies$group) #B
+  n_group <- nlevels(colonies$group)
 
   ### APPORTIONNING ###
   ## Get Relative Weights for Apportioning
 
   ### Create Relative Weights (AW) for Apportioning fatalities
-
-  ## Filter colonies for the given species
-  #tbl_dist <- tbl_dist[which(rownames(tbl_dist) %in% colonies$colony_code), ]
 
   ## Ensure it is ordered by colony_code
   tbl_dist <- tbl_dist[order(row.names(tbl_dist)),,drop=F]
@@ -49,7 +46,6 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
 
   ## Add info colony size
   tbl_app$size <- colonies$mean[match(row.names(tbl_dist),colonies$colony_code)]
-  #tbl_app$size <- colonies$last[match(row.names(tbl_dist),colonies$colony_code)]
 
   ## Add info sea_area
   tbl_app$sea_area <- sea_area[row.names(tbl_dist)]
@@ -57,18 +53,8 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
   ## Avoid negative values for sea area
   tbl_app$sea_area[tbl_app$sea_area < 0] <- min(tbl_app$sea_area[tbl_app$sea_area > 0])
 
-  # check: which(!( (names(sea_area)) %in% ((colonies$colony_code))) )
-  # check: cbind((names(sea_area)), (colonies$colony_code) )
-
-  ## Define function to get relative weights
-  # rel_weight <- function(x) if(sum(x) == 0) 0 else x/sum(x)
+  ## function to get relative weights
   rel_weight <- function(x) x/sum(x)
-
-  ## Relation "risque relatif" et distance (d²)
-  #d <- seq(10, 100, length.out = 100)
-  #rr <- (1/rel_weight(d^2)) %>% rel_weight
-  # plot(x = d, y = rr, type = "l", ylab = "Risque relatif", xlab = "Distance (km)")
-
 
   #####################################
   #### COLONY SCALE
@@ -133,7 +119,6 @@ bdy_apportionning <- function(max_foraging_range_km,colonies,sea_area,tbl_dist,i
       sum
 
   } # gg
-  rm(gg)
 
   ## Make table of Absolute Weights
   AW_dist <- AW_size <- AW_area <- as.data.frame(matrix(NA, nrow = n_group, ncol = n_windfarms, dimnames = list(levels(colonies$group), colnames(tbl_dist))))

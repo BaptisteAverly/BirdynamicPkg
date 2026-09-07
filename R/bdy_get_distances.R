@@ -1,8 +1,8 @@
-#' Calculates distance windfarm-colonies
+#' Calculates  windfarm-colony distances
 #'
 #' Calculates the shortest path distances between marine bird colonies and wind farms
 #'
-#' @param colonies sf table where each row is a colony of interest.
+#' @param colonies sf table where each row is a colony of interest, as outputted by [bdy_summarise_colonies()].
 #'                Must contain the columns:
 #'                \itemize{
 #'                \item 'colony_code': character, unique identifiers for each colony
@@ -13,10 +13,10 @@
 #'                Must contain the columns:
 #'                \itemize{
 #'                \item 'NAME': character, unique identifier for each wind farm
-#'                \item 'geometry': sf coordiantes of the wind famr centroid
+#'                \item 'geometry': sf coordinates of the wind farm centroid
 #'                \item 'seafront': character, which sea front is the colony located in
 #'                }
-#' @param costMatrix named list containing cost rasters (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
+#' @param costMatrix named list containing cost rasters (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free, as outputted by [bdy_get_cost_raster()].
 #'                   Must contain one object per sea front, with names identical to names in column 'facade' of argument 'colonies' and column 'Facade' of argument 'windfarms'.
 #'                   Used to calculate shortest path distances for strictly marine birds which do not fly over the land.
 #' @param doShpa boolean. If set to false, only the euclidean distance is calculated which makes the computation faster, especially if there are many wind farms.
@@ -25,7 +25,7 @@
 #' @returns List containing 2 matrices with identical format (colonies as rows and wind farms as columns): \cr
 #'          'eucl_dist' contains the euclidian distances and 'shpa_dist' contains the shortest path distances (filled with NAs if doShpa=F)
 #'
-#' @seealso [bdy_get_cost_raster()]
+#' @seealso [bdy_get_cost_raster()],[bdy_summarise_colonies()]
 #' @export
 #'
 bdy_get_distances <- function(colonies,windfarms,costMatrix,doShpa=T,progress=NULL){
@@ -68,8 +68,6 @@ bdy_get_distances <- function(colonies,windfarms,costMatrix,doShpa=T,progress=NU
                                 origin = origin,
                                 goal = goals[seafrontIdx,],
                                 output = "SpatialLines") %>% suppressWarnings()
-
-      #crs(shortPath) <- CRS("+init=epsg:2154") %>% suppressWarnings()
 
       #storing the distances for the colonies on the right façade in the table
       shpa_dist[seafrontIdx,i] <- st_length(st_as_sf(shortPath), which = "Euclidean") /1000
