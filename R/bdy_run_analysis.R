@@ -2,7 +2,7 @@
 #'
 #' This function can be used to run the complete analysis (from calculating cost raster to getting model outputs). See the package vignette for more information.
 #'
-#' @param species vector of species names to include in the analysis
+#' @param species vector of latin names of species to include in the analysis
 #' @param countData table of bird counts
 #' @param windfarms sf object indicating the position of windfarms, for instance using [bdydata_windfarm_example]; must be in EPSG 2154
 #' @param timeRange minimum and maximum years of bird counts to integrate in trends estimates
@@ -47,7 +47,12 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
   for(sp in species){
     print(paste0("Start analysis ", sp, "\n"))
 
-    # !! prevoir cas ou l'espece d'interet n'est pas dans la liste !!
+    if(!sp %in% bdydata_seasons$species_latin){
+      print(paste0("Warning: The species ",sp, " is not part of the list of marine species for which the analysis can be run, and will be skipped.
+                   For a list of valid species, see bdydata_seasons$species_latin."))
+      next
+    }
+
     foraging_range_sp = foraging_ranges$max_km[which(foraging_ranges$species_latin==sp)]
     terrestrial_habit = foraging_ranges$terrestrial_habits[which(foraging_ranges$species_latin==sp)]
 

@@ -9,11 +9,11 @@ bdy_get_pop_vector(nb_pair, s, f, pr, type = "post")
 \arguments{
 \item{nb_pair}{a single number. Number of Pairs of reproductive individuals.}
 
-\item{s}{a numeric vector of survival probabilities for each age class}
+\item{s}{numeric vector giving the survival rates for the different age classes of the species of interest, for example from column 'survival' of \link{bdydata_vital_rates}}
 
-\item{f}{a numeric vector of fecundity values for each age class}
+\item{f}{numeric vector giving the fecundity rates for the different age classes of the species of interest, for example from column 'fecundity' of \link{bdydata_vital_rates}}
 
-\item{pr}{a numeric vector of proportions of reproductive individuals for each age class}
+\item{pr}{numeric vector giving the proportion of reproductive individual for the different age classes of the species of interest, for example from column 'propRepro' of \link{bdydata_vital_rates}}
 
 \item{type}{character, either "pre" or "post" breeding}
 }
@@ -21,5 +21,5 @@ bdy_get_pop_vector(nb_pair, s, f, pr, type = "post")
 numeric vector giving for each age class the estimated total number of individuals
 }
 \description{
-Builds a vector of population size, for each age class, using a Leslie matrix to get the Stable Age Distribution (SAD)
+Builds a vector of population size, for each age class, using a Leslie matrix to get the Stable Age Distribution (SAD). Used by \link{bdy_model_no_impact}
 }

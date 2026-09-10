@@ -22,19 +22,19 @@ bdy_model_no_impact(
 )
 }
 \arguments{
-\item{group_counts}{matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns)}
+\item{group_counts}{matrix giving annual bird counts for each group of colonies (rows) and each year of interest (columns), as outputted by \link{bdy_process_count_data}}
 
-\item{ppa}{matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns)}
+\item{ppa}{matrix giving the proportion of colonies monitored for each group of colonies (rows) and each year of interest (columns), as outputted by \link{bdy_process_count_data}}
 
-\item{survival}{numeric vector giving the survival rates for the different age classes of the species of interest}
+\item{survival}{numeric vector giving the survival rates for the different age classes of the species of interest, for example from column 'survival' of \link{bdydata_vital_rates}}
 
-\item{fecundity}{numeric vector giving the fecundity rates for the different age classes of the species of interest}
+\item{fecundity}{numeric vector giving the fecundity rates for the different age classes of the species of interest, for example from column 'fecundity' of \link{bdydata_vital_rates}}
 
-\item{propRepro}{numeric vector giving the proportion of reproductive individual for the different age classes of the species of interest}
+\item{propRepro}{numeric vector giving the proportion of reproductive individual for the different age classes of the species of interest, for example from column 'propRepro' of \link{bdydata_vital_rates}}
 
 \item{modelFile}{character, relative path for the text file containing the population model as jags code}
 
-\item{nimble}{boolean, whether to use nimble of jags to compute the bayesian model}
+\item{nimble}{boolean, whether to use nimble or jags to compute the bayesian model. Jags must be installed on your local machine in order to use it.}
 
 \item{lightResults}{boolean, whether the output should only be the estimated output useful for the model with impact, or the full posterior distribution (can be quite heavy)}
 

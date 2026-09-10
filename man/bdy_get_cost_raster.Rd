@@ -43,5 +43,5 @@ List of 2 elements:
 }
 }
 \description{
-Produces the transition matrix and cost raster used to calculate shortest path distances for birds with marine exclusive livestyles.
+Produces the transition matrix and cost raster used to calculate shortest path distances for birds with marine-exclusive lifestyles.
 }

@@ -16,9 +16,22 @@ bdy_process_count_data(
 \arguments{
 \item{sp}{character, latin name of the species of interest; this has to be a single species (not a vector)}
 
-\item{countData}{table of bird counts}
+\item{countData}{data frame of bird counts (at species level), where each line gives the number of individuals counted for a given colony, species, and year. Must have at least the following columns:
+\itemize{
+\item 'species_latin': character, latin name of the species
+\item 'year': numeric, year during which the observation was made
+\item 'colony': character, name of the colony where the observation was made, which should be found also in th column 'colony' of argument 'colonies'
+\item 'count': numeric, the count value for this given year, colony, species
+}}
 
-\item{colonies}{table of colonies from \code{\link[=bdy_summarise_colonies]{bdy_summarise_colonies()}}}
+\item{colonies}{sf table where each row is a colony of interest, as outputted by \code{\link[=bdy_summarise_colonies]{bdy_summarise_colonies()}}
+Must contain the columns:
+\itemize{
+\item 'colony': character, name of the colony
+\item 'colony_code': character, unique identifiers for each colony
+\item 'lat': numeric, latitude of the colony
+\item 'lon': numeric, longitude of the colony
+}}
 
 \item{first_year}{numeric, minimum year of bird counts to integrate in trends estimates}
 
@@ -37,5 +50,5 @@ List of 5 objects:
 }
 }
 \description{
-Process bird count data
+Uses bird counts and colony information to output several formatted tables used in the next steps of the analysis
 }

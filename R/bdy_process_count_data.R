@@ -17,6 +17,7 @@
 #'                \item 'colony_code': character, unique identifiers for each colony
 #'                \item 'lat': numeric, latitude of the colony
 #'                \item 'lon': numeric, longitude of the colony
+#'                }
 #' @param first_year numeric, minimum year of bird counts to integrate in trends estimates
 #' @param last_year numeric, maximum year of bird counts to integrate in trends estimates
 #' @param max_foraging_range_km numeric, maximum foraging range in kilometers for the species of interest

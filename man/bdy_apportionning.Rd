@@ -19,7 +19,7 @@ bdy_apportionning(
 \item{colonies}{data frame with each row being a colony where the species of interest is present. Must have at least the following columns:
 \itemize{
 \item 'group': numeric, colonies with the same number belong to the same cluster
-\item 'avg': numeric, average population size in that colony over the years of interests
+\item 'mean: numeric, average population size in that colony over the years of interests
 \item 'colony_code': character, unique identifier for the colony.
 }}
 

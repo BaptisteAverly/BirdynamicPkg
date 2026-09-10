@@ -4,23 +4,25 @@
 \alias{bdy_process_mortality}
 \title{Process mortality file}
 \usage{
-bdy_process_mortality(collision, season, n_iteration = 1000, RW_group)
+bdy_process_mortality(mortality, season, n_iteration = 1000, RW_group)
 }
 \arguments{
-\item{collision}{data frame giving mortality estimates for the species of interest and the wind farms of interest.Should have at least the following columns:
+\item{mortality}{data frame giving mortality estimates for the species of interest and the wind farms of interest, for instance modeled with package stochLAB. Should have at least the following columns:
 \itemize{
 \item 'windfarm': character, names of the windfarm for which the mortality due to collisions is estimated ('parc' is also accepted as a column name)
 \item 'month': numeric, month of the year (1 to 12) for which the mortality is estimated
-\item 'iteration': numeric, iteration index of the collision model.
-\item 'coefficient': numeric, estimated mortality coefficient from the collision model, for a given combination of windfarm, month and iteration
+\item 'iteration': numeric, iteration index of the mortality model.
+\item 'coefficient': numeric, estimated mortality coefficient from the mortality model, for a given combination of windfarm, month and iteration
 }}
 
-\item{season}{character vector of length 12, giving the presence status of the bird of interest on the french coasts for each month of the year, with: \cr
+\item{season}{character vector of length 12, giving the presence status of the bird of interest on the coast of interest for each month of the year, with: \cr
 'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. \cr
-For more details refer to the Birdynamic report by Chambert et al.}
+For example, see \link{bdydata_seasons}, and for more details refer to the Birdynamic report by Chambert et al.}
 
 \item{RW_group}{matrix (rows=groups of colonies, columns=windfarms) giving relative weights for each group/windfarm combination,
 with sum of weights for a given windfarm = 1, as outputed by \code{\link[=bdy_apportionning]{bdy_apportionning()}}}
+
+\item{iter}{numeric, number of iterations to draw from}
 }
 \value{
 Matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies

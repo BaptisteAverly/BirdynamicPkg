@@ -19,9 +19,10 @@ bdy_model_with_impact(
 
 \item{ny_data}{numeric, number of years for which count data exist for the bird species of interest}
 
-\item{posterior}{dataframe, estimated output from \code{\link[=bdy_model_no_impact]{bdy_model_no_impact()}}}
+\item{posterior}{dataframe, estimated output from \code{\link[=bdy_model_no_impact]{bdy_model_no_impact()}}  \cr
+columns contain estimated group size for the first year of projection (one column per group of colonies) and estimated annual growth rate (one column per group of colonies).}
 
-\item{mortality}{distribution of mortality accross groups of colonies, as outputted by \code{\link[=bdy_process_mortality]{bdy_process_mortality()}}}
+\item{mortality}{Matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies, as outputted by \code{\link[=bdy_process_mortality]{bdy_process_mortality()}}}
 
 \item{ni}{number of iterations}
 

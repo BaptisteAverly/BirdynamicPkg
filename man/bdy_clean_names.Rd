@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_clean_names.R
 \name{bdy_clean_names}
 \alias{bdy_clean_names}
-\title{Clean windfarm names}
+\title{Removes white spaces and special characters in each string of a vector. Used to homogenize windfarm names.}
 \usage{
 bdy_clean_names(any_words)
 }
@@ -13,7 +13,7 @@ bdy_clean_names(any_words)
 Vector of clean names
 }
 \description{
-Clean windfarm names
+Removes white spaces and special characters in each string of a vector. Used to homogenize windfarm names.
 }
 \examples{
 bdy_clean_names("Port-Leucate___23:bis")

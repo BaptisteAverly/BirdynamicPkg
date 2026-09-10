@@ -2,16 +2,22 @@
 % Please edit documentation in R/bdy_summarise_colonies.R
 \name{bdy_summarise_colonies}
 \alias{bdy_summarise_colonies}
-\title{Summarise bird counts into a table of colonies}
+\title{Summarizes a table of bird counts into a table of colonies}
 \usage{
-bdy_summarise_colonies(effecTable)
+bdy_summarise_colonies(countData)
 }
 \arguments{
-\item{effecTable}{table of bird counts (at species level)}
+\item{countData}{data frame of bird counts (at species level), where each line gives the number of birds counted for a given colony, species, and year. Must have at least the following columns:
+\itemize{
+\item 'colony': character, name of the colony
+\item 'lat': numeric, latitude of the colony
+\item 'lon': numeric, longitude of the colony
+\item 'seafront': character, name of the seafront on which the colony is located (for instance 'Atlantic', 'Mediterranean'...)
+}}
 }
 \value{
-table of all colonies (without species level)
+Sf table of colony information ('colony', 'lat', 'lon', 'seafront', 'colony_code', and 'geometry'), where each line is a different colony and the following columns:
 }
 \description{
-Summarise bird counts into a table of colonies
+Summarizes a table of bird counts into a table of colonies
 }

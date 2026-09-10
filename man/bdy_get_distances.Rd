@@ -2,12 +2,12 @@
 % Please edit documentation in R/bdy_get_distances.R
 \name{bdy_get_distances}
 \alias{bdy_get_distances}
-\title{Calculates distance windfarm-colonies}
+\title{Calculates  windfarm-colony distances}
 \usage{
 bdy_get_distances(colonies, windfarms, costMatrix, doShpa = T, progress = NULL)
 }
 \arguments{
-\item{colonies}{sf table where each row is a colony of interest.
+\item{colonies}{sf table where each row is a colony of interest, as outputted by \code{\link[=bdy_summarise_colonies]{bdy_summarise_colonies()}}.
 Must contain the columns:
 \itemize{
 \item 'colony_code': character, unique identifiers for each colony
@@ -19,11 +19,11 @@ Must contain the columns:
 Must contain the columns:
 \itemize{
 \item 'NAME': character, unique identifier for each wind farm
-\item 'geometry': sf coordiantes of the wind famr centroid
+\item 'geometry': sf coordinates of the wind farm centroid
 \item 'seafront': character, which sea front is the colony located in
 }}
 
-\item{costMatrix}{named list containing cost rasters (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free.
+\item{costMatrix}{named list containing cost rasters (Transition object from package gdistance) representing the land areas as costly and marine areas as cost free, as outputted by \code{\link[=bdy_get_cost_raster]{bdy_get_cost_raster()}}.
 Must contain one object per sea front, with names identical to names in column 'facade' of argument 'colonies' and column 'Facade' of argument 'windfarms'.
 Used to calculate shortest path distances for strictly marine birds which do not fly over the land.}
 
@@ -39,5 +39,5 @@ List containing 2 matrices with identical format (colonies as rows and wind farm
 Calculates the shortest path distances between marine bird colonies and wind farms
 }
 \seealso{
-\code{\link[=bdy_get_cost_raster]{bdy_get_cost_raster()}}
+\code{\link[=bdy_get_cost_raster]{bdy_get_cost_raster()}},\code{\link[=bdy_summarise_colonies]{bdy_summarise_colonies()}}
 }

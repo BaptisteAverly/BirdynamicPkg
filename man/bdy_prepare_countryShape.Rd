@@ -12,7 +12,7 @@ bdy_prepare_countryShape(colonies, buffer)
 \item{buffer}{buffer size (in km) around the colonies to include in the polygon}
 }
 \value{
-sf object of countries shorline in EPSG 2154
+sf object of countries shoreline in EPSG 2154
 }
 \description{
 This polygon of shorelines in the area covered by colonies selected is used in maps and in geospatial analyses (e.g., in \code{\link[=bdy_calculate_sea_area]{bdy_calculate_sea_area()}}). The map is based on the global map included in the package \link{bdydata_world_map}.

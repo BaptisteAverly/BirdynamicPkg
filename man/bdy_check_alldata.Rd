@@ -6,8 +6,8 @@
 \usage{
 bdy_check_alldata(
   windfarms_L93,
-  formatted_mortality,
   colonies_all,
+  formatted_mortality,
   countData,
   vital_rates,
   seasons,
@@ -16,21 +16,59 @@ bdy_check_alldata(
 )
 }
 \arguments{
-\item{windfarms_L93}{sf object indicating the position of windfarms, for instance using \link{bdydata_windfarm_example}; must be in EPSG 2154}
+\item{windfarms_L93}{sf object indicating the position of windfarms, for instance \link{bdydata_windfarm_example}; must be in EPSG 2154}
 
-\item{formatted_mortality}{formatted table of collision, for instance using \link{bdydata_mortality_example}}
+\item{colonies_all}{sf table with information about colonies, as outputed by \code{\link[=bdy_summarise_colonies]{bdy_summarise_colonies()}}.  Should have at least the following columns:
+\itemize{
+\item 'colony': character, textual name for the colony
+\item 'lat': numeric, latitude of the colony centroid
+\item 'lon': numeric, longitude of the colony centroid
+\item 'seafront': character, name of the seafront on which the colony is located (for instance 'Atlantic', 'Mediterranean'...)
+\item 'colony_code': character, unique identifier for each colony
+\item ' geometry" : sf coordinates of the colony centroid
+}}
 
-\item{colonies_all}{table of colonies from \code{\link[=bdy_summarise_colonies]{bdy_summarise_colonies()}}}
+\item{formatted_mortality}{data frame giving mortality estimates for the species of interest and the wind farms of interest. Should have at least the following columns:
+\itemize{
+\item 'species_latin': character, latin name of the species
+\item 'windfarm': character, names of the windfarm for which the mortality due to collisions is estimated ('parc' is also accepted as a column name)
+\item 'month': numeric, month of the year (1 to 12) for which the mortality is estimated
+\item 'iteration': numeric, iteration index of the mortality model.
+\item 'coefficient': numeric, estimated mortality coefficient from the mortality model, for a given combination of windfarm, month and iteration
+}
+For an example see \link{bdydata_mortality_example}}
 
-\item{countData}{table of bird counts}
+\item{countData}{data frame of bird counts (at species level), where each line gives the number of individuals counted for a given colony, species, and year. Should have at least the following columns:
+\itemize{
+\item 'species_latin': character, latin name of the species
+\item 'year': numeric, year during which the observation was made
+\item 'colony': character, name of the colony where the observation was made, which should be found also in th column 'colony' of argument 'colonies'
+\item 'count': numeric, the count value for this given year, colony, species
+}}
 
-\item{vital_rates}{table of species vital rates, for instance using \link{bdydata_vital_rates}}
+\item{vital_rates}{table of species vital rates (rows = species), for instance \link{bdydata_vital_rates}. Should contain at least the following columns:
+\itemize{
+\item 'species_latin': character, latin name of the species
+\item 'age': numeric, the age corresponding to the given parameters
+\item 'class': character, the age class corresponding to a given age for this species ('Juv' for juvenile, 'Imm' for immature, 'Sub' for subadult, 'Adu' for adult)
+\item 'survival': numeric between 0 and 1, the survival rate for the given species and age
+\item 'fecundity': numeric between 0 and 1, the fecundity rate for the given species and age
+\item ' propRepro" : numeric between 0 and 1, the proportion of reproductive individuals for the given species and age
+}}
 
-\item{seasons}{table of species seasonal activities, for instance using \link{bdydata_seasons}}
-
-\item{foraging_ranges}{table of species foraging ranges, for instance using \link{bdydata_foraging_ranges}}
+\item{foraging_ranges}{table of species foraging ranges, for instance \link{bdydata_foraging_ranges}. Should contain at least the following columns:
+\itemize{
+\item 'species_latin': character, latin name of the species
+\item 'terrestrial_habits': boolean, whether this species may fly overland (True) or is strictly marine (False)
+\item 'max_km': numeric, the maximum foraging range of this species in kilometers
+}}
 
 \item{countryShape}{sf object with the shape of countries shoreline, for instance cropped from \link{bdydata_world_map}}
+
+\item{season}{table of species presence status on the coast of interest for each month of the year (rows = species). \cr
+Should have a column named 'species_latin" with the latin name of each species, and one column per month (named 'Jan','Feb','Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec') giving the presence status, with: \cr
+'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. \cr
+For example, see \link{bdydata_seasons}, and for more details refer to the Birdynamic report by Chambert et al.}
 }
 \value{
 a text message if all data are valid, an error if any problem was detected
