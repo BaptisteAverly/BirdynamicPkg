@@ -78,7 +78,7 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
 
     #distributing mortality
     morta_iter_group <- bdy_process_mortality(
-      collision = mortality[which(mortality$species_latin==sp),],
+      mortality = mortality[which(mortality$species_latin==sp),],
       season=seasons[which(seasons$species_latin==sp),][month.abb],
       n_iteration=n_iteration,
       RW_group = apportionning$RW_group

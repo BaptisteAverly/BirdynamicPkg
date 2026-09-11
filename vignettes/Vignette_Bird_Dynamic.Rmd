@@ -222,7 +222,7 @@ ggplot()+
 Before running the analyses, we need to check that all required data are loaded. This is done by the function `bdy_check_alldata()` that will either return a message saying all data are good, or an error.
 
 ```{r check_data}
-bdy_check_alldata(windfarms_L93, formatted_mortality, colonies_all, countData, vital_rates, seasons, foraging_ranges, countryShape)
+bdy_check_alldata(windfarms_L93, colonies_all, formatted_mortality, countData, vital_rates, seasons, foraging_ranges, countryShape)
 ```
 
 
@@ -300,7 +300,7 @@ print(apportionning$RW_group)
 This table can then be used in the [bdy_process_mortality()] that distributes national mortality data among all colonies of a given species.
 ```{r apportion_mortality}
 morta_iter_group <- bdy_process_mortality(
-      collision = formatted_mortality,
+      mortality = formatted_mortality,
       season=seasons[which(seasons$species_latin==sp),][-1],
       n_iteration = 1000,
       RW_group = apportionning$RW_group

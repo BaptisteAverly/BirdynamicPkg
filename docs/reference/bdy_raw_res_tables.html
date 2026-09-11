@@ -62,7 +62,12 @@
 
 
 <dl><dt id="arg-mod-out">mod_out<a class="anchor" aria-label="anchor" href="#arg-mod-out"></a></dt>
-<dd><p>Output of the <code><a href="bdy_model_with_impact.html">bdy_model_with_impact()</a></code> function, completed with colonies, mortality and distance data</p></dd>
+<dd><p>A list including for each species a list of 5 outputs. This can be directly obtained for multiple species using <code><a href="bdy_run_analysis.html">bdy_run_analysis()</a></code>, or combined manually for each species within a loop (see Vignette for more details). For each species, the list must include:</p><ul><li><p>no_impact: output of the demographic model with no impact from windfarms, from <code><a href="bdy_model_no_impact.html">bdy_model_no_impact()</a></code></p></li>
+<li><p>with_impact: output of the model with impact from windfarms, from <code><a href="bdy_model_with_impact.html">bdy_model_with_impact()</a></code></p></li>
+<li><p>colonies: data frame with each row being a colony where the species of interest is present, from <code><a href="bdy_process_count_data.html">bdy_process_count_data()</a></code></p></li>
+<li><p>mortality: Matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies, from <code><a href="bdy_process_mortality.html">bdy_process_mortality()</a></code></p></li>
+<li><p>distance: matrix giving the distances between colonies (rows) and wind farms (columns), from <code><a href="bdy_get_distances.html">bdy_get_distances()</a></code></p></li>
+</ul></dd>
 
 </dl></div>
     <div id="value">

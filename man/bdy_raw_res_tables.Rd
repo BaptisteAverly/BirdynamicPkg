@@ -7,7 +7,13 @@
 bdy_raw_res_tables(mod_out)
 }
 \arguments{
-\item{mod_out}{Output of the \code{\link[=bdy_model_with_impact]{bdy_model_with_impact()}} function, completed with colonies, mortality and distance data}
+\item{mod_out}{A list including for each species a list of 5 outputs. This can be directly obtained for multiple species using \code{\link[=bdy_run_analysis]{bdy_run_analysis()}}, or combined manually for each species within a loop (see Vignette for more details). For each species, the list must include:\itemize{
+\item no_impact: output of the demographic model with no impact from windfarms, from \code{\link[=bdy_model_no_impact]{bdy_model_no_impact()}}
+\item with_impact: output of the model with impact from windfarms, from \code{\link[=bdy_model_with_impact]{bdy_model_with_impact()}}
+\item colonies: data frame with each row being a colony where the species of interest is present, from \code{\link[=bdy_process_count_data]{bdy_process_count_data()}}
+\item mortality: Matrix (rows = iterations, columns = groups of colonies) giving the distribution of mortality accross groups of colonies, from \code{\link[=bdy_process_mortality]{bdy_process_mortality()}}
+\item distance: matrix giving the distances between colonies (rows) and wind farms (columns), from \code{\link[=bdy_get_distances]{bdy_get_distances()}}
+}}
 }
 \value{
 Three tables:

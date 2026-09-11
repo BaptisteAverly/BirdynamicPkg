@@ -56,8 +56,8 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bdy_check_alldata</span><span class="op">(</span></span>
 <span>  <span class="va">windfarms_L93</span>,</span>
-<span>  <span class="va">formatted_mortality</span>,</span>
 <span>  <span class="va">colonies_all</span>,</span>
+<span>  <span class="va">formatted_mortality</span>,</span>
 <span>  <span class="va">countData</span>,</span>
 <span>  <span class="va">vital_rates</span>,</span>
 <span>  <span class="va">seasons</span>,</span>
@@ -71,35 +71,62 @@
 
 
 <dl><dt id="arg-windfarms-l-">windfarms_L93<a class="anchor" aria-label="anchor" href="#arg-windfarms-l-"></a></dt>
-<dd><p>sf object indicating the position of windfarms, for instance using <a href="bdydata_windfarm_example.html">bdydata_windfarm_example</a>; must be in EPSG 2154</p></dd>
-
-
-<dt id="arg-formatted-mortality">formatted_mortality<a class="anchor" aria-label="anchor" href="#arg-formatted-mortality"></a></dt>
-<dd><p>formatted table of collision, for instance using <a href="bdydata_mortality_example.html">bdydata_mortality_example</a></p></dd>
+<dd><p>sf object indicating the position of windfarms, for instance <a href="bdydata_windfarm_example.html">bdydata_windfarm_example</a>; must be in EPSG 2154</p></dd>
 
 
 <dt id="arg-colonies-all">colonies_all<a class="anchor" aria-label="anchor" href="#arg-colonies-all"></a></dt>
-<dd><p>table of colonies from <code><a href="bdy_summarise_colonies.html">bdy_summarise_colonies()</a></code></p></dd>
+<dd><p>sf table with information about colonies, as outputed by <code><a href="bdy_summarise_colonies.html">bdy_summarise_colonies()</a></code>.  Should have at least the following columns:</p><ul><li><p>'colony': character, textual name for the colony</p></li>
+<li><p>'lat': numeric, latitude of the colony centroid</p></li>
+<li><p>'lon': numeric, longitude of the colony centroid</p></li>
+<li><p>'seafront': character, name of the seafront on which the colony is located (for instance 'Atlantic', 'Mediterranean'...)</p></li>
+<li><p>'colony_code': character, unique identifier for each colony</p></li>
+<li><p>' geometry" : sf coordinates of the colony centroid</p></li>
+</ul></dd>
+
+
+<dt id="arg-formatted-mortality">formatted_mortality<a class="anchor" aria-label="anchor" href="#arg-formatted-mortality"></a></dt>
+<dd><p>data frame giving mortality estimates for the species of interest and the wind farms of interest. Should have at least the following columns:</p><ul><li><p>'species_latin': character, latin name of the species</p></li>
+<li><p>'windfarm': character, names of the windfarm for which the mortality due to collisions is estimated ('parc' is also accepted as a column name)</p></li>
+<li><p>'month': numeric, month of the year (1 to 12) for which the mortality is estimated</p></li>
+<li><p>'iteration': numeric, iteration index of the mortality model.</p></li>
+<li><p>'coefficient': numeric, estimated mortality coefficient from the mortality model, for a given combination of windfarm, month and iteration</p></li>
+</ul><p>For an example see <a href="bdydata_mortality_example.html">bdydata_mortality_example</a></p></dd>
 
 
 <dt id="arg-countdata">countData<a class="anchor" aria-label="anchor" href="#arg-countdata"></a></dt>
-<dd><p>table of bird counts</p></dd>
+<dd><p>data frame of bird counts (at species level), where each line gives the number of individuals counted for a given colony, species, and year. Should have at least the following columns:</p><ul><li><p>'species_latin': character, latin name of the species</p></li>
+<li><p>'year': numeric, year during which the observation was made</p></li>
+<li><p>'colony': character, name of the colony where the observation was made, which should be found also in th column 'colony' of argument 'colonies'</p></li>
+<li><p>'count': numeric, the count value for this given year, colony, species</p></li>
+</ul></dd>
 
 
 <dt id="arg-vital-rates">vital_rates<a class="anchor" aria-label="anchor" href="#arg-vital-rates"></a></dt>
-<dd><p>table of species vital rates, for instance using <a href="bdydata_vital_rates.html">bdydata_vital_rates</a></p></dd>
-
-
-<dt id="arg-seasons">seasons<a class="anchor" aria-label="anchor" href="#arg-seasons"></a></dt>
-<dd><p>table of species seasonal activities, for instance using <a href="bdydata_seasons.html">bdydata_seasons</a></p></dd>
+<dd><p>table of species vital rates (rows = species), for instance <a href="bdydata_vital_rates.html">bdydata_vital_rates</a>. Should contain at least the following columns:</p><ul><li><p>'species_latin': character, latin name of the species</p></li>
+<li><p>'age': numeric, the age corresponding to the given parameters</p></li>
+<li><p>'class': character, the age class corresponding to a given age for this species ('Juv' for juvenile, 'Imm' for immature, 'Sub' for subadult, 'Adu' for adult)</p></li>
+<li><p>'survival': numeric between 0 and 1, the survival rate for the given species and age</p></li>
+<li><p>'fecundity': numeric between 0 and 1, the fecundity rate for the given species and age</p></li>
+<li><p>' propRepro" : numeric between 0 and 1, the proportion of reproductive individuals for the given species and age</p></li>
+</ul></dd>
 
 
 <dt id="arg-foraging-ranges">foraging_ranges<a class="anchor" aria-label="anchor" href="#arg-foraging-ranges"></a></dt>
-<dd><p>table of species foraging ranges, for instance using <a href="bdydata_foraging_ranges.html">bdydata_foraging_ranges</a></p></dd>
+<dd><p>table of species foraging ranges, for instance <a href="bdydata_foraging_ranges.html">bdydata_foraging_ranges</a>. Should contain at least the following columns:</p><ul><li><p>'species_latin': character, latin name of the species</p></li>
+<li><p>'terrestrial_habits': boolean, whether this species may fly overland (True) or is strictly marine (False)</p></li>
+<li><p>'max_km': numeric, the maximum foraging range of this species in kilometers</p></li>
+</ul></dd>
 
 
 <dt id="arg-countryshape">countryShape<a class="anchor" aria-label="anchor" href="#arg-countryshape"></a></dt>
 <dd><p>sf object with the shape of countries shoreline, for instance cropped from <a href="bdydata_world_map.html">bdydata_world_map</a></p></dd>
+
+
+<dt id="arg-season">season<a class="anchor" aria-label="anchor" href="#arg-season"></a></dt>
+<dd><p>table of species presence status on the coast of interest for each month of the year (rows = species). <br>
+Should have a column named 'species_latin" with the latin name of each species, and one column per month (named 'Jan','Feb','Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec') giving the presence status, with: <br>
+'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. <br>
+For example, see <a href="bdydata_seasons.html">bdydata_seasons</a>, and for more details refer to the Birdynamic report by Chambert et al.</p></dd>
 
 </dl></div>
     <div id="value">

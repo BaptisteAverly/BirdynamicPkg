@@ -54,30 +54,34 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bdy_process_mortality</span><span class="op">(</span><span class="va">collision</span>, <span class="va">season</span>, n_iteration <span class="op">=</span> <span class="fl">1000</span>, <span class="va">RW_group</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">bdy_process_mortality</span><span class="op">(</span><span class="va">mortality</span>, <span class="va">season</span>, n_iteration <span class="op">=</span> <span class="fl">1000</span>, <span class="va">RW_group</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
 
 
-<dl><dt id="arg-collision">collision<a class="anchor" aria-label="anchor" href="#arg-collision"></a></dt>
-<dd><p>data frame giving mortality estimates for the species of interest and the wind farms of interest.Should have at least the following columns:</p><ul><li><p>'windfarm': character, names of the windfarm for which the mortality due to collisions is estimated ('parc' is also accepted as a column name)</p></li>
+<dl><dt id="arg-mortality">mortality<a class="anchor" aria-label="anchor" href="#arg-mortality"></a></dt>
+<dd><p>data frame giving mortality estimates for the species of interest and the wind farms of interest, for instance modeled with package stochLAB. Should have at least the following columns:</p><ul><li><p>'windfarm': character, names of the windfarm for which the mortality due to collisions is estimated ('parc' is also accepted as a column name)</p></li>
 <li><p>'month': numeric, month of the year (1 to 12) for which the mortality is estimated</p></li>
-<li><p>'iteration': numeric, iteration index of the collision model.</p></li>
-<li><p>'coefficient': numeric, estimated mortality coefficient from the collision model, for a given combination of windfarm, month and iteration</p></li>
+<li><p>'iteration': numeric, iteration index of the mortality model.</p></li>
+<li><p>'coefficient': numeric, estimated mortality coefficient from the mortality model, for a given combination of windfarm, month and iteration</p></li>
 </ul></dd>
 
 
 <dt id="arg-season">season<a class="anchor" aria-label="anchor" href="#arg-season"></a></dt>
-<dd><p>character vector of length 12, giving the presence status of the bird of interest on the french coasts for each month of the year, with: <br>
+<dd><p>character vector of length 12, giving the presence status of the bird of interest on the coast of interest for each month of the year, with: <br>
 'B' = breeding, 'R' = resident, 'T' = transition, 'M' = mixed, 'V' = visiting, 'A' = absent. <br>
-For more details refer to the Birdynamic report by Chambert et al.</p></dd>
+For example, see <a href="bdydata_seasons.html">bdydata_seasons</a>, and for more details refer to the Birdynamic report by Chambert et al.</p></dd>
 
 
 <dt id="arg-rw-group">RW_group<a class="anchor" aria-label="anchor" href="#arg-rw-group"></a></dt>
 <dd><p>matrix (rows=groups of colonies, columns=windfarms) giving relative weights for each group/windfarm combination,
 with sum of weights for a given windfarm = 1, as outputed by <code><a href="bdy_apportionning.html">bdy_apportionning()</a></code></p></dd>
+
+
+<dt id="arg-iter">iter<a class="anchor" aria-label="anchor" href="#arg-iter"></a></dt>
+<dd><p>numeric, number of iterations to draw from</p></dd>
 
 </dl></div>
     <div id="value">

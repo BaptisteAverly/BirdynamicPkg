@@ -18,7 +18,7 @@ bdy_run_analysis(
 )
 }
 \arguments{
-\item{species}{vector of species names to include in the analysis}
+\item{species}{vector of latin names of species to include in the analysis}
 
 \item{countData}{table of bird counts}
 

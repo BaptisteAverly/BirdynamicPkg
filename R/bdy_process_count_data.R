@@ -54,6 +54,7 @@ bdy_process_count_data <- function(sp, countData, colonies, first_year, last_yea
   coloniesSp <- colonies[which(colonies$colony_code %in% effecSp$colony_code),]
 
   ## Add column "effectifs"
+  if(! "count" %in% names(effecSp)){effecSp$count <- effecSp$count_mean} # The function also accepts count_mean (useful for GISOM data) if no other value is provided
   agrEff <- round(tapply(effecSp$count,effecSp$colony_code,mean),1)
   coloniesSp$mean <- agrEff[match(coloniesSp$colony_code,names(agrEff))]
 
