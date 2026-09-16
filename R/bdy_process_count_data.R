@@ -84,13 +84,16 @@ bdy_process_count_data <- function(sp, countData, colonies, first_year, last_yea
   ## Add missing years (all NA's)
   if(length(miss_yr) > 0){
     for(k in 1:length(miss_yr)){
-      counts00 <- counts00 %>% add_column(new = NA, .after = paste(miss_yr[k]-1))
+      counts00 <- counts00 %>% add_column(new = NA)
       colnames(counts00)[colnames(counts00) == "new"] <- paste(miss_yr[k])
 
-      rgp00 <- rgp00 %>% add_column(new = NA, .after = paste(miss_yr[k]-1))
+      rgp00 <- rgp00 %>% add_column(new = NA)
       colnames(rgp00)[colnames(rgp00) == "new"] <- paste(miss_yr[k])
     } #k
   } # end if
+  counts00 <- counts00[,order(colnames(counts00))]
+  rgp00 <- rgp00[,order(colnames(rgp00))]
+
   rownames(counts00) <- rowNames
   rownames(rgp00) <- rowNames
 
@@ -173,5 +176,4 @@ bdy_process_count_data <- function(sp, countData, colonies, first_year, last_yea
               "colonies_sp" = coloniesSp,
               "sea_area_sp" = sea_area
               ))
-
 }
