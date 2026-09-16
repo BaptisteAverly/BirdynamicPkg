@@ -77,9 +77,9 @@ bdy_get_distances <- function(colonies,windfarms,costMatrix,doShpa=T,progress=NU
       #updating progress
       if(!is.null(progress)){
         if(i < iMax){
-          progress$inc(1/iMax, detail = paste0("Windfarm ", i+1,"  / ",iMax))
+          progress$inc(1/iMax, detail = paste0("Parc ", i+1,"  / ",iMax))
         }else{
-          progress$inc(1/iMax, detail = paste0("Windfarm ", iMax,"  / ",iMax))
+          progress$inc(1/iMax, detail = paste0("Parc ", iMax,"  / ",iMax))
         }
 
       }
