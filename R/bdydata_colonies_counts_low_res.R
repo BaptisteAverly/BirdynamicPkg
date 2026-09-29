@@ -9,17 +9,15 @@
 #' application at https://shiny.cefe.cnrs.fr/Shiny_Bird_dynamic.
 #'
 #' Includes the following columns: \itemize{
-#'      \item group: unique identifier for the group of colonies
-#'      \item lat: latitude of the group centroid
+#'      \item colony: unique identifier for the group of colonies
 #'      \item lon: longitude of the group centroid
+#'      \item lat: latitude of the group centroid
 #'      \item seafront: on which seafront is the group located (either "atlantic" or "mediterranean)
 #'      \item species_latin: latin name of the species
 #'      \item species_fr: french vernacular name of the species
 #'      \item species_en: english vernacular name of the species
 #'      \item year: year at which the count was made
 #'      \item count: number of breeding couples recorded for the given colony group, species, and year
-#'      \item colony: unique identifier, redundant whith column group but kept for consistency
-#'      \item regroup: empty column, kept for consistency
 #' }
 #'
 #' @docType data
