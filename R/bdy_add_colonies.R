@@ -17,7 +17,7 @@
 #' @param replaceDefaultTable boolean. If FALSE (default), then provided table (argument new_count_table), will be appended to the default count table (bdydata_colonies_counts_low_res).
 #'                                     If TRUE, then provided table will completely remplace the default table.
 #'
-#' @returns
+#' @returns Updated data frame with formatted count data
 #' @export
 #'
 #' @examples
@@ -83,28 +83,29 @@ bdy_add_colonies <- function(new_count_table, removeNewDuplicates = T, replaceDe
 
   if(replaceDefaultTable){
 
-    bdydata_colonies_counts_low_res <- new_count_table
+    new_data <- new_count_table
 
   }else{
 
     if(removeNewDuplicates){
-      bdydata_colonies_counts_low_res <- rbind(bdydata_colonies_counts_low_res,new_count_table)
+      new_data <- rbind(bdydata_colonies_counts_low_res,new_count_table)
     }else{
-      bdydata_colonies_counts_low_res <- rbind(new_count_table,bdydata_colonies_counts_low_res)
+      new_data <- rbind(new_count_table,bdydata_colonies_counts_low_res)
     }
   }
 
-
   ## checking for duplicates
 
-  temp <- bdydata_colonies_counts_low_res
+  temp <- new_data
   temp$lon <- round(temp$lon,3)
   temp$lat <- round(temp$lat,3)
 
   dupl <- which(duplicated(temp[,c("lon","lat","species_latin","year")]))
 
   if(length(dupl) > 0 ){
-    bdydata_colonies_counts_low_res <- bdydata_colonies_counts_low_res[-dupl,]
+    newData <- newData[-dupl,]
     warning(paste0(length(dupl)," rows in the final table were duplicates of other rows (same longitude, latitude, species, and count year) and thus were deleted"))
   }
+
+  return(newData)
 }
