@@ -21,6 +21,9 @@
 #' @param first_year numeric, minimum year of bird counts to integrate in trends estimates
 #' @param last_year numeric, maximum year of bird counts to integrate in trends estimates
 #' @param max_foraging_range_km numeric, maximum foraging range in kilometers for the species of interest
+#' @param h_km bandwidth (in km) used by the Clustering Algorithm (colonies within that distance of another will be regrouped)
+#' @param dist_regr_isol maximum distance to regroup an isolated colony to closest cluster
+#' @param regroupIsolates logical; whether isolated colonies should be grouped with closest cluster (based on dist_regr_isol)
 #'
 #' @returns List of 5 objects:
 #'          \itemize{
@@ -32,7 +35,7 @@
 #'          }
 #' @export
 #'
-bdy_process_count_data <- function(sp, countData, colonies, first_year, last_year, max_foraging_range_km){
+bdy_process_count_data <- function(sp, countData, colonies, first_year, last_year, max_foraging_range_km, h_km=5, dist_regr_isol=4*h_km,regroupIsolates=T){
 
 
   #selecting only the count data for the species of interest
@@ -68,7 +71,7 @@ bdy_process_count_data <- function(sp, countData, colonies, first_year, last_yea
   effecSp <- effecSp[which(effecSp$colony_code %in% coloniesSp$colony_code), ]
 
   ##make clusters
-  coloniesSp$group <- bdy_clustering(coord=coloniesSp[c("lon","lat")])
+  coloniesSp$group <- bdy_clustering(coord=coloniesSp[c("lon","lat")], h_km=h_km, dist_regr_isol=dist_regr_isol,regroupIsolates=regroupIsolates)
   n_group <- nlevels(coloniesSp$group)
 
   ## Get count data

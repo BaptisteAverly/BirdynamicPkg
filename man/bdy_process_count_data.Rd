@@ -10,7 +10,10 @@ bdy_process_count_data(
   colonies,
   first_year,
   last_year,
-  max_foraging_range_km
+  max_foraging_range_km,
+  h_km = 5,
+  dist_regr_isol = 4 * h_km,
+  regroupIsolates = T
 )
 }
 \arguments{
@@ -38,6 +41,12 @@ Must contain the columns:
 \item{last_year}{numeric, maximum year of bird counts to integrate in trends estimates}
 
 \item{max_foraging_range_km}{numeric, maximum foraging range in kilometers for the species of interest}
+
+\item{h_km}{bandwidth (in km) used by the Clustering Algorithm (colonies within that distance of another will be regrouped)}
+
+\item{dist_regr_isol}{maximum distance to regroup an isolated colony to closest cluster}
+
+\item{regroupIsolates}{logical; whether isolated colonies should be grouped with closest cluster (based on dist_regr_isol)}
 }
 \value{
 List of 5 objects:
