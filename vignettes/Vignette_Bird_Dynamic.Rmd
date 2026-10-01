@@ -56,12 +56,47 @@ library(htmltools)
 To run the analyses, you need to prepare data of seabird counts (TO DETAIL GISOM), location of windfarms (spatial data), mortality data from collision with windfarms (which you can calculate using the stochLAB package if you have seabird density estimates around the location of each windfarm, as detailed below). The other data (eg. species demographic parameters) are automatically loaded from the package data, but you can decide to edit them if you have better data or wish to add species that are not included in the package defaults.
 
 ## Count data
-TO COME (GISOM for now)
+The approach developped in Bird Dynamic was based on bird count data gathered and shared by the GISOM ([Groupement d'Intérêt Scientifique Oiseaux Marins](https://www.gisom.org/)). This dataset includes breeding year counts of all marine bird species on Metropolitan French coasts. This dataset is the one used in the online Shiny App, but unfortunately cannot be shared directly in this R package as the GISOM shares it only for specific projects.
+
+To run the analyses with this package, you then have three options:
+
+* Contact the [GISOM](https://www.gisom.org/contact) to discuss possible agreement to get their data.
+* Use your own count data. The data must follow the format of `bdydata_colonies_counts_low_res`, including the columns: "colony" with the name or code of the colony, "lat" and "lon" with the spatial coordinates of the colony (in degrees as in WGS84),  "seafront" to specify if the colony is on Atlantic or Mediterranean coastline, "species_latin" with the species name, "year" for the year of survey, and "count" with the number of breeding pairs (specifically the number of 'Apparently Occupied Sites').
+* Use the data made available in this package `bdydata_colonies_counts_low_res`, which includes the whole GISOM dataset with a low geographic resolution (see more details in `help(bdydata_colonies_counts_low_res)`. We grouped colonies and counts following the grouping procedure from `bdy_clustering())`. This means that the coordinates included in this dataset are those of the centroids of group of colonies, which can be tens of kilometers away from the true coordinates of some colonies. This may strongly impact the results as the distance between colonies and windfarms can be very different from the distance between group centroids and windfarms; it is therefore advised to use a complete dataset, or the online Shiny App, to get more accurate results.
+
+In this example, we will use the low resolution data from `bdydata_colonies_counts_low_res` as an example.
 
 ```{r count_data}
-countData <-  read.csv2("../../Birdynamic/0.BV_Data_input/BD_Effectifs_clean.csv") %>% subset(., seafront=="atlantique")
-colonies_all <- bdy_summarise_colonies(countData)
-countData$colony_code <- colonies_all$colony_code[match(countData$colony,colonies_all$colony)]
+head(bdydata_colonies_counts_low_res)
+```
+
+
+You can then decide to add count data (from year that are not in this table or colonies that are not in this table) using the function `bdy_add_counts` and a dataframe that you loaded or created with the information required (see help for more details). In this example, I want to add a colony of Roseate Tern close to Cherbourg with 6 years of count (this is fake data, just for the example):
+```{r add_countdata}
+counts_to_add <- data.frame(
+  colony="Fake Cherbourg colony",
+  lon=-1.7115,
+  lat=49.6786,
+  seafront="atlantic",
+  species_latin="Sterna dougallii",
+  year=c(2015, 2016, 2017, 2018, 2020, 2021),
+  count=c(6, 8, 4, 8, 10, 13)
+)
+
+countData_completed <- bdy_add_counts(counts_to_add) %>% subset(., seafront=="atlantic")
+
+```
+
+When the count data are ready and complete, we can then create the spatial data of colonies.
+```{r create_colonies}
+colonies_all <- bdy_summarise_colonies(countData_completed)
+countData_completed$colony_code <- colonies_all$colony_code[match(countData_completed$colony, colonies_all$colony)]
+
+ggplot(countData_completed)+
+  geom_sf(data=st_transform(colonies_all, st_crs(4326)), col="grey80")+
+  geom_point(aes(x=lon, y=lat), col="firebrick")+
+  facet_wrap(~ species_latin)+
+  theme_void()
 ```
 
 
@@ -222,7 +257,7 @@ ggplot()+
 Before running the analyses, we need to check that all required data are loaded. This is done by the function `bdy_check_alldata()` that will either return a message saying all data are good, or an error.
 
 ```{r check_data}
-bdy_check_alldata(windfarms_L93, colonies_all, formatted_mortality, countData, vital_rates, seasons, foraging_ranges, countryShape)
+bdy_check_alldata(windfarms_L93, colonies_all, formatted_mortality, countData_completed, vital_rates, seasons, foraging_ranges, countryShape)
 ```
 
 
@@ -253,7 +288,7 @@ For this example, we will select the Northern Gannett (**Morus bassanus**) and p
 sp <- "Morus bassanus"
 
 count_processed <- bdy_process_count_data(sp=sp,
-                                          countData=countData,
+                                          countData=countData_completed,
                                           colonies=colonies_all,
                                           first_year = 2009,
                                           last_year = 2021,
@@ -382,7 +417,7 @@ The same analysis can be run using the grouped function `bdy_run_analysis`, whic
 ```{r run_analysis, echo = FALSE, warning = FALSE, message = FALSE}
 mod_outputs <- bdy_run_analysis(
   species = c("Morus bassanus", "Sterna dougallii"),
-  countData = countData,
+  countData = countData_completed,
   foraging_ranges = foraging_ranges,
   mortality = formatted_mortality,
   windfarms = windfarms_L93
