@@ -13,8 +13,8 @@ bdydata_colonies_counts_low_res
 \description{
 This table gives accurate counts of breeding pairs (Apparently Occupied Sites) of marine birds along the french coastline, between 2009 and 2021,
 based on data aggregated by the french Groupement d'Intéret Scientifique Oiseaux Marins (GISOM).
-It is the primary data source used by the model to compute projections of future population dynamics.
-/!\ CAUTION /!\ Because of the sensitive nature of these data, colonies have been clustered to lower the spatial resolution,
+It is the primary data source used by the model to compute projections of future population dynamics. \cr \cr
+\strong{CAUTION} Because of the sensitive nature of these data, colonies have been clustered to lower the spatial resolution,
 thus each line of the table represents a group of colonies (within 5km of each other + isolated colonies within 20km), with the centroid given as coordinates.
 This may slightly alter the results of the population models. If you need to use the unaltered dataset, you can either use your own dataset, contact the GISOM, of use the dedicated online
 application at https://shiny.cefe.cnrs.fr/Shiny_Bird_dynamic.

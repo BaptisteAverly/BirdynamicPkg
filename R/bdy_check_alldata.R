@@ -154,6 +154,8 @@ bdy_check_alldata <- function(windfarms_L93, colonies_all, formatted_mortality, 
   if(anyNA(formatted_mortality$coefficient)){stop("Some mortality coefficient values are missing")}
 
 
+  ### Check all seafronts from windfarm are in colonies data
+  if(any(! windfarms_L93$seafront %in% colonies_all$seafront)){stop("Some seafront values from windfarms_L93 data are not included in colonies_all")}
 
   ### Check colonies
 

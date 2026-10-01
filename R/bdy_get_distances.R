@@ -30,6 +30,8 @@
 #'
 bdy_get_distances <- function(colonies,windfarms,costMatrix,doShpa=T,progress=NULL){
 
+  if("transition_matrix" %in% names(costMatrix)){costMatrix <- costMatrix$transition_matrix}
+
   ## Calculate Euclidean Distance
   eucl_dist <- (st_distance(x = colonies, y = windfarms)) %>% set_units(., km)
   rownames(eucl_dist) <- colonies$colony_code

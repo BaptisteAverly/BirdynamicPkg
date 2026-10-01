@@ -88,14 +88,14 @@ countData_completed <- bdy_add_counts(counts_to_add) %>% subset(., seafront=="at
 ```
 
 When the count data are ready and complete, we can then create the spatial data of colonies.
-```{r create_colonies}
+```{r create_colonies, out.width='100%'}
 colonies_all <- bdy_summarise_colonies(countData_completed)
 countData_completed$colony_code <- colonies_all$colony_code[match(countData_completed$colony, colonies_all$colony)]
 
 ggplot(countData_completed)+
   geom_sf(data=st_transform(colonies_all, st_crs(4326)), col="grey80")+
   geom_point(aes(x=lon, y=lat), col="firebrick")+
-  facet_wrap(~ species_latin)+
+  facet_wrap(~ sub(" ", "\n", species_latin), ncol=7)+
   theme_void()
 ```
 
@@ -215,15 +215,15 @@ names(formatted_mortality) <- revalue(names(formatted_mortality), c(
 ```
 
 ## Windfarm data
-Windfarm data must be provided to run the analyses, as a sf object (see `help(st_read)` for more details) using either points or polygons, projected in Lambert93 (EPSG:2154). As an example, we here use the `bdydata_windfarm_example` data included in the package and we apply the `bdy_clean_names()` function to the NAME column (to remove spaces and capital and ensure it matches with names in mortality data). They must include a column indicating the seafront (for France, it can be 'atlantique' or 'mediterranee'); this also has to be added as a column to the colony file.
+Windfarm data must be provided to run the analyses, as a sf object (see `help(st_read)` for more details) using either points or polygons, projected in Lambert93 (EPSG:2154). As an example, we here use the `bdydata_windfarm_example` data included in the package and we apply the `bdy_clean_names()` function to the NAME column (to remove spaces and capital and ensure it matches with names in mortality data). They must include a column indicating the seafront (for France, it can be 'atlantic' or 'mediterranean'); this also has to be added as a column to the colony file (and is already included in `bdydata_colonies_counts_low_res`).
 
 ```{r parc_example}
 windfarms_L93 <- bdydata_windfarm_example %>% st_transform(., st_crs(2154))
 windfarms_L93$NAME <- bdy_clean_names(windfarms_L93$NAME)
-windfarms_L93$seafront <- "atlantique"
+windfarms_L93$seafront <- "atlantic"
 windfarms_L93
 
-colonies_all$seafront <- "atlantique"
+table(colonies_all$seafront)
 ```
 
 
@@ -270,9 +270,9 @@ We calculate two types of distance: euclidian distance is used for species that 
 ```{r calc_dist}
 cost_matrix <- bdy_get_cost_raster(colonies_all)
 
-all_distances <- bdy_get_distances(colonies=colonies_all,
+all_distances <- bdy_get_distances(colonies = colonies_all,
                                    windfarms = windfarms_L93,
-                                   costMatrix=cost_matrix,
+                                   costMatrix = cost_matrix,
                                    doShpa = T)
 
 head(all_distances$eucl_dist)
@@ -283,7 +283,7 @@ head(all_distances$shpa_dist)
 ## Process count data
 The next steps of the analysis are applied species by species. In this vignette, we show a detailed example for one species, followed by how you can loop the analysis for multiple species.
 
-For this example, we will select the Northern Gannett (**Morus bassanus**) and process count data. The processing step includes an important step, which is to cluster close colonies (reported in the column `group`).
+For this example, we will select the Northern Gannett (*Morus bassanus*) and process count data. The processing step includes an important step, which is to cluster close colonies (reported in the column `group`).
 ```{r select_species}
 sp <- "Morus bassanus"
 

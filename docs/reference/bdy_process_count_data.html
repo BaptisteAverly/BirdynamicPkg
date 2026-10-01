@@ -60,7 +60,10 @@
 <span>  <span class="va">colonies</span>,</span>
 <span>  <span class="va">first_year</span>,</span>
 <span>  <span class="va">last_year</span>,</span>
-<span>  <span class="va">max_foraging_range_km</span></span>
+<span>  <span class="va">max_foraging_range_km</span>,</span>
+<span>  h_km <span class="op">=</span> <span class="fl">5</span>,</span>
+<span>  dist_regr_isol <span class="op">=</span> <span class="fl">4</span> <span class="op">*</span> <span class="va">h_km</span>,</span>
+<span>  regroupIsolates <span class="op">=</span> <span class="cn">T</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -99,6 +102,18 @@ Must contain the columns:</p><ul><li><p>'colony': character, name of the colony<
 
 <dt id="arg-max-foraging-range-km">max_foraging_range_km<a class="anchor" aria-label="anchor" href="#arg-max-foraging-range-km"></a></dt>
 <dd><p>numeric, maximum foraging range in kilometers for the species of interest</p></dd>
+
+
+<dt id="arg-h-km">h_km<a class="anchor" aria-label="anchor" href="#arg-h-km"></a></dt>
+<dd><p>bandwidth (in km) used by the Clustering Algorithm (colonies within that distance of another will be regrouped)</p></dd>
+
+
+<dt id="arg-dist-regr-isol">dist_regr_isol<a class="anchor" aria-label="anchor" href="#arg-dist-regr-isol"></a></dt>
+<dd><p>maximum distance to regroup an isolated colony to closest cluster</p></dd>
+
+
+<dt id="arg-regroupisolates">regroupIsolates<a class="anchor" aria-label="anchor" href="#arg-regroupisolates"></a></dt>
+<dd><p>logical; whether isolated colonies should be grouped with closest cluster (based on dist_regr_isol)</p></dd>
 
 </dl></div>
     <div id="value">
