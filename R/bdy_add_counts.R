@@ -50,16 +50,17 @@ bdy_add_counts <- function(new_count_table, removeNewDuplicates = T, replaceDefa
                     length(which(wrongSpeciesBool))," rows):", paste0("'",wrongSpecies,"'",collapse=", "),
                    "
                    For a list of available species, see bdydata_seasons$species_latin"))
+
+    new_count_table <- new_count_table[-which(wrongSpeciesBool),]
   }
 
-  if("species_fr" %in% colnames(new_count_table)){
+  if(!"species_fr" %in% colnames(new_count_table)){
     new_count_table$species_fr <- bdydata_seasons$species_fr[match(new_count_table$species_latin,bdydata_seasons$species_latin)]
   }
 
-  if("species_en" %in% colnames(new_count_table)){
+  if(!"species_en" %in% colnames(new_count_table)){
     new_count_table$species_en <- bdydata_seasons$species_en[match(new_count_table$species_latin,bdydata_seasons$species_latin)]
   }
-
 
   ## check that numeric columns are numeric
 

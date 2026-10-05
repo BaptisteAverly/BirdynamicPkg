@@ -20,6 +20,7 @@
 #'                    \item 'year': numeric, year during which the observation was made
 #'                    \item 'colony': character, name of the colony where the observation was made, which should be found also in th column 'colony' of argument 'colonies'
 #'                    \item 'count': numeric, the count value for this given year, colony, species
+#'                    \item 'colony_code': character, unique identifier for each colony
 #'                    }
 #'
 #' @param colonies_all sf table with information about colonies, as outputed by [bdy_summarise_colonies()].  Should have at least the following columns:
@@ -66,13 +67,13 @@ bdy_check_alldata <- function(windfarms_L93, colonies_all, formatted_mortality, 
   col_missing_windfarms <- c("NAME", "seafront") %>% .[! . %in% names(windfarms_L93)]
   if(length(col_missing_windfarms)>0){stop(paste0("Missing columns in 'windfarms_L93': ", paste0(col_missing_windfarms, collapse=", ")))}
 
-  # formatted_mortality
-  col_missing_morta <- c("species_latin", "windfarm", "month", "iteration", "coefficient") %>% .[! . %in% names(formatted_mortality)]
-  if(length(col_missing_morta)>0){stop(paste0("Missing columns in 'formatted_mortality': ", paste0(col_missing_morta, collapse=", ")))}
-
   # colonies_all
   col_missing_colonies <- c("seafront", "colony_code", "colony", "lat", "lon") %>% .[! . %in% names(colonies_all)]
   if(length(col_missing_colonies)>0){stop(paste0("Missing columns in 'colonies_all': ", paste0(col_missing_colonies, collapse=", ")))}
+
+  # formatted_mortality
+  col_missing_morta <- c("species_latin", "windfarm", "month", "iteration", "coefficient") %>% .[! . %in% names(formatted_mortality)]
+  if(length(col_missing_morta)>0){stop(paste0("Missing columns in 'formatted_mortality': ", paste0(col_missing_morta, collapse=", ")))}
 
   # countData
   col_missing_count <- c("species_latin", "seafront", "year", "colony", "colony_code") %>% .[! . %in% names(countData)]
@@ -157,11 +158,57 @@ bdy_check_alldata <- function(windfarms_L93, colonies_all, formatted_mortality, 
   ### Check all seafronts from windfarm are in colonies data
   if(any(! windfarms_L93$seafront %in% colonies_all$seafront)){stop("Some seafront values from windfarms_L93 data are not included in colonies_all")}
 
+
   ### Check colonies
+
+  ## check that numeric columns are numeric
+
+  numCol <- c("lon","lat")
+
+  notNum <- numCol[which(!apply(colonies_all[,numCol],2,is.numeric))]
+
+  if(length(notNum) > 0){
+    stop(paste0("Following column(s) if colony table should be numeric:",paste0("'",notNum,"'",collapse=", ")))
+  }
+
+  ## check that colonies in colony table are in count table
+
+  missingcol <- which(!colonies_all$colony_code %in% countData$colony_code)
+  if(length(missingCol)>0){
+    stop("Some colonies are present in the count table but not in the colony table")
+  }
 
 
   ### Check countData
 
+  ## check that species are legal
+
+  wrongSpeciesBool <- !countData$species_latin %in% bdydata_seasons$species_latin
+
+  if(all(wrongSpeciesBool)){
+
+    stop("No species in the colony table are currently implemented in the package (or all latin names are misspelled).
+         For a list of available species, see bdydata_seasons$species_latin")
+  }
+
+  wrongSpecies <- unique(countData$species_latin[which(wrongSpeciesBool)])
+
+  if(length(wrongSpecies) > 0){
+    warning(paste0("The following species are currently not implemented in the package and should be removed from the colony table (",
+                   length(which(wrongSpeciesBool))," rows):", paste0("'",wrongSpecies,"'",collapse=", "),
+                   "
+                   For a list of available species, see bdydata_seasons$species_latin"))
+  }
+
+  ## check that numeric columns are numeric
+
+  numCol <- c("year","count")
+
+  notNum <- numCol[which(!apply(countData[,numCol],2,is.numeric))]
+
+  if(length(notNum) > 0){
+    stop(paste0("Following column(s) if colony table should be numeric:",paste0("'",notNum,"'",collapse=", ")))
+  }
 
 
 
