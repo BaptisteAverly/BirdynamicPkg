@@ -20,8 +20,8 @@
 #' @returns Updated data frame with formatted count data
 #' @export
 #'
-#'
-bdy_add_colonies <- function(new_count_table, removeNewDuplicates = T, replaceDefaultTable = F){
+
+bdy_add_counts <- function(new_count_table, removeNewDuplicates = T, replaceDefaultTable = F){
 
   ## check for missing columns
 
@@ -87,9 +87,9 @@ bdy_add_colonies <- function(new_count_table, removeNewDuplicates = T, replaceDe
   }else{
 
     if(removeNewDuplicates){
-      new_data <- rbind(bdydata_colonies_counts_low_res,new_count_table)
+      new_data <- rbind.fill(bdydata_colonies_counts_low_res,new_count_table)
     }else{
-      new_data <- rbind(new_count_table,bdydata_colonies_counts_low_res)
+      new_data <- rbind.fill(new_count_table,bdydata_colonies_counts_low_res)
     }
   }
 
@@ -102,9 +102,9 @@ bdy_add_colonies <- function(new_count_table, removeNewDuplicates = T, replaceDe
   dupl <- which(duplicated(temp[,c("lon","lat","species_latin","year")]))
 
   if(length(dupl) > 0 ){
-    newData <- newData[-dupl,]
+    new_data <- new_data[-dupl,]
     warning(paste0(length(dupl)," rows in the final table were duplicates of other rows (same longitude, latitude, species, and count year) and thus were deleted"))
   }
 
-  return(newData)
+  return(new_data)
 }

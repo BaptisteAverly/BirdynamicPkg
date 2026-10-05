@@ -62,7 +62,7 @@ bdy_run_analysis <- function(species,countData,windfarms,timeRange = c(2009,2021
                                               colonies=colonies_all,first_year=timeRange[1],last_year = timeRange[2],
                                               max_foraging_range_km=foraging_range_sp)
 
-    #selecting apropriate distance table (shpa or eucl), and only for colonies where species is present
+    #selecting appropriate distance table (shpa or eucl), and only for colonies where species is present
     if(terrestrial_habit){
       distances <-  all_distances$eucl_dist
     }else{

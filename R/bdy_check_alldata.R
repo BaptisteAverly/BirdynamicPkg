@@ -75,7 +75,8 @@ bdy_check_alldata <- function(windfarms_L93, colonies_all, formatted_mortality, 
   if(length(col_missing_colonies)>0){stop(paste0("Missing columns in 'colonies_all': ", paste0(col_missing_colonies, collapse=", ")))}
 
   # countData
-  col_missing_count <- c("species_latin", "seafront", "year", "count_mean", "colony", "colony_code") %>% .[! . %in% names(countData)]
+  col_missing_count <- c("species_latin", "seafront", "year", "colony", "colony_code") %>% .[! . %in% names(countData)]
+  if((! "count_mean" %in% names(countData)) & (! "count" %in% names(countData))){col_missing_count <- c(col_missing_count, "count_mean")}
   if(length(col_missing_count)>0){stop(paste0("Missing columns in 'countData': ", paste0(col_missing_count, collapse=", ")))}
 
   # vital_rates
@@ -153,6 +154,8 @@ bdy_check_alldata <- function(windfarms_L93, colonies_all, formatted_mortality, 
   if(anyNA(formatted_mortality$coefficient)){stop("Some mortality coefficient values are missing")}
 
 
+  ### Check all seafronts from windfarm are in colonies data
+  if(any(! windfarms_L93$seafront %in% colonies_all$seafront)){stop("Some seafront values from windfarms_L93 data are not included in colonies_all")}
 
   ### Check colonies
 
