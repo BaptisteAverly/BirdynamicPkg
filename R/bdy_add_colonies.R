@@ -20,7 +20,6 @@
 #' @returns Updated data frame with formatted count data
 #' @export
 #'
-#' @examples
 #'
 bdy_add_colonies <- function(new_count_table, removeNewDuplicates = T, replaceDefaultTable = F){
 

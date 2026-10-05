@@ -74,7 +74,7 @@ bdy_get_cost_raster <- function(colonies,shapeBuffer=100,pixel_size=1000,
     plot(colonies$geometry,xlim=c(bb[1]-1000*W_buffer,bb[3]+1000*E_buffer),
                            ylim=c(bb[2]-1000*S_buffer,bb[4]+1000*N_buffer))
     for(seafront in unique(colonies$seafront)){
-      plot(tr_cost_tot[[seafront]]@extent,add=T)
+      lines(tr_cost_tot[[seafront]]@extent)
     }
   }
 

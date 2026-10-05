@@ -72,6 +72,7 @@ bdy_process_count_data <- function(sp, countData, colonies, first_year, last_yea
 
   ##make clusters
   coloniesSp$group <- bdy_clustering(coord=coloniesSp[c("lon","lat")], h_km=h_km, dist_regr_isol=dist_regr_isol,regroupIsolates=regroupIsolates)
+  coloniesSp <- coloniesSp[order(coloniesSp$group),]
   n_group <- nlevels(coloniesSp$group)
 
   ## Get count data
