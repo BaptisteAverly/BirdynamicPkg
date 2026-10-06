@@ -12,8 +12,8 @@ bdy_plot_trends <- function(Raw_ResTables){
 
   # Prepare trends plot
   Summary_simulated <- ddply(Raw_ResTables$Simulated_National, .(Year, Species), function(x){data.frame(
-    Count_noimpact_mean = mean(x$Sum_noimpact, na.rm=T),
-    Count_withimpact_mean = mean(x$Sum_withimpact, na.rm=T),
+    Count_noimpact_median = median(x$Sum_noimpact, na.rm=T),
+    Count_withimpact_median = median(x$Sum_withimpact, na.rm=T),
     Count_noimpact_2.5 = quantile(x$Sum_noimpact, probs=0.025, na.rm=T),
     Count_withimpact_2.5 = quantile(x$Sum_withimpact, probs=0.025, na.rm=T),
     Count_noimpact_97.5 = quantile(x$Sum_noimpact, probs=0.975, na.rm=T),
@@ -38,13 +38,13 @@ bdy_plot_trends <- function(Raw_ResTables){
 
   # Plot
   G <- ggplot(Summary_simulated)+
-    geom_ribbon(aes(x=Year, ymin=Count_noimpact_2.5/Count_noimpact_mean*100, ymax=Count_noimpact_97.5/Count_noimpact_mean*100), fill="#4dac26", alpha=0.2)+
-    geom_ribbon(aes(x=Year, ymin=Count_withimpact_2.5/Count_noimpact_mean*100, ymax=0.001+Count_withimpact_97.5/Count_noimpact_mean*100), fill="#c51b7d", alpha=0.2)+
-    geom_line(aes(x=Year, y=Count_noimpact_mean/Count_noimpact_mean*100, col="Sans parcs éoliens"), linewidth=1.5)+
+    geom_ribbon(aes(x=Year, ymin=Count_noimpact_2.5/Count_noimpact_median*100, ymax=Count_noimpact_97.5/Count_noimpact_median*100), fill="#4dac26", alpha=0.2)+
+    geom_ribbon(aes(x=Year, ymin=Count_withimpact_2.5/Count_noimpact_median*100, ymax=0.001+Count_withimpact_97.5/Count_noimpact_median*100), fill="#c51b7d", alpha=0.2)+
+    geom_line(aes(x=Year, y=Count_noimpact_median/Count_noimpact_median*100, col="Sans parcs éoliens"), linewidth=1.5)+
     geom_line(aes(x=Year, y=IR95, text=Text, col="Avec parcs éoliens"), linetype="dashed", linewidth=1.5)+
     facet_wrap(~Species)+
     scale_color_manual(name="Modèle", breaks=c("Sans parcs éoliens", "Avec parcs éoliens"), values=c("Sans parcs éoliens"="#4dac26", "Avec parcs éoliens"="#c51b7d"))+
-    coord_cartesian(ylim=c(0, min(c(150, max(Summary_simulated$Count_withimpact_97.5/Summary_simulated$Count_noimpact_mean*100)))))+
+    coord_cartesian(ylim=c(0, min(c(150, max(Summary_simulated$Count_withimpact_97.5/Summary_simulated$Count_noimpact_median*100)))))+
     xlab("Année")+ylab("Proportion de la population sans impact (%)")+
     theme_minimal()
 
