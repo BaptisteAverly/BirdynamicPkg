@@ -21,6 +21,14 @@ bdy_plot_trends <- function(Raw_ResTables){
     Text=NA
   )})
 
+  # IR 95%
+  Relative_Impact <- Raw_ResTables$Simulated_National %>%
+    mutate(Rel_impact=100*(Sum_noimpact-Sum_withimpact)/Sum_noimpact) %>%
+    dplyr::group_by(Species, Year) %>%
+    dplyr::summarise(RelImpact_95 = 100-quantile(Rel_impact, probs=0.95, na.rm=T))
+
+  Summary_simulated$IR95 <- Relative_Impact$RelImpact_95[match(paste0(Summary_simulated$Species, Summary_simulated$Year), paste0(Relative_Impact$Species, Relative_Impact$Year))]
+
   # Add text info (relative impact + extinction)
   Pretty_table_national <- bdy_pretty_result_table(Raw_ResTables, type="national")
 
@@ -33,7 +41,7 @@ bdy_plot_trends <- function(Raw_ResTables){
     geom_ribbon(aes(x=Year, ymin=Count_noimpact_2.5/Count_noimpact_mean*100, ymax=Count_noimpact_97.5/Count_noimpact_mean*100), fill="#4dac26", alpha=0.2)+
     geom_ribbon(aes(x=Year, ymin=Count_withimpact_2.5/Count_noimpact_mean*100, ymax=0.001+Count_withimpact_97.5/Count_noimpact_mean*100), fill="#c51b7d", alpha=0.2)+
     geom_line(aes(x=Year, y=Count_noimpact_mean/Count_noimpact_mean*100, col="Sans parcs éoliens"), linewidth=1.5)+
-    geom_line(aes(x=Year, y=Count_withimpact_mean/Count_noimpact_mean*100, text=Text, col="Avec parcs éoliens"), linetype="dashed", linewidth=1.5)+
+    geom_line(aes(x=Year, y=IR95, text=Text, col="Avec parcs éoliens"), linetype="dashed", linewidth=1.5)+
     facet_wrap(~Species)+
     scale_color_manual(name="Modèle", breaks=c("Sans parcs éoliens", "Avec parcs éoliens"), values=c("Sans parcs éoliens"="#4dac26", "Avec parcs éoliens"="#c51b7d"))+
     coord_cartesian(ylim=c(0, min(c(150, max(Summary_simulated$Count_withimpact_97.5/Summary_simulated$Count_noimpact_mean*100)))))+
