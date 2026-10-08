@@ -454,7 +454,9 @@ leafmap
 
 Fourth, you can obtain a plot summarising the effect of each windfarm:
 ```{r res_parcs, out.width='100%'}
-bdy_plot_windfarm_impact(result_table, formatted_mortality)
+windfarm_impact <- bdy_plot_windfarm_impact(result_table, formatted_mortality)
+windfarm_impact$plot
+windfarm_impact$table %>% knitr::kable()
 ```
 
 

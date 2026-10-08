@@ -12,7 +12,7 @@ bdy_plot_windfarm_impact(Raw_ResTables, formatted_mortality)
 \item{formatted_mortality}{formatted table of collision, for instance using \link{bdydata_mortality_example}}
 }
 \value{
-ggplot object
+list with a ggplot object and a table of raw results
 }
 \description{
 Plot impact of each windfarm on each species
