@@ -172,7 +172,7 @@ bdy_check_alldata <- function(windfarms_L93, colonies_all, formatted_mortality, 
 
   ## check that colonies in colony table are in count table
 
-  missingcol <- which(!colonies_all$colony_code %in% countData$colony_code)
+  missingCol <- which(!colonies_all$colony_code %in% countData$colony_code)
   if(length(missingCol)>0){
     stop("Some colonies are present in the count table but not in the colony table")
   }
