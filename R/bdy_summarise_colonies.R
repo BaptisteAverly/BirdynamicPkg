@@ -1,4 +1,4 @@
-#' Summarizes a table of bird counts into a table of colonies
+#' Summarise bird counts into colonies
 #'
 #' @param countData data frame of bird counts (at species level), where each line gives the number of birds counted for a given colony, species, and year. Must have at least the following columns:
 #'                    \itemize{

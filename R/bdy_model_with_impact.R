@@ -1,4 +1,4 @@
-#' Model with impact
+#' Run model with no windfarm impact
 #'
 #' Computes the population model with impact from wind farms for the birds species of interest
 #'

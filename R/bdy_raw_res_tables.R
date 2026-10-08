@@ -1,4 +1,4 @@
-#' Raw result tables
+#' Create raw result tables
 #'
 #' Compute result tables (national and by group of colonies)
 #'

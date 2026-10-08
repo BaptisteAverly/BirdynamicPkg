@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_process_mortality.R
 \name{bdy_process_mortality}
 \alias{bdy_process_mortality}
-\title{Process mortality file}
+\title{Process mortality data}
 \usage{
 bdy_process_mortality(mortality, season, n_iteration = 1000, RW_group)
 }

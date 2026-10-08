@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_plot_trends.R
 \name{bdy_plot_trends}
 \alias{bdy_plot_trends}
-\title{Plots trends}
+\title{Create plot of population trends}
 \usage{
 bdy_plot_trends(Raw_ResTables)
 }

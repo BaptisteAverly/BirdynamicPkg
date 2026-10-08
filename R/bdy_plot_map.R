@@ -1,4 +1,4 @@
-#' Result map
+#' Create interactive result map
 #'
 #' Summarise results in an interactive leaflet map
 #'

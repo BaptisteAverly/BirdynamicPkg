@@ -1,4 +1,4 @@
-#' Windfarm impact
+#' Create plot with windfarm impact by parc
 #'
 #' Plot impact of each windfarm on each species
 #'

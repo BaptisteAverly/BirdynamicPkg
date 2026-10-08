@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_plot_map.R
 \name{bdy_plot_map}
 \alias{bdy_plot_map}
-\title{Result map}
+\title{Create interactive result map}
 \usage{
 bdy_plot_map(mod_out, Raw_ResTables, windfarms, BufferForaging = NULL)
 }

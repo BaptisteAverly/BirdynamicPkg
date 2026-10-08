@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_apportionning.R
 \name{bdy_apportionning}
 \alias{bdy_apportionning}
-\title{Apportionning}
+\title{Apportionning mortalities among group of colonies}
 \usage{
 bdy_apportionning(
   max_foraging_range_km,

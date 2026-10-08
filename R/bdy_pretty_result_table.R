@@ -1,4 +1,4 @@
-#' Pretty result table
+#' Create pretty result table
 #'
 #' Transform raw result tables to a table ready to be used for reporting
 #'

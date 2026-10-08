@@ -1,4 +1,4 @@
-#' Get a population size vector
+#' Prepare population size vector for models
 #'
 #' Builds a vector of population size, for each age class, using a Leslie matrix to get the Stable Age Distribution (SAD). Used by [bdy_model_no_impact]
 #'

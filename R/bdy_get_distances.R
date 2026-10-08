@@ -1,4 +1,4 @@
-#' Calculates  windfarm-colony distances
+#' Calculate windfarm-colony distances
 #'
 #' Calculates the shortest path distances between marine bird colonies and wind farms
 #'

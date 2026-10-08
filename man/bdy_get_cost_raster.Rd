@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_get_cost_raster.R
 \name{bdy_get_cost_raster}
 \alias{bdy_get_cost_raster}
-\title{Get cost transition matrix}
+\title{Prepare sea cost transition matrix}
 \usage{
 bdy_get_cost_raster(
   colonies,

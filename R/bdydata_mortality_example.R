@@ -1,4 +1,4 @@
-#' Example data of mortality from collision with windfarms
+#' Example mortality data from collision with windfarms
 #'
 #' @docType data
 #'

@@ -3,7 +3,7 @@
 \docType{data}
 \name{bdydata_mortality_example}
 \alias{bdydata_mortality_example}
-\title{Example data of mortality from collision with windfarms}
+\title{Example mortality data from collision with windfarms}
 \format{
 Dataframe (.rda)
 }
@@ -11,6 +11,6 @@ Dataframe (.rda)
 bdydata_mortality_example
 }
 \description{
-Example data of mortality from collision with windfarms
+Example mortality data from collision with windfarms
 }
 \keyword{datasets}

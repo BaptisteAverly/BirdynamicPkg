@@ -1,4 +1,4 @@
-#' Plots trends
+#' Create plot of population trends
 #'
 #' Plot figure of projected national trends
 #'

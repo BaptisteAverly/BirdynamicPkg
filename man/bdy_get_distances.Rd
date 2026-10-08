@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_get_distances.R
 \name{bdy_get_distances}
 \alias{bdy_get_distances}
-\title{Calculates  windfarm-colony distances}
+\title{Calculate windfarm-colony distances}
 \usage{
 bdy_get_distances(colonies, windfarms, costMatrix, doShpa = T, progress = NULL)
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_run_analysis.R
 \name{bdy_run_analysis}
 \alias{bdy_run_analysis}
-\title{Run complete analysis}
+\title{Run the complete analysis}
 \usage{
 bdy_run_analysis(
   species,

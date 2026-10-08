@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_model_code.R
 \name{bdy_model_code}
 \alias{bdy_model_code}
-\title{Code null population model}
+\title{Prepare code for demographic model}
 \usage{
 bdy_model_code()
 }

@@ -1,4 +1,4 @@
-#' Run complete analysis
+#' Run the complete analysis
 #'
 #' This function can be used to run the complete analysis (from calculating cost raster to getting model outputs). See the package vignette for more information.
 #'

@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_summarise_colonies.R
 \name{bdy_summarise_colonies}
 \alias{bdy_summarise_colonies}
-\title{Summarizes a table of bird counts into a table of colonies}
+\title{Summarise bird counts into colonies}
 \usage{
 bdy_summarise_colonies(countData)
 }
@@ -19,5 +19,5 @@ bdy_summarise_colonies(countData)
 Sf table of colony information ('colony', 'lat', 'lon', 'seafront', 'colony_code', and 'geometry'), where each line is a different colony and the following columns:
 }
 \description{
-Summarizes a table of bird counts into a table of colonies
+Summarise bird counts into colonies
 }

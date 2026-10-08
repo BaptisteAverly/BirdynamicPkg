@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_model_no_impact.R
 \name{bdy_model_no_impact}
 \alias{bdy_model_no_impact}
-\title{Model with no impact}
+\title{Run model with no windfarm impact}
 \usage{
 bdy_model_no_impact(
   group_counts,
