@@ -50,7 +50,7 @@ bdy_plot_map <- function(mod_out, Raw_ResTables, windfarms, BufferForaging=NULL)
       st_buffer(., 1) %>%
       group_by(group) %>%
       summarise(geometry=st_union(geometry),
-                colonies=paste0(unique(Popup), collapse=", "),
+                colonies=paste0(unique(Popup), collapse=", ") %>% ifelse(nchar(.)>900, paste0(substr(., 1, 800), "..."), .),
                 Dist_min=min(Dist_min, na.rm=T),
                 Windfarm_min=Windfarm_min[which.min(Dist_min)],
                 Windfarm_foraging=Windfarm_foraging %>% strsplit(., ";") %>% unlist(.) %>% unique(.) %>% sort(.) %>% paste0(., collapse=", ") %>% ifelse(.=="", "aucun", .)
