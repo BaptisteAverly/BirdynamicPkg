@@ -83,7 +83,7 @@ counts_to_add <- data.frame(
   count=c(6, 8, 4, 8, 10, 13)
 )
 
-countData_completed <- bdy_add_counts(counts_to_add) %>% subset(., seafront=="atlantic")
+countData_completed <- bdy_add_counts(counts_to_add)
 
 ```
 

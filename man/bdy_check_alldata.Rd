@@ -44,6 +44,7 @@ For an example see \link{bdydata_mortality_example}}
 \item 'year': numeric, year during which the observation was made
 \item 'colony': character, name of the colony where the observation was made, which should be found also in th column 'colony' of argument 'colonies'
 \item 'count': numeric, the count value for this given year, colony, species
+\item 'colony_code': character, unique identifier for each colony
 }}
 
 \item{vital_rates}{table of species vital rates (rows = species), for instance \link{bdydata_vital_rates}. Should contain at least the following columns:
