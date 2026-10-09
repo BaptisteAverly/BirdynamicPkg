@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 
 # Introduction
-The R package 'BirdynamicPkg' enables modelling the demographic impact of windfarms on seabird species following the methodology developed in the Bird Dynamic project. Check out the 'Read me' file to know more.
+The R package 'BirdynamicPkg' enables modelling the demographic impact of windfarms on seabird species following the methodology developed in the Bird Dynamic project. Check out the 'Read me' file to know more on the online [Shiny app](https://shiny.cefe.cnrs.fr/Shiny_Bird_dynamic/).
 
 
 # Download and load the package
@@ -56,7 +56,10 @@ library(htmltools)
 To run the analyses, you need to prepare data of seabird counts (see below), location of windfarms (spatial data), mortality data from collision with windfarms (which you can calculate using the stochLAB package if you have seabird density estimates around the location of each windfarm, as detailed below). The other data (eg. species demographic parameters) are automatically loaded from the package data, but you can decide to edit them if you have better data or wish to add species that are not included in the package defaults.
 
 ## Count data
-The approach developped in Bird Dynamic was based on bird count data gathered and shared by the GISOM ([Groupement d'Intérêt Scientifique Oiseaux Marins](https://www.gisom.org/)). This dataset includes breeding year counts of all marine bird species on Metropolitan French coasts. This dataset is the one used in the online Shiny App, but unfortunately cannot be shared directly in this R package as the GISOM shares it only for specific projects.
+The approach developped in Bird Dynamic was based on bird count data gathered and shared by the GISOM ([Groupement d'Intérêt Scientifique Oiseaux Marins](https://www.gisom.org/)). This dataset includes breeding year counts of all marine bird species on Metropolitan French coasts. Unlike in the Shiny app, and for intellectual property reasons, the data included in the package resource are aggregated with `bdy_clustering()` ([Chambert et al. 2026](https://doi.org/10.1002/ecy.4459)).
+
+
+This dataset is the one used in the online Shiny App, but unfortunately cannot be shared directly in this R package as the GISOM shares it only for specific projects.
 
 To run the analyses with this package, you then have three options:
 
