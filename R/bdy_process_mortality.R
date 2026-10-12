@@ -1,4 +1,4 @@
-#' Process mortality file
+#' Process mortality data
 #'
 #' Distributes national mortality among all colonies of a given species, based on weights calculated with [bdy_apportionning()]
 #'

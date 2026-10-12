@@ -1,4 +1,4 @@
-#' Apportionning
+#' Apportionning mortalities among group of colonies
 #'
 #' Calculates weights to distribute bird mortality between colonies and groups of colonies for a given species. For a given colony, these weights are influenced by: (1) Distance between the colony and the windfarms,
 #' (2) The population size of the species of interest for that colony and (3), the proportion of marine surface surrounding the colony.

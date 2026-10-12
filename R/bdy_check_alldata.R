@@ -162,18 +162,17 @@ bdy_check_alldata <- function(windfarms_L93, colonies_all, formatted_mortality, 
   ### Check colonies
 
   ## check that numeric columns are numeric
-
   numCol <- c("lon","lat")
 
-  notNum <- numCol[which(!apply(colonies_all[,numCol],2,is.numeric))]
+  notNum <- numCol[which(!apply(as.data.frame(colonies_all)[,numCol],2,is.numeric))]
 
   if(length(notNum) > 0){
-    stop(paste0("Following column(s) if colony table should be numeric:",paste0("'",notNum,"'",collapse=", ")))
+    stop(paste0("Following column(s) in colony table should be numeric:", paste0("'", notNum, "'", collapse=", ")))
   }
 
   ## check that colonies in colony table are in count table
 
-  missingcol <- which(!colonies_all$colony_code %in% countData$colony_code)
+  missingCol <- which(!colonies_all$colony_code %in% countData$colony_code)
   if(length(missingCol)>0){
     stop("Some colonies are present in the count table but not in the colony table")
   }

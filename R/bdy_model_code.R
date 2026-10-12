@@ -1,4 +1,4 @@
-#' Code null population model
+#' Prepare code for demographic model
 #'
 #' Nimble code for the null population model (without impact from wind farms). Meant to be called by [bdy_model_no_impact()]
 #'

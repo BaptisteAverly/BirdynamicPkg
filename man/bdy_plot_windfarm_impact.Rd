@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_plot_windfarm_impact.R
 \name{bdy_plot_windfarm_impact}
 \alias{bdy_plot_windfarm_impact}
-\title{Windfarm impact}
+\title{Create plot with windfarm impact by parc}
 \usage{
 bdy_plot_windfarm_impact(Raw_ResTables, formatted_mortality)
 }
@@ -12,7 +12,7 @@ bdy_plot_windfarm_impact(Raw_ResTables, formatted_mortality)
 \item{formatted_mortality}{formatted table of collision, for instance using \link{bdydata_mortality_example}}
 }
 \value{
-ggplot object
+list with a ggplot object and a table of raw results
 }
 \description{
 Plot impact of each windfarm on each species

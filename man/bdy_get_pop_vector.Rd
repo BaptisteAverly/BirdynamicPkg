@@ -2,7 +2,7 @@
 % Please edit documentation in R/bdy_get_pop_vector.R
 \name{bdy_get_pop_vector}
 \alias{bdy_get_pop_vector}
-\title{Get a population size vector}
+\title{Prepare population size vector for models}
 \usage{
 bdy_get_pop_vector(nb_pair, s, f, pr, type = "post")
 }
