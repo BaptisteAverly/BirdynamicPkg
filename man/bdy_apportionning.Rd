@@ -24,7 +24,7 @@ bdy_apportionning(
 }}
 
 \item{sea_area}{named numeric vector giving for each colony the proportion of marine surface surrounding it.
-Each value should be named with the unique identifier for the corresponding colony.}
+Each value should be named with the unique identifier for the corresponding colony. Values should be set to 1 for species with colonies being completely inland.}
 
 \item{tbl_dist}{matrix giving the distances between colonies (rows) and wind farms (columns), as outputted by \code{\link[=bdy_get_distances]{bdy_get_distances()}}}
 

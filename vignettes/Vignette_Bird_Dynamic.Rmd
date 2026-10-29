@@ -77,9 +77,9 @@ head(bdydata_colonies_counts_low_res)
 You can then decide to add count data (from year that are not in this table or colonies that are not in this table) using the function `bdy_add_counts` and a dataframe that you loaded or created with the information required (see help for more details). In this example, I want to add a colony of Roseate Tern close to Cherbourg with 6 years of count (this is fake data, just for the example):
 ```{r add_countdata}
 counts_to_add <- data.frame(
-  colony="Fake Cherbourg colony",
-  lon=-1.657,
-  lat=49.65,
+  colony="Fake Ebihens colony",
+  lon=-2.195,
+  lat=48.62,
   seafront="atlantic",
   species_latin="Sterna dougallii",
   year=c(2015, 2016, 2017, 2018, 2020, 2021),

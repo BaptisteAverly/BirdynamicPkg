@@ -11,7 +11,7 @@
 #'                \item 'colony_code': character, unique identifier for the colony.
 #'                }
 #' @param sea_area named numeric vector giving for each colony the proportion of marine surface surrounding it.
-#'                  Each value should be named with the unique identifier for the corresponding colony.
+#'                  Each value should be named with the unique identifier for the corresponding colony. Values should be set to 1 for species with colonies being completely inland.
 #' @param tbl_dist matrix giving the distances between colonies (rows) and wind farms (columns), as outputted by [bdy_get_distances()]
 #' @param incl_pop_size boolean, whether population size should influence the weight calculation
 #' @param incl_sea_area boolean, whether the proportion of marine surface surrounding the colony should influence the weight calculation
