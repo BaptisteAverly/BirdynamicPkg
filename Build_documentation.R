@@ -10,13 +10,11 @@ pkgdown::build_reference()
 pkgdown::build_home()
 
 
-
-### TO DEPLOY
+### TO DEPLOY ONLINE
 # Preview your site locally before publishing (runs all the previous functions)
 pkgdown::build_site()
 
-# Run once to configure your package to use and deploy pkgdown
-usethis::use_pkgdown_github_pages()
+# Run once to configure your package to use and deploy pkgdown (only works from Baptiste laptop)
 usethis::use_github_pages(branch = 'develop', path = "/docs")
 
 

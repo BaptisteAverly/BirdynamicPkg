@@ -1,6 +1,7 @@
 Package: BirdynamicPkg
 Type: Package
 Title: Windfarm impact analysis based on the project Bird Dynamic
+URL: https://baptisteaverly.github.io/BirdynamicPkg
 Version: 1.1
 Authors@R: c(
     person(
