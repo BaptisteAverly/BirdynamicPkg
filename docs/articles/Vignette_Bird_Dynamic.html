@@ -4,79 +4,64 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Use BirdynamicPkg package • BirdynamicPkg</title>
-<!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
-<script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
-<!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
-<script src="../pkgdown.js"></script><meta property="og:title" content="Use BirdynamicPkg package">
-<!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
-<script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-<script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-<![endif]-->
+<script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link href="../deps/bootstrap-5.3.8/bootstrap.min.css" rel="stylesheet">
+<script src="../deps/bootstrap-5.3.8/bootstrap.bundle.min.js"></script><link href="../deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="../deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="../deps/headroom-0.11.0/headroom.min.js"></script><script src="../deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="../deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="../deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="../deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="../deps/search-1.0.0/fuse.min.js"></script><script src="../deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Use BirdynamicPkg package">
 </head>
-<body data-spy="scroll" data-target="#toc">
+<body>
+    <a href="#main" class="visually-hidden-focusable">Skip to contents</a>
 
 
-    <div class="container template-article">
-      <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
-  <div class="container">
-    <div class="navbar-header">
-      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false">
-        <span class="sr-only">Toggle navigation</span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-        <span class="icon-bar"></span>
-      </button>
-      <span class="navbar-brand">
-        <a class="navbar-link" href="../index.html">BirdynamicPkg</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">1.1</span>
-      </span>
-    </div>
+    <nav class="navbar navbar-expand-lg fixed-top bg-light" data-bs-theme="light" aria-label="Site navigation"><div class="container">
 
-    <div id="navbar" class="navbar-collapse collapse">
-      <ul class="nav navbar-nav">
-<li>
-  <a href="../reference/index.html">Reference</a>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-    Articles
+    <a class="navbar-brand me-2" href="../index.html">BirdynamicPkg</a>
 
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-<li>
-      <a href="../articles/Vignette_Bird_Dynamic.html">Use BirdynamicPkg package</a>
-    </li>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.1</small>
+
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div id="navbar" class="collapse navbar-collapse ms-3">
+      <ul class="navbar-nav me-auto">
+<li class="nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+<li class="active nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="../articles/Vignette_Bird_Dynamic.html">Use BirdynamicPkg package</a></li>
   </ul>
 </li>
       </ul>
-<ul class="nav navbar-nav navbar-right"></ul>
+<ul class="navbar-nav">
+<li class="nav-item"><form class="form-inline" role="search">
+ <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json">
+</form></li>
+      </ul>
 </div>
-<!--/.nav-collapse -->
+
+
   </div>
-<!--/.container -->
-</div>
-<!--/.navbar -->
+</nav><div class="container template-article">
 
 
 
-      </header><link href="Vignette_Bird_Dynamic_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
+<link href="Vignette_Bird_Dynamic_files/htmltools-fill-0.5.9/fill.css" rel="stylesheet">
 <script src="Vignette_Bird_Dynamic_files/htmlwidgets-1.6.4/htmlwidgets.js"></script><link href="Vignette_Bird_Dynamic_files/leaflet-1.3.1/leaflet.css" rel="stylesheet">
 <script src="Vignette_Bird_Dynamic_files/leaflet-1.3.1/leaflet.js"></script><link href="Vignette_Bird_Dynamic_files/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
 <script src="Vignette_Bird_Dynamic_files/proj4-2.6.2/proj4.min.js"></script><script src="Vignette_Bird_Dynamic_files/Proj4Leaflet-1.0.1/proj4leaflet.js"></script><link href="Vignette_Bird_Dynamic_files/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
 <script src="Vignette_Bird_Dynamic_files/leaflet-binding-2.2.3/leaflet.js"></script><script src="Vignette_Bird_Dynamic_files/leaflet-providers-3.0.0/leaflet-providers.js"></script><script src="Vignette_Bird_Dynamic_files/leaflet-providers-plugin-2.2.3/leaflet-providers-plugin.js"></script><script src="Vignette_Bird_Dynamic_files/clipboard-0.0.1/setClipboardText.js"></script><div class="row">
-  <div class="col-md-9 contents">
-    <div class="page-header toc-ignore">
-      <h1 data-toc-skip>Use BirdynamicPkg package</h1>
+  <main id="main" class="col-md-9"><div class="page-header">
+
+      <h1>Use BirdynamicPkg package</h1>
             
       
 
-      <div class="hidden name"><code>Vignette_Bird_Dynamic.Rmd</code></div>
-
+      <div class="d-none name"><code>Vignette_Bird_Dynamic.Rmd</code></div>
     </div>
 
     
@@ -86,18 +71,18 @@
 </h2>
 <p>The R package ‘BirdynamicPkg’ enables modelling the demographic
 impact of windfarms on seabird species following the methodology
-developed in the Bird Dynamic project. Check out the ‘Read me’ file to
-know more on the online <a href="https://shiny.cefe.cnrs.fr/Shiny_Bird_dynamic/" class="external-link">Shiny app</a>.</p>
+developed in the Bird Dynamic project <a href="https://doi.org/10.1002/ecy.4459" class="external-link">(Chambert et al. 2024)</a>.
+Check out the ‘Read me’ file to know more on the online <a href="https://shiny.cefe.cnrs.fr/Shiny_Bird_dynamic/" class="external-link">Shiny app</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="download-and-load-the-package">Download and load the package<a class="anchor" aria-label="anchor" href="#download-and-load-the-package"></a>
 </h2>
 </div>
 <div class="section level2">
-<h2 id="prepare-data">Prepare data<a class="anchor" aria-label="anchor" href="#prepare-data"></a>
+<h2 id="prepare-the-data">Prepare the data<a class="anchor" aria-label="anchor" href="#prepare-the-data"></a>
 </h2>
-<p>To run the analyses, you need to prepare data of seabird counts (see
-below), location of windfarms (spatial data), mortality data from
+<p>To run the analyses, you need to prepare seabird counts data (see
+below), windfarm locations (spatial data), and mortality data from
 collision with windfarms (which you can calculate using the stochLAB
 package if you have seabird density estimates around the location of
 each windfarm, as detailed below). The other data (eg. species
@@ -143,7 +128,7 @@ group centroids and windfarms; it is therefore advised to use a complete
 dataset, or the online Shiny App, to get more accurate results.</li>
 </ul>
 <p>In this example, we will use the low resolution data from
-<code>bdydata_colonies_counts_low_res</code> as an example.</p>
+<code>bdydata_colonies_counts_low_res</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">bdydata_colonies_counts_low_res</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   colony        lon      lat seafront             species_latin     species_fr</span></span>
@@ -160,12 +145,12 @@ dataset, or the online Shiny App, to get more accurate results.</li>
 <span><span class="co">#&gt; 4 European shag 2009   151</span></span>
 <span><span class="co">#&gt; 5 European shag 2009     2</span></span>
 <span><span class="co">#&gt; 6 European shag 2009     8</span></span></code></pre></div>
-<p>You can then decide to add count data (from year that are not in this
+<p>You can then decide to add count data (years that are not in this
 table or colonies that are not in this table) using the function
 <code>bdy_add_counts</code> and a dataframe that you loaded or created
 with the information required (see help for more details). In this
-example, I want to add a colony of Roseate Tern close to Cherbourg with
-6 years of count (this is fake data, just for the example):</p>
+example, we show how to add a colony of Roseate Tern close to Ebihens
+with 6 years of count (this is fake data, just for the example):</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">counts_to_add</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span>
 <span>  colony<span class="op">=</span><span class="st">"Fake Ebihens colony"</span>,</span>
@@ -187,7 +172,7 @@ example, I want to add a colony of Roseate Tern close to Cherbourg with
 <span></span>
 <span><span class="va">countData_completed</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bdy_add_counts.html">bdy_add_counts</a></span><span class="op">(</span><span class="va">counts_to_add</span><span class="op">)</span></span></code></pre></div>
 <p>When the count data are ready and complete, we can then create the
-spatial data of colonies.</p>
+colonies spatial data.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">colonies_all</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/bdy_summarise_colonies.html">bdy_summarise_colonies</a></span><span class="op">(</span><span class="va">countData_completed</span><span class="op">)</span></span>
 <span><span class="va">countData_completed</span><span class="op">$</span><span class="va">colony_code</span> <span class="op">&lt;-</span> <span class="va">colonies_all</span><span class="op">$</span><span class="va">colony_code</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span><span class="va">countData_completed</span><span class="op">$</span><span class="va">colony</span>, <span class="va">colonies_all</span><span class="op">$</span><span class="va">colony</span><span class="op">)</span><span class="op">]</span></span>
@@ -414,9 +399,9 @@ object from coordinates using the following function</p>
 <code class="sourceCode R"><span><span class="va">windfarms_bis</span> <span class="op">&lt;-</span> <span class="fu">st_as_sf</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span>lon<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3.214</span>, <span class="fl">3.606</span>, <span class="fl">5.026</span><span class="op">)</span>, lat<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">43.118</span>, <span class="fl">43.283</span>, <span class="fl">43.292</span><span class="op">)</span>, NAME<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"W1"</span>, <span class="st">"W2"</span>, <span class="st">"W3"</span><span class="op">)</span><span class="op">)</span>, coords <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"lon"</span>,<span class="st">"lat"</span><span class="op">)</span>, crs<span class="op">=</span><span class="fu">st_crs</span><span class="op">(</span><span class="fl">4326</span><span class="op">)</span><span class="op">)</span> <span class="op">%&gt;%</span> <span class="fu">st_transform</span><span class="op">(</span><span class="va">.</span>, <span class="fu">st_crs</span><span class="op">(</span><span class="fl">2154</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
-<h3 id="prepare-coast-line">Prepare coast line<a class="anchor" aria-label="anchor" href="#prepare-coast-line"></a>
+<h3 id="prepare-the-coastline">Prepare the coastline<a class="anchor" aria-label="anchor" href="#prepare-the-coastline"></a>
 </h3>
-<p>A map of coastline is needed to create a cost matrix to calculate
+<p>A coastline map is needed to create a cost matrix to calculate
 distance by sea, and to calculate the proportion of sea area around each
 colonies. We use data stored in the package and crop based on the
 location of colonies.</p>
@@ -450,14 +435,14 @@ saying all data are good, or an error.</p>
 <h2 id="detailed-analysis-for-one-species">Detailed analysis for one species<a class="anchor" aria-label="anchor" href="#detailed-analysis-for-one-species"></a>
 </h2>
 <div class="section level3">
-<h3 id="calculate-distance-between-colonies-and-windfarms">Calculate distance between colonies and windfarms<a class="anchor" aria-label="anchor" href="#calculate-distance-between-colonies-and-windfarms"></a>
+<h3 id="calculate-distances-between-colonies-and-windfarms">Calculate distances between colonies and windfarms<a class="anchor" aria-label="anchor" href="#calculate-distances-between-colonies-and-windfarms"></a>
 </h3>
-<p>We calculate two types of distance: euclidian distance is used for
-species that cross land (e.g., gulls), shortest sea path is used for
-purely marine species (e.g., Northern Gannet). Both distances are
-calculated for all colonies (if doShpa is set to TRUE) with the
+<p>We calculate two types of distance: the euclidian distance is used
+for species that cross land (e.g., gulls), and the shortest sea path is
+used for purely marine species (e.g., Northern Gannet). Both distances
+are calculated for all colonies (if doShpa is set to TRUE) with the
 <code><a href="../reference/bdy_get_distances.html">bdy_get_distances()</a></code> function, the type of distance to use
-then depends on species later in the analysis. Before calculating
+then depends on the species later in the analysis. Before calculating
 distances, a cost matrix based on coastline must be calculated with the
 <code><a href="../reference/bdy_get_cost_raster.html">bdy_get_cost_raster()</a></code>.</p>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
@@ -529,7 +514,7 @@ pipeline) are attributed to the different colonies depending on their
 distance to the windfarms or the configuration of the coastline.</p>
 <p>We first set the distance between windfarms and colonies that include
 the selected species, keeping the shortest sea path if the species is
-purely marine, the euclidian distance otherwise.</p>
+purely marine, or the euclidian distance otherwise.</p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span><span class="op">(</span><span class="va">foraging_ranges</span><span class="op">$</span><span class="va">terrestrial_habits</span><span class="op">[</span><span class="va">foraging_ranges</span><span class="op">$</span><span class="va">species_latin</span><span class="op">==</span><span class="va">sp</span><span class="op">]</span><span class="op">)</span><span class="op">{</span></span>
 <span>  <span class="va">distances</span> <span class="op">&lt;-</span> <span class="va">all_distances</span><span class="op">$</span><span class="va">eucl_dist</span></span>
@@ -684,8 +669,8 @@ national level. Relative impact was calculated for each iteration as
 abundance of the species after 30 years <strong>without</strong>
 windfarm impact and <code>C1</code> is the estimated abundance of the
 species after 30 years <strong>with</strong> windfarm impact (the median
-across simulations is provided, as well as the confidence interval).
-Increase in extinction probability is calculated as
+across simulations is provided, as well as the confidence interval). The
+increase in extinction probability is calculated as
 <code>100*(P1-P0)</code> where P0 is the probability of extinction
 <strong>without</strong> windfarm impact (calculated as the proportion
 of simulations that reach counts of 0 after 30 years) and P1 is the
@@ -862,29 +847,22 @@ windfarm:</p>
 </tbody>
 </table>
 </div>
-  </div>
-
-  <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-
-      </div>
-
+  </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>
+    </nav></aside>
 </div>
 
 
 
-      <footer><div class="copyright">
-  <p></p>
-<p>Developed by Baptiste Averly, Victor Cazalis, Thierry Chambert.</p>
+    <footer><div class="pkgdown-footer-left">
+  <p>Developed by Baptiste Averly, Victor Cazalis, Thierry Chambert.</p>
 </div>
 
-<div class="pkgdown">
-  <p></p>
-<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
+<div class="pkgdown-footer-right">
+  <p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.2.1.</p>
 </div>
 
-      </footer>
+    </footer>
 </div>
-
 
 
 

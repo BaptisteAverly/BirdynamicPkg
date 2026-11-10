@@ -19,7 +19,7 @@ knitr::opts_chunk$set(
 
 
 # Introduction
-The R package 'BirdynamicPkg' enables modelling the demographic impact of windfarms on seabird species following the methodology developed in the Bird Dynamic project. Check out the 'Read me' file to know more on the online [Shiny app](https://shiny.cefe.cnrs.fr/Shiny_Bird_dynamic/).
+The R package 'BirdynamicPkg' enables modelling the demographic impact of windfarms on seabird species following the methodology developed in the Bird Dynamic project [(Chambert et al. 2024)](https://doi.org/10.1002/ecy.4459). Check out the 'Read me' file to know more on the online [Shiny app](https://shiny.cefe.cnrs.fr/Shiny_Bird_dynamic/).
 
 
 # Download and load the package
@@ -52,8 +52,8 @@ library(htmltools)
 ```
 
 
-# Prepare data
-To run the analyses, you need to prepare data of seabird counts (see below), location of windfarms (spatial data), mortality data from collision with windfarms (which you can calculate using the stochLAB package if you have seabird density estimates around the location of each windfarm, as detailed below). The other data (eg. species demographic parameters) are automatically loaded from the package data, but you can decide to edit them if you have better data or wish to add species that are not included in the package defaults.
+# Prepare the data
+To run the analyses, you need to prepare seabird counts data (see below), windfarm locations (spatial data), and mortality data from collision with windfarms (which you can calculate using the stochLAB package if you have seabird density estimates around the location of each windfarm, as detailed below). The other data (eg. species demographic parameters) are automatically loaded from the package data, but you can decide to edit them if you have better data or wish to add species that are not included in the package defaults.
 
 ## Count data
 The approach developped in Bird Dynamic was based on bird count data gathered and shared by the GISOM ([Groupement d'Intérêt Scientifique Oiseaux Marins](https://www.gisom.org/)). This dataset includes breeding year counts of all marine bird species on Metropolitan French coasts. Unlike in the Shiny app, and for intellectual property reasons, the data included in the package resource are aggregated with `bdy_clustering()` ([Chambert et al. 2026](https://doi.org/10.1002/ecy.4459)).
@@ -67,14 +67,14 @@ To run the analyses with this package, you then have three options:
 * Use your own count data. The data must follow the format of `bdydata_colonies_counts_low_res`, including the columns: "colony" with the name or code of the colony, "lat" and "lon" with the spatial coordinates of the colony (in degrees as in WGS84),  "seafront" to specify if the colony is on Atlantic or Mediterranean coastline, "species_latin" with the species name, "year" for the year of survey, and "count" with the number of breeding pairs (specifically the number of 'Apparently Occupied Sites').
 * Use the data made available in this package `bdydata_colonies_counts_low_res`, which includes the whole GISOM dataset with a low geographic resolution (see more details in `help(bdydata_colonies_counts_low_res)`. We grouped colonies and counts following the grouping procedure from `bdy_clustering())`. This means that the coordinates included in this dataset are those of the centroids of group of colonies, which can be tens of kilometers away from the true coordinates of some colonies. This may strongly impact the results as the distance between colonies and windfarms can be very different from the distance between group centroids and windfarms; it is therefore advised to use a complete dataset, or the online Shiny App, to get more accurate results.
 
-In this example, we will use the low resolution data from `bdydata_colonies_counts_low_res` as an example.
+In this example, we will use the low resolution data from `bdydata_colonies_counts_low_res`.
 
 ```{r count_data}
 head(bdydata_colonies_counts_low_res)
 ```
 
 
-You can then decide to add count data (from year that are not in this table or colonies that are not in this table) using the function `bdy_add_counts` and a dataframe that you loaded or created with the information required (see help for more details). In this example, I want to add a colony of Roseate Tern close to Cherbourg with 6 years of count (this is fake data, just for the example):
+You can then decide to add count data (years that are not in this table or colonies that are not in this table) using the function `bdy_add_counts` and a dataframe that you loaded or created with the information required (see help for more details). In this example, we show how to add a colony of Roseate Tern close to Ebihens with 6 years of count (this is fake data, just for the example):
 ```{r add_countdata}
 counts_to_add <- data.frame(
   colony="Fake Ebihens colony",
@@ -91,7 +91,7 @@ countData_completed <- bdy_add_counts(counts_to_add)
 
 ```
 
-When the count data are ready and complete, we can then create the spatial data of colonies.
+When the count data are ready and complete, we can then create the colonies spatial data.
 ```{r create_colonies, out.width='100%'}
 colonies_all <- bdy_summarise_colonies(countData_completed)
 countData_completed$colony_code <- colonies_all$colony_code[match(countData_completed$colony, colonies_all$colony)]
@@ -238,8 +238,8 @@ windfarms_bis <- st_as_sf(data.frame(lon=c(3.214, 3.606, 5.026), lat=c(43.118, 4
 
 
 
-## Prepare coast line
-A map of coastline is needed to create a cost matrix to calculate distance by sea, and to calculate the proportion of sea area around each colonies. We use data stored in the package and crop based on the location of colonies.
+## Prepare the coastline
+A coastline map is needed to create a cost matrix to calculate distance by sea, and to calculate the proportion of sea area around each colonies. We use data stored in the package and crop based on the location of colonies.
 
 ```{r countryShape, out.width='100%'}
 crop_extent <- colonies_all %>% st_bbox() %>% st_as_sfc() %>% st_buffer(., 100000) %>% st_transform(., 4326)
@@ -268,8 +268,8 @@ bdy_check_alldata(windfarms_L93, colonies_all, formatted_mortality, countData_co
 
 # Detailed analysis for one species
 
-## Calculate distance between colonies and windfarms
-We calculate two types of distance: euclidian distance is used for species that cross land (e.g., gulls), shortest sea path is used for purely marine species (e.g., Northern Gannet). Both distances are calculated for all colonies (if doShpa is set to TRUE) with the `bdy_get_distances()` function, the type of distance to use then depends on species later in the analysis. Before calculating distances, a cost matrix based on coastline must be calculated with the `bdy_get_cost_raster()`.
+## Calculate distances between colonies and windfarms
+We calculate two types of distance: the euclidian distance is used for species that cross land (e.g., gulls), and the shortest sea path is used for purely marine species (e.g., Northern Gannet). Both distances are calculated for all colonies (if doShpa is set to TRUE) with the `bdy_get_distances()` function, the type of distance to use then depends on the species later in the analysis. Before calculating distances, a cost matrix based on coastline must be calculated with the `bdy_get_cost_raster()`.
 
 ```{r calc_dist}
 cost_matrix <- bdy_get_cost_raster(colonies_all)
@@ -311,7 +311,7 @@ head(count_processed$sea_area)
 ## Apportionning and processing mortality data
 The first step to apply is the apportionning, where mortalities due to collisions with wind turbines (modelled or loaded earlier in the pipeline) are attributed to the different colonies depending on their distance to the windfarms or the configuration of the coastline.
 
-We first set the distance between windfarms and colonies that include the selected species, keeping the shortest sea path if the species is purely marine, the euclidian distance otherwise.
+We first set the distance between windfarms and colonies that include the selected species, keeping the shortest sea path if the species is purely marine, or the euclidian distance otherwise.
 
 ```{r select_dist}
 if(foraging_ranges$terrestrial_habits[foraging_ranges$species_latin==sp]){
@@ -404,7 +404,7 @@ First, the table `Simulated_National` includes estimated counts per year and per
 result_table$Simulated_National
 ```
 
-Second, the table `Tableau_National` includes the relative impact and the increase in probability of extinction for each species at national level. Relative impact was calculated for each iteration as `100*(C0-C1)/C0`where `C0` is the estimated abundance of the species after 30 years **without** windfarm impact and `C1` is the estimated abundance of the species after 30 years **with** windfarm impact (the median across simulations is provided, as well as the confidence interval). Increase in extinction probability is calculated as `100*(P1-P0)` where P0 is the probability of extinction **without** windfarm impact (calculated as the proportion of simulations that reach counts of 0 after 30 years) and P1 is the probability of extinction **with** windfarm impact. 
+Second, the table `Tableau_National` includes the relative impact and the increase in probability of extinction for each species at national level. Relative impact was calculated for each iteration as `100*(C0-C1)/C0`where `C0` is the estimated abundance of the species after 30 years **without** windfarm impact and `C1` is the estimated abundance of the species after 30 years **with** windfarm impact (the median across simulations is provided, as well as the confidence interval). The increase in extinction probability is calculated as `100*(P1-P0)` where P0 is the probability of extinction **without** windfarm impact (calculated as the proportion of simulations that reach counts of 0 after 30 years) and P1 is the probability of extinction **with** windfarm impact. 
 ```{r result_2}
 as.data.frame(result_table$Tableau_National)
 ```
