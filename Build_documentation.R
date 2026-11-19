@@ -15,6 +15,6 @@ pkgdown::build_home()
 pkgdown::build_site()
 
 # Run once to configure your package to use and deploy pkgdown (only works from Baptiste laptop)
-usethis::use_github_pages(branch = 'develop', path = "/docs")
+usethis::use_github_pages(branch = 'main', path = "/docs")
 
 
